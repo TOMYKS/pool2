@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dwq7mn7wtcsct"]
+
+[ext_resource type="PackedScene" uid="uid://dlkc35t6aa5yu" path="res://assets/model2/pool_table_-_billiard_table_with_cues_and_balls.glb" id="1_8482y"]
+
+[node name="Sketchfab_Scene" unique_id=1955690397 instance=ExtResource("1_8482y")]

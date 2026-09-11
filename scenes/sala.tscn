@@ -1,8 +1,29 @@
 [gd_scene format=3 uid="uid://dhggdj3hxtgsm"]
 
-[ext_resource type="PackedScene" uid="uid://dlkc35t6aa5yu" path="res://assets/model2/pool_table_-_billiard_table_with_cues_and_balls.glb" id="1_uox7l"]
+[ext_resource type="PackedScene" uid="uid://cguivx2otvujd" path="res://scenes/mesa.tscn" id="1_uox7l"]
+[ext_resource type="PackedScene" uid="uid://cn3rsna8e41uo" path="res://scenes/Ball0.tscn" id="2_mteyr"]
 
 [node name="Sala" type="Node3D" unique_id=2013218986]
 
-[node name="Sketchfab_Scene" parent="." unique_id=1955690397 instance=ExtResource("1_uox7l")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09501505, 0, 1.5845705)
+[node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.625, 0)
+
+[node name="Ball0" parent="." unique_id=596734405 instance=ExtResource("2_mteyr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.023605347, 2.532715, -0.8513033)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1053307438]
+transform = Transform3D(0.031054566, -0.20393704, 0.9784913, 0.0064691314, 0.978984, 0.2038344, -0.99949676, 0, 0.031721216, 4.578636, 1.3618674, 0.21930742)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=604606705]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.5027213, 3.342027, 0)
+light_energy = 16.0
+light_indirect_energy = 1.905
+light_volumetric_fog_energy = 16.0
+light_size = 0.456
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=1555046908]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2.503, 3.342027, 0)
+light_energy = 16.0
+light_indirect_energy = 1.905
+light_volumetric_fog_energy = 16.0
+light_size = 0.456
