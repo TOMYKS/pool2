@@ -9,20 +9,29 @@ size = Vector3(9.813324, 1, 4.849365)
 [sub_resource type="BoxShape3D" id="BoxShape3D_oimtj"]
 size = Vector3(0.9647827, 1, 4.119812)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_iwtcp"]
+size = Vector3(0.79541016, 3.9, 0.73339844)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sx2gp"]
+size = Vector3(0.50671387, 3.9, 0.73339844)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v32hm"]
+size = Vector3(0.8807373, 3.035, 0.43826294)
+
 [node name="Mesa" type="Node3D" unique_id=533647460]
 
 [node name="Pool Table _Mark Peters on Sketchfab_PoolTable_MTL_0" type="MeshInstance3D" parent="." unique_id=347769498]
-transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 5, 0, -5, -2.1855695e-07, 0, 0, 0)
+transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 3, 0, -5, -1.3113416e-07, 0, 1.7927437, 0)
 mesh = ExtResource("1_sx2gp")
 
 [node name="Pool Table _Mark Peters on Sketchfab_PoolTable_MTL_02" type="MeshInstance3D" parent="." unique_id=1059119242]
-transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 5, 0, -5, -2.1855695e-07, 0, 0, 0)
+transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 3, 0, -5, -1.3113416e-07, 0, 1.7927437, 0)
 mesh = ExtResource("2_8ehb7")
 
 [node name="Pano" type="StaticBody3D" parent="." unique_id=2093126086]
 
 [node name="Cube" type="CollisionShape3D" parent="Pano" unique_id=928035250]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0063233376, 8.995, 0.006225586)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0063233376, 3.6761234, 0.006225586)
 shape = SubResource("BoxShape3D_ds2lj")
 
 [node name="Bordes" type="StaticBody3D" parent="." unique_id=1593898992]
@@ -36,3 +45,115 @@ debug_color = Color(0.99607843, 0, 0.17254902, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.38, 3.905, -0.008)
 shape = SubResource("BoxShape3D_oimtj")
 debug_color = Color(0.99607843, 0, 0.17254902, 1)
+
+[node name="Largo1" type="CollisionShape3D" parent="Bordes" unique_id=1917965871]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.4281282, 3.905, 2.952292)
+shape = SubResource("BoxShape3D_oimtj")
+debug_color = Color(0.99607843, 0, 0.17254902, 1)
+
+[node name="Largo2" type="CollisionShape3D" parent="Bordes" unique_id=1971752982]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.42552, 3.905, 2.952292)
+shape = SubResource("BoxShape3D_oimtj")
+debug_color = Color(0.99607843, 0, 0.17254902, 1)
+
+[node name="Largo3" type="CollisionShape3D" parent="Bordes" unique_id=664151568]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.4281282, 3.905, -2.952)
+shape = SubResource("BoxShape3D_oimtj")
+debug_color = Color(0.99607843, 0, 0.17254902, 1)
+
+[node name="Largo4" type="CollisionShape3D" parent="Bordes" unique_id=1558328937]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.42552, 3.905, -2.952)
+shape = SubResource("BoxShape3D_oimtj")
+debug_color = Color(0.99607843, 0, 0.17254902, 1)
+
+[node name="Pockets" type="StaticBody3D" parent="." unique_id=1495795868]
+
+[node name="Pk1" type="CollisionShape3D" parent="Pockets" unique_id=1213577881]
+transform = Transform3D(0.76767254, 0, -0.6408423, 0, 1, 0, 0.6408423, 0, 0.76767254, -4.5571637, 2.4624846, -3.0051923)
+shape = SubResource("BoxShape3D_iwtcp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk2" type="CollisionShape3D" parent="Pockets" unique_id=1005751002]
+transform = Transform3D(0.76767254, 0, -0.6408423, 0, 1, 0, 0.6408423, 0, 0.76767254, -5.445113, 2.4624846, -2.0385442)
+shape = SubResource("BoxShape3D_iwtcp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk3" type="CollisionShape3D" parent="Pockets" unique_id=2066160507]
+transform = Transform3D(0.76767254, 0, -0.6408423, 0, 1, 0, 0.6408423, 0, 0.76767254, -5.466629, 2.4624846, -2.9009662)
+shape = SubResource("BoxShape3D_sx2gp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk10" type="CollisionShape3D" parent="Pockets" unique_id=322215933]
+transform = Transform3D(-0.76746994, 0, 0.6410849, 0, 1, 0, -0.6410849, 0, -0.76746994, 4.545516, 2.4624846, 3.0031457)
+shape = SubResource("BoxShape3D_iwtcp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk11" type="CollisionShape3D" parent="Pockets" unique_id=1475358826]
+transform = Transform3D(-0.76746994, 0, 0.6410849, 0, 1, 0, -0.6410849, 0, -0.76746994, 5.433771, 2.4624846, 2.0367782)
+shape = SubResource("BoxShape3D_iwtcp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk12" type="CollisionShape3D" parent="Pockets" unique_id=1932956881]
+transform = Transform3D(-0.76746994, 0, 0.6410849, 0, 1, 0, -0.6410849, 0, -0.76746994, 5.455014, 2.4624846, 2.8992069)
+shape = SubResource("BoxShape3D_sx2gp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk4" type="CollisionShape3D" parent="Pockets" unique_id=1157804190]
+transform = Transform3D(0.77627635, 0, 0.6303928, 0, 1, 0, -0.6303928, 0, 0.77627635, -4.553132, 2.4624846, 3.005972)
+shape = SubResource("BoxShape3D_iwtcp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk5" type="CollisionShape3D" parent="Pockets" unique_id=1254645100]
+transform = Transform3D(0.77627635, 0, 0.6303928, 0, 1, 0, -0.6303928, 0, 0.77627635, -5.4408975, 2.4624846, 2.0128257)
+shape = SubResource("BoxShape3D_iwtcp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk6" type="CollisionShape3D" parent="Pockets" unique_id=195684252]
+transform = Transform3D(0.77627635, 0, 0.6303928, 0, 1, 0, -0.6303928, 0, 0.77627635, -5.446339, 2.4624846, 2.9132237)
+shape = SubResource("BoxShape3D_sx2gp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk7" type="CollisionShape3D" parent="Pockets" unique_id=1086525620]
+transform = Transform3D(-0.77676874, 0, -0.6297861, 0, 1, 0, 0.6297861, 0, -0.77676874, 4.554376, 2.4624846, -3.0081236)
+shape = SubResource("BoxShape3D_iwtcp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk8" type="CollisionShape3D" parent="Pockets" unique_id=159494374]
+transform = Transform3D(-0.77676874, 0, -0.6297861, 0, 1, 0, 0.6297861, 0, -0.77676874, 5.431124, 2.4624846, -2.0270853)
+shape = SubResource("BoxShape3D_iwtcp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk9" type="CollisionShape3D" parent="Pockets" unique_id=878861326]
+transform = Transform3D(-0.77676874, 0, -0.6297861, 0, 1, 0, 0.6297861, 0, -0.77676874, 5.4475107, 2.4624846, -2.8941956)
+shape = SubResource("BoxShape3D_sx2gp")
+debug_color = Color(0.6745098, 0.30588236, 1, 0.9372549)
+
+[node name="Pk13" type="CollisionShape3D" parent="Pockets" unique_id=341924881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.218246)
+shape = SubResource("BoxShape3D_v32hm")
+debug_color = Color(0.6627451, 0.31764707, 1, 0.91764706)
+
+[node name="Pk14" type="CollisionShape3D" parent="Pockets" unique_id=956110268]
+transform = Transform3D(0.25881907, 0, -0.9659258, 0, 1, 0, 0.9659258, 0, 0.25881907, -0.4733989, 2.9, 2.9541104)
+shape = SubResource("BoxShape3D_v32hm")
+debug_color = Color(0.6627451, 0.31764707, 1, 0.91764706)
+
+[node name="Pk15" type="CollisionShape3D" parent="Pockets" unique_id=1600788823]
+transform = Transform3D(0.25881907, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, 0.25881907, 0.46167094, 2.9, 2.9541104)
+shape = SubResource("BoxShape3D_v32hm")
+debug_color = Color(0.6627451, 0.31764707, 1, 0.91764706)
+
+[node name="Pk16" type="CollisionShape3D" parent="Pockets" unique_id=1600595832]
+transform = Transform3D(-0.99999994, 0, -0.00031241577, 0, 1, 0, 0.00031241577, 0, -0.99999994, -0.0078736525, 2.9, -3.213921)
+shape = SubResource("BoxShape3D_v32hm")
+debug_color = Color(0.6627451, 0.31764707, 1, 0.91764706)
+
+[node name="Pk17" type="CollisionShape3D" parent="Pockets" unique_id=276256517]
+transform = Transform3D(-0.25912082, 0, 0.96584487, 0, 1, 0, -0.96584487, 0, -0.25912082, 0.46560773, 2.9, -2.9499333)
+shape = SubResource("BoxShape3D_v32hm")
+debug_color = Color(0.6627451, 0.31764707, 1, 0.91764706)
+
+[node name="Pk18" type="CollisionShape3D" parent="Pockets" unique_id=1850719840]
+transform = Transform3D(-0.25851727, 0, -0.96600664, 0, 1, 0, 0.96600664, 0, -0.25851727, -0.46946204, 2.9, -2.9496412)
+shape = SubResource("BoxShape3D_v32hm")
+debug_color = Color(0.6627451, 0.31764707, 1, 0.91764706)
