@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dhggdj3hxtgsm"]
+
+[ext_resource type="PackedScene" uid="uid://dlkc35t6aa5yu" path="res://assets/model2/pool_table_-_billiard_table_with_cues_and_balls.glb" id="1_uox7l"]
+
+[node name="Sala" type="Node3D" unique_id=2013218986]
+
+[node name="Sketchfab_Scene" parent="." unique_id=1955690397 instance=ExtResource("1_uox7l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09501505, 0, 1.5845705)
