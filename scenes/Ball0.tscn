@@ -1,8 +1,12 @@
 [gd_scene format=4 uid="uid://cn3rsna8e41uo"]
 
+[ext_resource type="Script" uid="uid://ds5i2iqahp0dv" path="res://scripts/wasd.gd" id="1_57gcm"]
 [ext_resource type="Texture2D" uid="uid://dnpyjgs4mmh20" path="res://assets/model2/pool_table_-_billiard_table_with_cues_and_balls_26.png" id="1_s2j4f"]
 [ext_resource type="Texture2D" uid="uid://d3i3piyc1da4d" path="res://assets/model2/pool_table_-_billiard_table_with_cues_and_balls_1.png" id="2_57gcm"]
 [ext_resource type="Texture2D" uid="uid://u4fwfa78020m" path="res://assets/model2/pool_table_-_billiard_table_with_cues_and_balls_2.png" id="3_iu6xw"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
+bounce = 0.9
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4a3ir"]
 resource_name = "PoolTableBallWhite_MTL"
@@ -54,6 +58,10 @@ shadow_mesh = SubResource("ArrayMesh_7qqra")
 radius = 0.14083566
 
 [node name="Ball0" type="RigidBody3D" unique_id=596734405]
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+script = ExtResource("1_57gcm")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="." unique_id=1762413033]
 transform = Transform3D(4.9, 0, 0, 0, 4.9, 0, 0, 0, 4.9, 0, 0, 0)

@@ -3,8 +3,16 @@
 [ext_resource type="ArrayMesh" uid="uid://l5457b2tb823" path="res://assets/mesa1.res" id="1_sx2gp"]
 [ext_resource type="ArrayMesh" uid="uid://bpf81swinj310" path="res://assets/mesa2.res" id="2_8ehb7"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_57gcm"]
+bounce = 0.5
+absorbent = true
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_ds2lj"]
 size = Vector3(9.813324, 1, 4.849365)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
+bounce = 0.3
+absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oimtj"]
 size = Vector3(0.9647827, 1, 4.119812)
@@ -29,12 +37,14 @@ transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 2.5, 0, -5, -1.09278474e-07,
 mesh = ExtResource("2_8ehb7")
 
 [node name="Pano" type="StaticBody3D" parent="." unique_id=2093126086]
+physics_material_override = SubResource("PhysicsMaterial_57gcm")
 
 [node name="Cube" type="CollisionShape3D" parent="Pano" unique_id=928035250]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0063233376, 3.6761234, 0.006225586)
 shape = SubResource("BoxShape3D_ds2lj")
 
 [node name="Bordes" type="StaticBody3D" parent="." unique_id=1593898992]
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
 
 [node name="Ancho1" type="CollisionShape3D" parent="Bordes" unique_id=1981357201]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.385, 3.905, -0.008)

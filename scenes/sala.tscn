@@ -9,21 +9,41 @@
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.625, 0)
 
 [node name="Ball0" parent="." unique_id=596734405 instance=ExtResource("2_mteyr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.023605347, 2.532715, -0.8513033)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1294627, -0.17906475, -1.4562925)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1053307438]
-transform = Transform3D(0.031054566, -0.20393704, 0.9784913, 0.0064691314, 0.978984, 0.2038344, -0.99949676, 0, 0.031721216, 4.578636, 1.3618674, 0.21930742)
+transform = Transform3D(0.031054566, -0.20393704, 0.9784913, 0.0064691314, 0.978984, 0.2038344, -0.99949676, 0, 0.031721216, 7.431362, 1.3618674, 0.21930742)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=604606705]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.5027213, 3.342027, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3, 3.496, 0)
+light_energy = 16.0
+light_size = 0.565
+shadow_enabled = true
+shadow_blur = 0.087
+spot_range = 5.3
+spot_angle = 60.0
+spot_angle_attenuation = 0.08537742
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="." unique_id=20033930]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 3.4957547, 0)
 light_energy = 16.0
 light_indirect_energy = 1.905
 light_volumetric_fog_energy = 16.0
-light_size = 0.456
+light_size = 0.565
+shadow_enabled = true
+shadow_blur = 0.087
+spot_range = 5.3
+spot_angle = 60.0
+spot_angle_attenuation = 0.08537742
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=1555046908]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2.503, 3.342027, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -3, 3.496, 0)
 light_energy = 16.0
 light_indirect_energy = 1.905
 light_volumetric_fog_energy = 16.0
-light_size = 0.456
+light_size = 0.565
+shadow_enabled = true
+shadow_blur = 0.087
+spot_range = 5.3
+spot_angle = 60.0
+spot_angle_attenuation = 0.08537742
