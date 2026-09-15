@@ -17,6 +17,10 @@ absorbent = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_oimtj"]
 size = Vector3(0.9647827, 1, 4.119812)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_3rsqy"]
+bounce = 1.0
+absorbent = true
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_iwtcp"]
 size = Vector3(0.79541016, 3.9, 0.73339844)
 
@@ -30,10 +34,12 @@ size = Vector3(0.8807373, 3.035, 0.43826294)
 
 [node name="Pool Table _Mark Peters on Sketchfab_PoolTable_MTL_0" type="MeshInstance3D" parent="." unique_id=347769498]
 transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 2.5, 0, -5, -1.09278474e-07, 0, 2.199049, 0)
+layers = 3
 mesh = ExtResource("1_sx2gp")
 
 [node name="Pool Table _Mark Peters on Sketchfab_PoolTable_MTL_02" type="MeshInstance3D" parent="." unique_id=1059119242]
 transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 2.5, 0, -5, -1.09278474e-07, 0, 2.199049, 0)
+layers = 3
 mesh = ExtResource("2_8ehb7")
 
 [node name="Pano" type="StaticBody3D" parent="." unique_id=2093126086]
@@ -77,6 +83,7 @@ shape = SubResource("BoxShape3D_oimtj")
 debug_color = Color(0.99607843, 0, 0.17254902, 1)
 
 [node name="Pockets" type="StaticBody3D" parent="." unique_id=1495795868]
+physics_material_override = SubResource("PhysicsMaterial_3rsqy")
 
 [node name="Pk1" type="CollisionShape3D" parent="Pockets" unique_id=1213577881]
 transform = Transform3D(0.76767254, 0, -0.6408423, 0, 1, 0, 0.6408423, 0, 0.76767254, -4.5571637, 2.4624846, -3.0051923)

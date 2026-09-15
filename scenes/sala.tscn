@@ -1,49 +1,81 @@
 [gd_scene format=3 uid="uid://dhggdj3hxtgsm"]
 
+[ext_resource type="Script" uid="uid://b76hkranxw4qe" path="res://scripts/main.gd" id="1_ml4em"]
 [ext_resource type="PackedScene" uid="uid://cguivx2otvujd" path="res://scenes/mesa.tscn" id="1_uox7l"]
 [ext_resource type="PackedScene" uid="uid://cn3rsna8e41uo" path="res://scenes/Ball0.tscn" id="2_mteyr"]
+[ext_resource type="PackedScene" uid="uid://cv3d7xjq2qhtd" path="res://scenes/cue.tscn" id="3_3rsqy"]
+[ext_resource type="Script" uid="uid://b3w18lpxydeis" path="res://scripts/movimientowasd.gd" id="3_ltybl"]
 
-[node name="Sala" type="Node3D" unique_id=2013218986]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqvpg"]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.014105198, 0.19620469, 1, 0.85882354)
+
+[sub_resource type="SphereMesh" id="SphereMesh_i6w6a"]
+material = SubResource("StandardMaterial3D_wqvpg")
+
+[node name="Sala" type="Node3D" unique_id=2013218986 node_paths=PackedStringArray("camera", "marker", "taco", "ball")]
+script = ExtResource("1_ml4em")
+camera = NodePath("Pivot/SpringArm3D/Camera3D")
+marker = NodePath("Marca")
+taco = NodePath("Cue")
+ball = NodePath("Ball0")
 
 [node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.625, 0)
 
 [node name="Ball0" parent="." unique_id=596734405 instance=ExtResource("2_mteyr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1294627, -0.17906475, -1.4562925)
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1053307438]
-transform = Transform3D(0.031054566, -0.20393704, 0.9784913, 0.0064691314, 0.978984, 0.2038344, -0.99949676, 0, 0.031721216, 7.431362, 1.3618674, 0.21930742)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09391928, 4.397657, 0.13739645)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=604606705]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3, 3.496, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.5, 8.12463, 0)
+light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
-light_size = 0.565
+light_indirect_energy = 1.81
+light_volumetric_fog_energy = 4.111
 shadow_enabled = true
-shadow_blur = 0.087
-spot_range = 5.3
-spot_angle = 60.0
+spot_range = 5.4
+spot_angle = 65.0
 spot_angle_attenuation = 0.08537742
 
 [node name="SpotLight3D3" type="SpotLight3D" parent="." unique_id=20033930]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 3.4957547, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 11.439547, 0)
 light_energy = 16.0
 light_indirect_energy = 1.905
 light_volumetric_fog_energy = 16.0
 light_size = 0.565
 shadow_enabled = true
 shadow_blur = 0.087
-spot_range = 5.3
+spot_range = 12.922
+spot_attenuation = 2.0
 spot_angle = 60.0
 spot_angle_attenuation = 0.08537742
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=1555046908]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -3, 3.496, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2.5, 8.12463, 0)
+light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
-light_indirect_energy = 1.905
-light_volumetric_fog_energy = 16.0
-light_size = 0.565
+light_indirect_energy = 1.81
+light_volumetric_fog_energy = 4.111
 shadow_enabled = true
-shadow_blur = 0.087
-spot_range = 5.3
-spot_angle = 60.0
+spot_range = 5.4
+spot_angle = 65.0
 spot_angle_attenuation = 0.08537742
+
+[node name="Pivot" type="Node3D" parent="." unique_id=1733307964 node_paths=PackedStringArray("ball")]
+script = ExtResource("3_ltybl")
+ball = NodePath("../Ball0")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Pivot" unique_id=26822733]
+collision_mask = 2
+
+[node name="Camera3D" type="Camera3D" parent="Pivot/SpringArm3D" unique_id=1836800179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.565178)
+
+[node name="Cue" parent="." unique_id=827978359 instance=ExtResource("3_3rsqy")]
+
+[node name="Marca" type="MeshInstance3D" parent="." unique_id=210527033]
+transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0)
+cast_shadow = 0
+mesh = SubResource("SphereMesh_i6w6a")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1053307438]
+transform = Transform3D(1, 0, 0, 0, 0.65209836, 0.75813437, 0, -0.75813437, 0.65209836, 0.008568287, 8.873234, 3.9401698)
