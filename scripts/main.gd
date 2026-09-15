@@ -1,14 +1,17 @@
 extends Node3D
 
 @export var camera: Camera3D
+@export var camera_mesa: Camera3D
 @export var marker: MeshInstance3D
 @export var taco: AnimatableBody3D
 @export var ball: RigidBody3D  # <--- Esta era la línea que faltaba
 
+var time_since_hit: float = 0.0
 var impact_point_global: Vector3
 var is_aiming: bool = false
 var is_hitting_mode: bool = false
-var cue_speed_multiplier: float = 0.05 
+@export var cue_speed_multiplier: float = 0.5 
+var is_waiting_for_ball: bool = false
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -74,17 +77,35 @@ func _input(event):
 		if collision and collision.get_collider() == ball:
 			is_hitting_mode = false
 			marker.visible = false
+			taco.visible = false # Ocultamos el palo
 			
-			# 1. Obtenemos la dirección hacia donde apunta el taco (eje -Z)
+			# 1. GOLPE CON EFECTO: Usar apply_impulse con un OFFSET
 			var hit_direction = -taco.global_transform.basis.z.normalized()
+			var hit_force = abs(mouse_movement) * cue_speed_multiplier * 2.0 # Ajusta esta fuerza
 			
-			# 2. Calculamos la fuerza basándonos en el movimiento del ratón
-			# Usamos abs() para garantizar un valor positivo y multiplicamos por un factor de fuerza
-			var force_multiplier = 0.2 # Ajusta este valor a tu gusto
-			var hit_force = abs(mouse_movement) * force_multiplier 
+			# Calculamos la distancia desde el centro de la bola al punto rojo
+			var offset_impacto = impact_point_global - ball.global_position
 			
-			# 3. Aplicamos el impulso a la bola
-			ball.apply_central_impulse(hit_direction * hit_force)
+			# apply_impulse aplica fuerza y rotación automática al no golpear en el centro
+			ball.apply_impulse(hit_direction * hit_force, offset_impacto)
 			
-			# Opcional: Ocultar el taco tras el golpe
-			taco.visible = false
+			# 2. CAMBIO DE CÁMARA A LA MESA
+			if camera_mesa:
+				camera_mesa.make_current() 
+				is_waiting_for_ball = true 
+				time_since_hit = 0.0 #
+func _process(delta):
+	# 3. VIGILAR LA BOLA PARA VOLVER A LA CÁMARA DEL JUGADOR
+	if is_waiting_for_ball:
+		time_since_hit += delta
+		
+		# Esperamos 0.5 segundos antes de empezar a revisar si se detuvo
+		if time_since_hit > 0.5:
+			
+			# Alternativa 1: Tu método original (sleeping)
+			# if ball.sleeping:
+			
+			# Alternativa 2 (Recomendada): Comprobar que la velocidad sea casi nula
+			if ball.linear_velocity.length() < 0.05 and ball.angular_velocity.length() < 0.05:
+				camera.make_current() # Volvemos a la cámara original
+				is_waiting_for_ball = false
