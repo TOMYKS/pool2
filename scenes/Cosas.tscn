@@ -1,5 +1,65 @@
 [gd_scene format=3 uid="uid://dwq7mn7wtcsct"]
 
 [ext_resource type="PackedScene" uid="uid://dlkc35t6aa5yu" path="res://assets/model2/pool_table_-_billiard_table_with_cues_and_balls.glb" id="1_8482y"]
+[ext_resource type="ArrayMesh" uid="uid://cye6jyk8w5dtu" path="res://assets/Ball1.res" id="2_v03tr"]
+[ext_resource type="ArrayMesh" uid="uid://gd2rng87uog1" path="res://assets/Ball10.res" id="3_xsepy"]
+[ext_resource type="ArrayMesh" uid="uid://dbjkeq4ie0ddv" path="res://assets/Ball11.res" id="4_gaajt"]
+[ext_resource type="ArrayMesh" uid="uid://bkt7xfiunmb5u" path="res://assets/Ball12.res" id="5_q33ax"]
+[ext_resource type="ArrayMesh" uid="uid://dfqwmqq6ihn1v" path="res://assets/Ball13.res" id="6_i0tod"]
+[ext_resource type="ArrayMesh" uid="uid://bwa1a7jo4ihfk" path="res://assets/Ball14.res" id="7_eklw7"]
+[ext_resource type="ArrayMesh" uid="uid://ji4mboy4dvrv" path="res://assets/Ball15.res" id="8_co33v"]
+[ext_resource type="ArrayMesh" uid="uid://d3m7fnes81vjr" path="res://assets/Ball2.res" id="9_i4h63"]
+[ext_resource type="ArrayMesh" uid="uid://xouxqrgvdglo" path="res://assets/Ball3.res" id="10_enakl"]
+[ext_resource type="ArrayMesh" uid="uid://dv0r6ucud810k" path="res://assets/Ball4.res" id="11_httxa"]
+[ext_resource type="ArrayMesh" uid="uid://s5xyjnp6teqo" path="res://assets/Ball5.res" id="12_hyk2d"]
+[ext_resource type="ArrayMesh" uid="uid://4ddleg01y3ir" path="res://assets/Ball6.res" id="13_emu27"]
+[ext_resource type="ArrayMesh" uid="uid://dj3uxdq5kkytt" path="res://assets/Ball7.res" id="14_rkj7n"]
+[ext_resource type="ArrayMesh" uid="uid://erpkw4txx586" path="res://assets/Ball8.res" id="15_ltt8r"]
+[ext_resource type="ArrayMesh" uid="uid://djeokafofj31k" path="res://assets/Ball9.res" id="16_86x7g"]
 
 [node name="Sketchfab_Scene" unique_id=1955690397 instance=ExtResource("1_8482y")]
+
+[node name="Pool Table - Ball1 _Mark Peters on Sketchfab_PoolTableBall1_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball1 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(1396317498) index="0" unique_id=1969870788]
+mesh = ExtResource("2_v03tr")
+
+[node name="Pool Table - Ball10 _Mark Peters on Sketchfab_PoolTableBall10_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball10 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(995336155) index="0" unique_id=1048353625]
+mesh = ExtResource("3_xsepy")
+
+[node name="Pool Table - Ball11 _Mark Peters on Sketchfab_PoolTableBall11_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball11 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(1389737931) index="0" unique_id=1819066713]
+mesh = ExtResource("4_gaajt")
+
+[node name="Pool Table - Ball12 _Mark Peters on Sketchfab_PoolTableBall12_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball12 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(1647036975) index="0" unique_id=1444265227]
+mesh = ExtResource("5_q33ax")
+
+[node name="Pool Table - Ball13 _Mark Peters on Sketchfab_PoolTableBall13_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball13 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(1374198107) index="0" unique_id=838323521]
+mesh = ExtResource("6_i0tod")
+
+[node name="Pool Table - Ball14 _Mark Peters on Sketchfab_PoolTableBall14_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball14 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(612614670) index="0" unique_id=1286217271]
+mesh = ExtResource("7_eklw7")
+
+[node name="Pool Table - Ball15 _Mark Peters on Sketchfab_PoolTableBall15_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball15 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(1598612365) index="0" unique_id=1577127983]
+mesh = ExtResource("8_co33v")
+
+[node name="Pool Table - Ball2 _Mark Peters on Sketchfab_PoolTableBall2_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball2 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(17429068) index="0" unique_id=498119521]
+mesh = ExtResource("9_i4h63")
+
+[node name="Pool Table - Ball3 _Mark Peters on Sketchfab_PoolTableBall3_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball3 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(2059218803) index="0" unique_id=26273193]
+mesh = ExtResource("10_enakl")
+
+[node name="Pool Table - Ball4 _Mark Peters on Sketchfab_PoolTableBall4_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball4 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(95536329) index="0" unique_id=2090913019]
+mesh = ExtResource("11_httxa")
+
+[node name="Pool Table - Ball5 _Mark Peters on Sketchfab_PoolTableBall5_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball5 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(1334950608) index="0" unique_id=2127491800]
+mesh = ExtResource("12_hyk2d")
+
+[node name="Pool Table - Ball6 _Mark Peters on Sketchfab_PoolTableBall6_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball6 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(701763431) index="0" unique_id=1011695541]
+mesh = ExtResource("13_emu27")
+
+[node name="Pool Table - Ball7 _Mark Peters on Sketchfab_PoolTableBall7_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball7 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(596546454) index="0" unique_id=1276789087]
+mesh = ExtResource("14_rkj7n")
+
+[node name="Pool Table - Ball8 _Mark Peters on Sketchfab_PoolTableBall8_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball8 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(1977736831) index="0" unique_id=1129989632]
+mesh = ExtResource("15_ltt8r")
+
+[node name="Pool Table - Ball9 _Mark Peters on Sketchfab_PoolTableBall9_MTL_0" parent="Sketchfab_model/9b4d3ba4e2164edfa4d8b143de50a587_fbx/RootNode/Pool Table - Ball9 _Mark Peters on Sketchfab" parent_id_path=PackedInt32Array(1634941555) index="0" unique_id=470324454]
+mesh = ExtResource("16_86x7g")

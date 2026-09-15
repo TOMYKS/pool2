@@ -5,6 +5,20 @@
 [ext_resource type="PackedScene" uid="uid://cn3rsna8e41uo" path="res://scenes/Ball0.tscn" id="2_mteyr"]
 [ext_resource type="PackedScene" uid="uid://cv3d7xjq2qhtd" path="res://scenes/cue.tscn" id="3_3rsqy"]
 [ext_resource type="Script" uid="uid://b3w18lpxydeis" path="res://scripts/movimientowasd.gd" id="3_ltybl"]
+[ext_resource type="ArrayMesh" uid="uid://cye6jyk8w5dtu" path="res://assets/Ball1.res" id="6_4xymg"]
+[ext_resource type="ArrayMesh" uid="uid://d3m7fnes81vjr" path="res://assets/Ball2.res" id="7_pxogb"]
+[ext_resource type="ArrayMesh" uid="uid://xouxqrgvdglo" path="res://assets/Ball3.res" id="8_nw2fu"]
+[ext_resource type="ArrayMesh" uid="uid://dv0r6ucud810k" path="res://assets/Ball4.res" id="9_605we"]
+[ext_resource type="ArrayMesh" uid="uid://s5xyjnp6teqo" path="res://assets/Ball5.res" id="10_j3qns"]
+[ext_resource type="ArrayMesh" uid="uid://4ddleg01y3ir" path="res://assets/Ball6.res" id="11_4rnia"]
+[ext_resource type="ArrayMesh" uid="uid://dj3uxdq5kkytt" path="res://assets/Ball7.res" id="12_d1obb"]
+[ext_resource type="ArrayMesh" uid="uid://erpkw4txx586" path="res://assets/Ball8.res" id="13_obnxk"]
+[ext_resource type="ArrayMesh" uid="uid://djeokafofj31k" path="res://assets/Ball9.res" id="14_xtqig"]
+[ext_resource type="ArrayMesh" uid="uid://dbjkeq4ie0ddv" path="res://assets/Ball11.res" id="15_s1q4q"]
+[ext_resource type="ArrayMesh" uid="uid://bkt7xfiunmb5u" path="res://assets/Ball12.res" id="16_fkxhj"]
+[ext_resource type="ArrayMesh" uid="uid://dfqwmqq6ihn1v" path="res://assets/Ball13.res" id="17_p1vf7"]
+[ext_resource type="ArrayMesh" uid="uid://bwa1a7jo4ihfk" path="res://assets/Ball14.res" id="18_ts382"]
+[ext_resource type="ArrayMesh" uid="uid://ji4mboy4dvrv" path="res://assets/Ball15.res" id="19_kvj3p"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqvpg"]
 vertex_color_use_as_albedo = true
@@ -12,6 +26,12 @@ albedo_color = Color(0.014105198, 0.19620469, 1, 0.85882354)
 
 [sub_resource type="SphereMesh" id="SphereMesh_i6w6a"]
 material = SubResource("StandardMaterial3D_wqvpg")
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
+bounce = 0.9
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_iwtcp"]
+radius = 0.14083566
 
 [node name="Sala" type="Node3D" unique_id=2013218986 node_paths=PackedStringArray("camera", "camera_mesa", "marker", "taco", "ball")]
 script = ExtResource("1_ml4em")
@@ -24,7 +44,7 @@ ball = NodePath("Ball0")
 [node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
 
 [node name="Ball0" parent="." unique_id=596734405 instance=ExtResource("2_mteyr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09391928, 4.397657, 0.13739645)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8209105, 4.397657, 0.13739645)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=604606705]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.5, 8.12463, 0)
@@ -62,8 +82,10 @@ spot_angle = 65.0
 spot_angle_attenuation = 0.08537742
 
 [node name="Pivot" type="Node3D" parent="." unique_id=1733307964 node_paths=PackedStringArray("ball")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 script = ExtResource("3_ltybl")
 ball = NodePath("../Ball0")
+rotation_speed = 0.7
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Pivot" unique_id=26822733]
 collision_mask = 2
@@ -80,3 +102,215 @@ mesh = SubResource("SphereMesh_i6w6a")
 
 [node name="CameraMesa" type="Camera3D" parent="." unique_id=1053307438]
 transform = Transform3D(1, 0, 0, 0, 0.65209836, 0.75813437, 0, -0.75813437, 0.65209836, 0.008568287, 8.873234, 3.9401698)
+
+[node name="Bolas" type="Node3D" parent="." unique_id=1903889870]
+
+[node name="Ball1" type="RigidBody3D" parent="Bolas" unique_id=946964474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5800989, 4.3169107, -0.021022052)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball1" unique_id=1762413033]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("6_4xymg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball1" unique_id=161027197]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball2" type="RigidBody3D" parent="Bolas" unique_id=133560216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3257208, 4.346054, 0.63089716)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball2" unique_id=1526116746]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("7_pxogb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball2" unique_id=838979999]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball3" type="RigidBody3D" parent="Bolas" unique_id=593540977]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6844735, 4.346054, 1.1880317)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball3" unique_id=2049366716]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("8_nw2fu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball3" unique_id=1754724230]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball4" type="RigidBody3D" parent="Bolas" unique_id=1891736032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13833725, 4.346054, -0.8317548)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball4" unique_id=1814620678]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("9_605we")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball4" unique_id=1004009150]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball5" type="RigidBody3D" parent="Bolas" unique_id=400224148]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5311165, 4.346054, -0.39814842)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball5" unique_id=1619320431]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("10_j3qns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball5" unique_id=440634852]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball6" type="RigidBody3D" parent="Bolas" unique_id=1598605605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43968222, 4.346054, 0.37318254)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball6" unique_id=188165199]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("11_4rnia")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball6" unique_id=20413453]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball7" type="RigidBody3D" parent="Bolas" unique_id=1744184685]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47675815, 4.346054, -0.32839435)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball7" unique_id=1689083906]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("12_d1obb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball7" unique_id=713678966]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball8" type="RigidBody3D" parent="Bolas" unique_id=1586697203]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1677874, 4.346054, 0.84496474)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball8" unique_id=838213018]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("13_obnxk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball8" unique_id=1713891421]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball9" type="RigidBody3D" parent="Bolas" unique_id=1194143713]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6680022, 4.346054, -0.7758186)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball9" unique_id=2126970292]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("14_xtqig")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball9" unique_id=1673123453]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball10" type="RigidBody3D" parent="Bolas" unique_id=1011331708]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4891059, 4.346054, 0.5428443)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball10" unique_id=538189526]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("15_s1q4q")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball10" unique_id=721315704]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball11" type="RigidBody3D" parent="Bolas" unique_id=2029226822]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.567024, 4.346054, -0.89061916)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball11" unique_id=220251600]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("16_fkxhj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball11" unique_id=2015782694]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball12" type="RigidBody3D" parent="Bolas" unique_id=96526948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9474027, 4.346054, -0.27783474)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball12" unique_id=1162491701]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("16_fkxhj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball12" unique_id=1618781425]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball13" type="RigidBody3D" parent="Bolas" unique_id=1737047792]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14875996, 4.346054, 0.985764)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball13" unique_id=1540178252]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("17_p1vf7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball13" unique_id=1407512492]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball14" type="RigidBody3D" parent="Bolas" unique_id=1320554984]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.155657, 4.346054, -1.5200621)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball14" unique_id=935852888]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("18_ts382")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball14" unique_id=1343730435]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="Ball15" type="RigidBody3D" parent="Bolas" unique_id=1903657130]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.346054, 0)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball15" unique_id=1151321031]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("19_kvj3p")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball15" unique_id=1927200434]
+shape = SubResource("SphereShape3D_iwtcp")

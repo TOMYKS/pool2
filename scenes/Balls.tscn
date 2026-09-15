@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c3jigooafn226"]
+
+[ext_resource type="ArrayMesh" uid="uid://cye6jyk8w5dtu" path="res://assets/Ball1.res" id="1_0yovg"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
+bounce = 0.9
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_iwtcp"]
+radius = 0.14083566
+
+[node name="Balls" type="RigidBody3D" unique_id=596734405]
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+angular_damp = 2.0
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="." unique_id=1762413033]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("1_0yovg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=161027197]
+shape = SubResource("SphereShape3D_iwtcp")
