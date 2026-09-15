@@ -109,3 +109,14 @@ func _process(delta):
 			if ball.linear_velocity.length() < 0.05 and ball.angular_velocity.length() < 0.05:
 				camera.make_current() # Volvemos a la cámara original
 				is_waiting_for_ball = false
+func _on_area_3d_body_entered(body):
+	if body.is_in_group("bolas_color"):
+		print("¡Una bola de color entró!")
+		body.queue_free() # Elimina la bola de la mesa
+		# Aquí sumarías un punto o cambiarías de turno
+		
+	elif body.is_in_group("blanca"):
+		print("¡Falta! Cayó la blanca.")
+		body.linear_velocity = Vector3.ZERO
+		body.angular_velocity = Vector3.ZERO
+		# Código para reposicionar la blanca en su punto de inicio
