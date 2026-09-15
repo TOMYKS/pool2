@@ -43,7 +43,7 @@ ball = NodePath("Ball0")
 
 [node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
 
-[node name="Ball0" parent="." unique_id=596734405 instance=ExtResource("2_mteyr")]
+[node name="Ball0" parent="." unique_id=596734405 groups=["blanca"] instance=ExtResource("2_mteyr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8209105, 4.397657, 0.13739645)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=604606705]
@@ -105,7 +105,7 @@ transform = Transform3D(1, 0, 0, 0, 0.65209836, 0.75813437, 0, -0.75813437, 0.65
 
 [node name="Bolas" type="Node3D" parent="." unique_id=1903889870]
 
-[node name="Ball1" type="RigidBody3D" parent="Bolas" unique_id=946964474]
+[node name="Ball1" type="RigidBody3D" parent="Bolas" unique_id=946964474 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5800989, 4.3169107, -0.021022052)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -119,7 +119,7 @@ mesh = ExtResource("6_4xymg")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball1" unique_id=161027197]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball2" type="RigidBody3D" parent="Bolas" unique_id=133560216]
+[node name="Ball2" type="RigidBody3D" parent="Bolas" unique_id=133560216 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3257208, 4.346054, 0.63089716)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -133,7 +133,7 @@ mesh = ExtResource("7_pxogb")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball2" unique_id=838979999]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball3" type="RigidBody3D" parent="Bolas" unique_id=593540977]
+[node name="Ball3" type="RigidBody3D" parent="Bolas" unique_id=593540977 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6844735, 4.346054, 1.1880317)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -147,7 +147,7 @@ mesh = ExtResource("8_nw2fu")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball3" unique_id=1754724230]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball4" type="RigidBody3D" parent="Bolas" unique_id=1891736032]
+[node name="Ball4" type="RigidBody3D" parent="Bolas" unique_id=1891736032 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13833725, 4.346054, -0.8317548)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -161,7 +161,7 @@ mesh = ExtResource("9_605we")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball4" unique_id=1004009150]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball5" type="RigidBody3D" parent="Bolas" unique_id=400224148]
+[node name="Ball5" type="RigidBody3D" parent="Bolas" unique_id=400224148 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5311165, 4.346054, -0.39814842)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -175,7 +175,7 @@ mesh = ExtResource("10_j3qns")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball5" unique_id=440634852]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball6" type="RigidBody3D" parent="Bolas" unique_id=1598605605]
+[node name="Ball6" type="RigidBody3D" parent="Bolas" unique_id=1598605605 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43968222, 4.346054, 0.37318254)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -189,7 +189,7 @@ mesh = ExtResource("11_4rnia")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball6" unique_id=20413453]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball7" type="RigidBody3D" parent="Bolas" unique_id=1744184685]
+[node name="Ball7" type="RigidBody3D" parent="Bolas" unique_id=1744184685 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47675815, 4.346054, -0.32839435)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -203,7 +203,7 @@ mesh = ExtResource("12_d1obb")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball7" unique_id=713678966]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball8" type="RigidBody3D" parent="Bolas" unique_id=1586697203]
+[node name="Ball8" type="RigidBody3D" parent="Bolas" unique_id=1586697203 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1677874, 4.346054, 0.84496474)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -217,7 +217,7 @@ mesh = ExtResource("13_obnxk")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball8" unique_id=1713891421]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball9" type="RigidBody3D" parent="Bolas" unique_id=1194143713]
+[node name="Ball9" type="RigidBody3D" parent="Bolas" unique_id=1194143713 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6680022, 4.346054, -0.7758186)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -231,7 +231,7 @@ mesh = ExtResource("14_xtqig")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball9" unique_id=1673123453]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball10" type="RigidBody3D" parent="Bolas" unique_id=1011331708]
+[node name="Ball10" type="RigidBody3D" parent="Bolas" unique_id=1011331708 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4891059, 4.346054, 0.5428443)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -245,7 +245,7 @@ mesh = ExtResource("15_s1q4q")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball10" unique_id=721315704]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball11" type="RigidBody3D" parent="Bolas" unique_id=2029226822]
+[node name="Ball11" type="RigidBody3D" parent="Bolas" unique_id=2029226822 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.567024, 4.346054, -0.89061916)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -259,7 +259,7 @@ mesh = ExtResource("16_fkxhj")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball11" unique_id=2015782694]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball12" type="RigidBody3D" parent="Bolas" unique_id=96526948]
+[node name="Ball12" type="RigidBody3D" parent="Bolas" unique_id=96526948 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9474027, 4.346054, -0.27783474)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -273,7 +273,7 @@ mesh = ExtResource("16_fkxhj")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball12" unique_id=1618781425]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball13" type="RigidBody3D" parent="Bolas" unique_id=1737047792]
+[node name="Ball13" type="RigidBody3D" parent="Bolas" unique_id=1737047792 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14875996, 4.346054, 0.985764)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -287,7 +287,7 @@ mesh = ExtResource("17_p1vf7")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball13" unique_id=1407512492]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball14" type="RigidBody3D" parent="Bolas" unique_id=1320554984]
+[node name="Ball14" type="RigidBody3D" parent="Bolas" unique_id=1320554984 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.155657, 4.346054, -1.5200621)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
@@ -301,7 +301,7 @@ mesh = ExtResource("18_ts382")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball14" unique_id=1343730435]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="Ball15" type="RigidBody3D" parent="Bolas" unique_id=1903657130]
+[node name="Ball15" type="RigidBody3D" parent="Bolas" unique_id=1903657130 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.346054, 0)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
