@@ -101,10 +101,7 @@ func _process(delta):
 		
 		# Esperamos 0.5 segundos antes de empezar a revisar si se detuvo
 		if time_since_hit > 0.5:
-			
-			# Alternativa 1: Tu método original (sleeping)
-			# if ball.sleeping:
-			
+
 			# Alternativa 2 (Recomendada): Comprobar que la velocidad sea casi nula
 			if ball.linear_velocity.length() < 0.05 and ball.angular_velocity.length() < 0.05:
 				camera.make_current() # Volvemos a la cámara original
@@ -119,4 +116,5 @@ func _on_area_3d_body_entered(body):
 		print("¡Falta! Cayó la blanca.")
 		body.linear_velocity = Vector3.ZERO
 		body.angular_velocity = Vector3.ZERO
-		# Código para reposicionar la blanca en su punto de inicio
+		body.global_position = Vector3(2.821, 4.398, 0)
+		# Código para reposicionar la blanca en su punto de inicio (2.821,4.398,0)

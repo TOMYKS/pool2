@@ -62,7 +62,7 @@ physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
 script = ExtResource("1_57gcm")
-magnus_multiplier = 0.035
+magnus_multiplier = 0.03
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="." unique_id=1762413033]
 transform = Transform3D(4.9, 0, 0, 0, 4.9, 0, 0, 0, 4.9, 0, 0, 0)
