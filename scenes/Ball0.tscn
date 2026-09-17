@@ -6,7 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://u4fwfa78020m" path="res://assets/model2/pool_table_-_billiard_table_with_cues_and_balls_2.png" id="3_iu6xw"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
-bounce = 0.9
+friction = 0.1
+bounce = 0.8
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4a3ir"]
 resource_name = "PoolTableBallWhite_MTL"
@@ -55,12 +56,14 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_7qqra")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_iwtcp"]
-radius = 0.14083566
+radius = 0.14
 
 [node name="Ball0" type="RigidBody3D" unique_id=596734405]
+collision_layer = 3
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
-angular_damp = 2.0
+linear_damp = 0.5
+angular_damp = 1.0
 script = ExtResource("1_57gcm")
 magnus_multiplier = 0.03
 

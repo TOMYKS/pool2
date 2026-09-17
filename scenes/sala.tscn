@@ -29,7 +29,8 @@ albedo_color = Color(0.014105198, 0.19620469, 1, 0.85882354)
 material = SubResource("StandardMaterial3D_wqvpg")
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
-bounce = 1.0
+friction = 0.1
+bounce = 0.9
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_iwtcp"]
 radius = 0.14083566
@@ -101,6 +102,8 @@ collision_mask = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.565178)
 
 [node name="Cue" parent="." unique_id=827978359 instance=ExtResource("3_3rsqy")]
+collision_layer = 2
+collision_mask = 2
 
 [node name="Marca" type="MeshInstance3D" parent="." unique_id=210527033]
 transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0)
@@ -114,7 +117,7 @@ transform = Transform3D(1, 0, 0, 0, 0.65209836, 0.75813437, 0, -0.75813437, 0.65
 
 [node name="Ball1" type="RigidBody3D" parent="Bolas" unique_id=946964474 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5800989, 4.3169107, -0.021022052)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -128,7 +131,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball2" type="RigidBody3D" parent="Bolas" unique_id=133560216 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0787535, 4.346054, 0.2732979)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -142,7 +145,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball3" type="RigidBody3D" parent="Bolas" unique_id=593540977 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0764754, 4.346054, -0.30455247)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -156,7 +159,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball4" type="RigidBody3D" parent="Bolas" unique_id=1891736032 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5889993, 4.346054, -0.5815642)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -170,7 +173,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball5" type="RigidBody3D" parent="Bolas" unique_id=400224148 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5796869, 4.346054, -0.0062836707)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -184,7 +187,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball6" type="RigidBody3D" parent="Bolas" unique_id=1598605605 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5919242, 4.346054, 0.587201)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -198,7 +201,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball7" type="RigidBody3D" parent="Bolas" unique_id=1744184685 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3331697, 4.346054, -0.14908196)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -212,7 +215,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball8" type="RigidBody3D" parent="Bolas" unique_id=1586697203 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0681546, 4.346054, -0.018173933)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -226,7 +229,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball9" type="RigidBody3D" parent="Bolas" unique_id=1194143713 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8193471, 4.346054, 0.14796767)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -240,7 +243,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball10" type="RigidBody3D" parent="Bolas" unique_id=1011331708 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3364449, 4.346054, -0.43458426)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -254,7 +257,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball11" type="RigidBody3D" parent="Bolas" unique_id=2029226822 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5858722, 4.346054, -0.2907647)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -268,7 +271,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball12" type="RigidBody3D" parent="Bolas" unique_id=96526948 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8102844, 4.346054, -0.17846946)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -282,7 +285,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball13" type="RigidBody3D" parent="Bolas" unique_id=1737047792 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3369687, 4.346054, 0.1433863)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -296,7 +299,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball14" type="RigidBody3D" parent="Bolas" unique_id=1320554984 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.329833, 4.346054, 0.42492312)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
@@ -310,7 +313,7 @@ shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball15" type="RigidBody3D" parent="Bolas" unique_id=1903657130 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5893216, 4.346054, 0.2863626)
-mass = 0.6
+mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 angular_damp = 2.0
