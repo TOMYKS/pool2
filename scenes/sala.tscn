@@ -29,7 +29,7 @@ albedo_color = Color(0.014105198, 0.19620469, 1, 0.85882354)
 material = SubResource("StandardMaterial3D_wqvpg")
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
-friction = 0.1
+friction = 0.5
 bounce = 0.9
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_iwtcp"]

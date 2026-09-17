@@ -11,6 +11,7 @@ absorbent = true
 size = Vector3(9.813324, 1, 4.849365)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
+friction = 0.9
 bounce = 0.25
 absorbent = true
 

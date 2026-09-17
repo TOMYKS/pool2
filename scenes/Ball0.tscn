@@ -72,4 +72,5 @@ transform = Transform3D(4.9, 0, 0, 0, 4.9, 0, 0, 0, 4.9, 0, 0, 0)
 mesh = SubResource("ArrayMesh_npkjs")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=161027197]
+visible = false
 shape = SubResource("SphereShape3D_iwtcp")
