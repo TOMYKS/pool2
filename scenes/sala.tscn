@@ -23,7 +23,10 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqvpg"]
 vertex_color_use_as_albedo = true
-albedo_color = Color(0.014105198, 0.19620469, 1, 0.85882354)
+albedo_color = Color(0.015686275, 0.2627451, 1, 1)
+metallic_specular = 0.0
+emission_enabled = true
+emission = Color(0, 0, 0.7050794, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_i6w6a"]
 material = SubResource("StandardMaterial3D_wqvpg")
@@ -66,12 +69,23 @@ spot_angle = 65.0
 spot_angle_attenuation = 0.08537742
 
 [node name="SpotLight3D3" type="SpotLight3D" parent="." unique_id=20033930]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 11.439547, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 11.44, -5)
 light_energy = 16.0
 light_indirect_energy = 1.905
 light_volumetric_fog_energy = 16.0
 light_size = 0.565
-shadow_enabled = true
+shadow_blur = 0.087
+spot_range = 12.922
+spot_attenuation = 2.0
+spot_angle = 60.0
+spot_angle_attenuation = 0.08537742
+
+[node name="SpotLight3D4" type="SpotLight3D" parent="." unique_id=1726383439]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 11.44, 5)
+light_energy = 16.0
+light_indirect_energy = 1.905
+light_volumetric_fog_energy = 16.0
+light_size = 0.565
 shadow_blur = 0.087
 spot_range = 12.922
 spot_attenuation = 2.0
