@@ -114,6 +114,7 @@ mesh = SubResource("SphereMesh_i6w6a")
 transform = Transform3D(1, 0, 0, 0, 0.65209836, 0.75813437, 0, -0.75813437, 0.65209836, 0.008568287, 8.873234, 3.9401698)
 
 [node name="Bolas" type="Node3D" parent="." unique_id=1903889870]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.002)
 
 [node name="Ball1" type="RigidBody3D" parent="Bolas" unique_id=946964474 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5800989, 4.3169107, -0.021022052)
@@ -127,6 +128,7 @@ transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07
 mesh = ExtResource("6_4xymg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball1" unique_id=161027197]
+visible = false
 shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="Ball2" type="RigidBody3D" parent="Bolas" unique_id=133560216 groups=["bolas_color"]]

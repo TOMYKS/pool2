@@ -60,9 +60,7 @@ func setup_cue_stick():
 	var distancia_retiro = 1.0 
 	var posicion_final = impact_point_global - (direccion * distancia_retiro)
 	posicion_final.y = impact_point_global.y
-	
-	print("Queremos mover el palo a: ", posicion_final)
-	
+
 	# 3. Forzamos el teletransporte alterando el Transform directamente
 	taco.global_transform.origin = posicion_final
 	taco.visible = true
@@ -70,7 +68,6 @@ func setup_cue_stick():
 	# 4. Apuntamos
 	taco.look_at(impact_point_global, Vector3.UP)
 	
-	print("El palo quedÃ³ realmente en: ", taco.global_position)
 	is_hitting_mode = true
 	max_forward_speed = 0.0
 func _input(event):

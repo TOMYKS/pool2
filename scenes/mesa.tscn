@@ -12,8 +12,6 @@ size = Vector3(9.813324, 1, 4.849365)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
 friction = 0.9
-bounce = 0.25
-absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oimtj"]
 size = Vector3(0.9647827, 1, 4.119812)
