@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bbma8qj426yge"]
+
+[ext_resource type="Script" uid="uid://d4jxdgc42rqx2" path="res://scripts/rebote.gd" id="1_g5627"]
+
+[node name="Rebote" type="Node3D" unique_id=1053093049]
+script = ExtResource("1_g5627")

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c2lqjmscghms2"]
+
+[ext_resource type="Script" uid="uid://bs62nt87rtubl" path="res://scripts/pesadas.gd" id="1_qlhuw"]
+
+[node name="Pesadas" type="Node3D" unique_id=888872750]
+script = ExtResource("1_qlhuw")
