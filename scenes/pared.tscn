@@ -1,0 +1,56 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/pared.gd" id="1_pared"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_banda"]
+friction = 0.0
+bounce = 0.2
+absorbent = true
+
+[sub_resource type="Shader" id="Shader_pared"]
+code = "shader_type spatial;
+varying vec3 posicion_local;
+
+void vertex() {
+	posicion_local = VERTEX;
+}
+
+void fragment() {
+	vec3 grafito = vec3(0.055, 0.065, 0.085);
+	vec3 naranja = vec3(1.0, 0.32, 0.035);
+	float altura = posicion_local.y;
+	float diagonal = step(0.5, fract((posicion_local.x + posicion_local.z) * 2.0 + altura * 1.5));
+	float borde = step(0.36, abs(altura));
+	float tapa = step(0.57, altura);
+	float franja_luz = 1.0 - step(0.022, abs(altura - 0.27));
+	vec3 color = mix(grafito, naranja, max(borde * diagonal, tapa));
+	ALBEDO = mix(color, naranja, franja_luz);
+	METALLIC = 0.25;
+	ROUGHNESS = 0.55;
+	EMISSION = naranja * franja_luz * 1.5;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pared"]
+shader = SubResource("Shader_pared")
+
+[sub_resource type="BoxMesh" id="BoxMesh_pared"]
+material = SubResource("ShaderMaterial_pared")
+size = Vector3(0.18, 1.2, 5.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pared"]
+size = Vector3(0.18, 1.2, 5.2)
+
+[node name="Pared" type="Node3D"]
+script = ExtResource("1_pared")
+
+[node name="Barrera" type="StaticBody3D" parent="."]
+position = Vector3(0, 4.7761234, 0)
+physics_material_override = SubResource("PhysicsMaterial_banda")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Barrera"]
+mesh = SubResource("BoxMesh_pared")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barrera"]
+shape = SubResource("BoxShape3D_pared")
+disabled = true
