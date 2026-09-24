@@ -1,5 +1,8 @@
 extends Node3D
 
+signal tiro_iniciado
+signal tiro_finalizado
+
 @export var camera: Camera3D
 @export var camera_mesa: Camera3D
 @export var marker: MeshInstance3D
@@ -31,6 +34,8 @@ func _unhandled_input(event):
 			is_hitting_mode = false
 			
 func shoot_raycast(mouse_pos: Vector2):
+	if is_waiting_for_ball:
+		return
 	var space_state = get_world_3d().direct_space_state
 	var origin = camera.project_ray_origin(mouse_pos)
 	var end = origin + camera.project_ray_normal(mouse_pos) * 100.0
@@ -150,6 +155,7 @@ func _input(event):
 				spin_torque = spin_torque.normalized() * dynamic_max_torque
 			
 			ball.apply_torque_impulse(spin_torque)
+			tiro_iniciado.emit()
 			
 			print("--- GOLPE ARCADE ---")
 			print("  Fuerza lineal: ", hit_force)
@@ -175,6 +181,7 @@ func _process(delta):
 			if todas_las_bolas_detenidas():
 				camera.make_current() # Volvemos a la cmara original
 				is_waiting_for_ball = false
+				tiro_finalizado.emit()
 func _on_area_3d_body_entered(body):
 	if body.is_in_group("bolas_color"):
 		print("¡Una bola de color entro!")
