@@ -20,6 +20,7 @@
 [ext_resource type="ArrayMesh" uid="uid://dfqwmqq6ihn1v" path="res://assets/Ball13.res" id="17_p1vf7"]
 [ext_resource type="ArrayMesh" uid="uid://bwa1a7jo4ihfk" path="res://assets/Ball14.res" id="18_ts382"]
 [ext_resource type="ArrayMesh" uid="uid://ji4mboy4dvrv" path="res://assets/Ball15.res" id="19_kvj3p"]
+[ext_resource type="PackedScene" path="res://scenes/powerups.tscn" id="22_powerups"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqvpg"]
 vertex_color_use_as_albedo = true
@@ -366,5 +367,7 @@ shape = SubResource("BoxShape3D_ds2lj")
 [node name="CollisionShape3D6" type="CollisionShape3D" parent="Area3D" unique_id=2085736341]
 transform = Transform3D(-0.016656984, 0, 0.99986124, 0.9997686, -0.013611656, 0.016655441, 0.013609767, 0.9999074, 0.00022672913, -1.0945601, 11.749845, 1.5888705)
 shape = SubResource("BoxShape3D_ds2lj")
+
+[node name="Powerups" parent="." unique_id=1316942066 instance=ExtResource("22_powerups")]
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

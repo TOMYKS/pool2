@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/powerups/bola_misterio.gdshader" id="1"]
+[ext_resource type="Texture2D" path="res://assets/powerups/interrogacion.svg" id="2"]
+[ext_resource type="Script" path="res://scripts/corona_activador.gd" id="3"]
+
+[sub_resource type="ShaderMaterial" id="BolaMaterial"]
+shader = ExtResource("1")
+shader_parameter/insignia = ExtResource("2")
+
+[sub_resource type="SphereMesh" id="BolaMesh"]
+material = SubResource("BolaMaterial")
+radius = 0.22
+height = 0.44
+radial_segments = 64
+rings = 32
+
+[sub_resource type="StandardMaterial3D" id="Oro"]
+albedo_color = Color(1, 0.64, 0.12, 1)
+metallic = 0.7
+roughness = 0.23
+cull_mode = 2
+
+[sub_resource type="TorusMesh" id="Aro"]
+inner_radius = 0.146
+outer_radius = 0.183
+rings = 64
+ring_segments = 16
+
+[node name="BolaMisterio" type="Node3D"]
+
+[node name="Bola" type="MeshInstance3D" parent="."]
+mesh = SubResource("BolaMesh")
+
+[node name="Corona" type="MeshInstance3D" parent="."]
+material_override = SubResource("Oro")
+script = ExtResource("3")
+
+[node name="AroInferior" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.15, 0)
+mesh = SubResource("Aro")
+material_override = SubResource("Oro")
