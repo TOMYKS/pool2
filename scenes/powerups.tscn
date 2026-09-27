@@ -1,18 +1,22 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://byrw1d6y83sfl"]
 
-[ext_resource type="Script" path="res://scripts/powerups.gd" id="1"]
+[ext_resource type="Script" uid="uid://brj5vd4u5yhxh" path="res://scripts/powerups.gd" id="1"]
+[ext_resource type="AudioStream" uid="uid://c243671lpkye3" path="res://assets/audio/Poder.wav" id="2_4eg47"]
 
-[node name="Powerups" type="Node3D"]
+[node name="Powerups" type="Node3D" unique_id=676774078]
 script = ExtResource("1")
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=968308857]
 
-[node name="Estado" type="Label" parent="HUD"]
+[node name="Estado" type="Label" parent="HUD" unique_id=1836430946]
 offset_left = 20.0
 offset_top = 16.0
-mouse_filter = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 20
 text = "Power-ups apagados · Espacio para activar"
+
+[node name="Powerup" type="AudioStreamPlayer" parent="." unique_id=1301219786]
+stream = ExtResource("2_4eg47")
+volume_db = -4.0

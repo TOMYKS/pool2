@@ -26,3 +26,9 @@ func _physics_process(delta):
 		
 		# Aplicamos la fuerza constante mientras ruede para curvar su trayectoria
 		apply_central_force(fuerza_curva)
+func _on_body_entered(body):
+	# Verificamos que lo que tocamos sea otra bola
+	if body.is_in_group("bolas_color") or body.is_in_group("blanca"):
+		# (Opcional) Podemos leer la fuerza del impacto para variar el volumen o no hacer sonar roces diminutos
+		if linear_velocity.length() > 0.5:
+			$SonidoChoque.play()

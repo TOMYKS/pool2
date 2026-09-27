@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cv3d7xjq2qhtd" path="res://scenes/cue.tscn" id="3_3rsqy"]
 [ext_resource type="Script" uid="uid://b3w18lpxydeis" path="res://scripts/movimientowasd.gd" id="3_ltybl"]
 [ext_resource type="ArrayMesh" uid="uid://cye6jyk8w5dtu" path="res://assets/Ball1.res" id="6_4xymg"]
+[ext_resource type="Script" uid="uid://cda7suvdt8lhx" path="res://scripts/bola_color.gd" id="6_xtqig"]
 [ext_resource type="ArrayMesh" uid="uid://d3m7fnes81vjr" path="res://assets/Ball2.res" id="7_pxogb"]
 [ext_resource type="ArrayMesh" uid="uid://xouxqrgvdglo" path="res://assets/Ball3.res" id="8_nw2fu"]
 [ext_resource type="ArrayMesh" uid="uid://dv0r6ucud810k" path="res://assets/Ball4.res" id="9_605we"]
@@ -20,7 +21,12 @@
 [ext_resource type="ArrayMesh" uid="uid://dfqwmqq6ihn1v" path="res://assets/Ball13.res" id="17_p1vf7"]
 [ext_resource type="ArrayMesh" uid="uid://bwa1a7jo4ihfk" path="res://assets/Ball14.res" id="18_ts382"]
 [ext_resource type="ArrayMesh" uid="uid://ji4mboy4dvrv" path="res://assets/Ball15.res" id="19_kvj3p"]
-[ext_resource type="PackedScene" path="res://scenes/powerups.tscn" id="22_powerups"]
+[ext_resource type="AudioStream" uid="uid://dcpqa7vp4usji" path="res://assets/audio/ChillPool.ogg" id="22_j3qns"]
+[ext_resource type="PackedScene" uid="uid://byrw1d6y83sfl" path="res://scenes/powerups.tscn" id="22_powerups"]
+[ext_resource type="AudioStream" uid="uid://c6iyct5mpqutb" path="res://assets/audio/Palovsblanca.wav" id="23_d1obb"]
+[ext_resource type="AudioStream" uid="uid://bi2jm4abdskh3" path="res://assets/audio/Ballpocketed.wav" id="24_obnxk"]
+[ext_resource type="AudioStream" uid="uid://bgfhnr2a3v1xq" path="res://assets/audio/Blancavsball.wav" id="25_obnxk"]
+[ext_resource type="AudioStream" uid="uid://josr1xi4lvly" path="res://assets/audio/BallvsBall.wav" id="27_s1q4q"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqvpg"]
 vertex_color_use_as_albedo = true
@@ -57,6 +63,8 @@ ball = NodePath("Ball0")
 
 [node name="Ball0" parent="." unique_id=596734405 groups=["blanca"] instance=ExtResource("2_mteyr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.821, 4.398, 0)
+contact_monitor = true
+max_contacts_reported = 1
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=604606705]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.5, 8.12463, 0)
@@ -136,7 +144,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5800989, 4.3169107, -0.021
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball1" unique_id=1762413033]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -146,12 +157,22 @@ mesh = ExtResource("6_4xymg")
 visible = false
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball1" unique_id=968500170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball1" unique_id=360431934]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball2" type="RigidBody3D" parent="Bolas" unique_id=133560216 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0787535, 4.346054, 0.2732979)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball2" unique_id=1526116746]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -160,12 +181,22 @@ mesh = ExtResource("7_pxogb")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball2" unique_id=838979999]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball2" unique_id=363132573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball2" unique_id=1017133989]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball3" type="RigidBody3D" parent="Bolas" unique_id=593540977 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0764754, 4.346054, -0.30455247)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball3" unique_id=2049366716]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -174,12 +205,22 @@ mesh = ExtResource("8_nw2fu")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball3" unique_id=1754724230]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball3" unique_id=1982902108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball3" unique_id=2085057534]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball4" type="RigidBody3D" parent="Bolas" unique_id=1891736032 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5889993, 4.346054, -0.5815642)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball4" unique_id=1814620678]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -188,12 +229,22 @@ mesh = ExtResource("9_605we")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball4" unique_id=1004009150]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball4" unique_id=658810034]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball4" unique_id=1519193436]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball5" type="RigidBody3D" parent="Bolas" unique_id=400224148 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5796869, 4.346054, -0.0062836707)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball5" unique_id=1619320431]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -202,12 +253,22 @@ mesh = ExtResource("10_j3qns")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball5" unique_id=440634852]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball5" unique_id=1054469145]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball5" unique_id=1898971019]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball6" type="RigidBody3D" parent="Bolas" unique_id=1598605605 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5919242, 4.346054, 0.587201)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball6" unique_id=188165199]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -216,12 +277,22 @@ mesh = ExtResource("11_4rnia")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball6" unique_id=20413453]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball6" unique_id=414667193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball6" unique_id=2049647187]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball7" type="RigidBody3D" parent="Bolas" unique_id=1744184685 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3331697, 4.346054, -0.14908196)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball7" unique_id=1689083906]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -230,12 +301,22 @@ mesh = ExtResource("12_d1obb")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball7" unique_id=713678966]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball7" unique_id=537310748]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball7" unique_id=1584739235]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball8" type="RigidBody3D" parent="Bolas" unique_id=1586697203 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0681546, 4.346054, -0.018173933)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball8" unique_id=838213018]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -244,12 +325,22 @@ mesh = ExtResource("13_obnxk")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball8" unique_id=1713891421]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball8" unique_id=1591419898]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball8" unique_id=635675629]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball9" type="RigidBody3D" parent="Bolas" unique_id=1194143713 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8193471, 4.346054, 0.14796767)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball9" unique_id=2126970292]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -258,12 +349,22 @@ mesh = ExtResource("14_xtqig")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball9" unique_id=1673123453]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball9" unique_id=768188133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball9" unique_id=2138668142]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball10" type="RigidBody3D" parent="Bolas" unique_id=1011331708 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3364449, 4.346054, -0.43458426)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball10" unique_id=538189526]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -272,12 +373,22 @@ mesh = ExtResource("15_s1q4q")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball10" unique_id=721315704]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball10" unique_id=1197862919]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball10" unique_id=387467650]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball11" type="RigidBody3D" parent="Bolas" unique_id=2029226822 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5858722, 4.346054, -0.2907647)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball11" unique_id=220251600]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -286,12 +397,22 @@ mesh = ExtResource("16_nw2fu")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball11" unique_id=2015782694]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball11" unique_id=926346296]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball11" unique_id=1805260862]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball12" type="RigidBody3D" parent="Bolas" unique_id=96526948 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8102844, 4.346054, -0.17846946)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball12" unique_id=1162491701]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -300,12 +421,22 @@ mesh = ExtResource("16_fkxhj")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball12" unique_id=1618781425]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball12" unique_id=1454044810]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball12" unique_id=1434840047]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball13" type="RigidBody3D" parent="Bolas" unique_id=1737047792 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3369687, 4.346054, 0.1433863)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball13" unique_id=1540178252]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -314,12 +445,22 @@ mesh = ExtResource("17_p1vf7")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball13" unique_id=1407512492]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball13" unique_id=1244444519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball13" unique_id=559967083]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball14" type="RigidBody3D" parent="Bolas" unique_id=1320554984 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.329833, 4.346054, 0.42492312)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball14" unique_id=935852888]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -328,12 +469,22 @@ mesh = ExtResource("18_ts382")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball14" unique_id=1343730435]
 shape = SubResource("SphereShape3D_iwtcp")
 
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball14" unique_id=1930952736]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball14" unique_id=996339112]
+stream = ExtResource("25_obnxk")
+
 [node name="Ball15" type="RigidBody3D" parent="Bolas" unique_id=1903657130 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5893216, 4.346054, 0.2863626)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
 angular_damp = 2.0
+script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball15" unique_id=1151321031]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
@@ -341,6 +492,13 @@ mesh = ExtResource("19_kvj3p")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball15" unique_id=1927200434]
 shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball15" unique_id=1060697708]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5800989, -4.3169107, 0.019022051)
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball15" unique_id=389330230]
+stream = ExtResource("25_obnxk")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1908130996]
 
@@ -370,4 +528,31 @@ shape = SubResource("BoxShape3D_ds2lj")
 
 [node name="Powerups" parent="." unique_id=1316942066 instance=ExtResource("22_powerups")]
 
+[node name="MusicaFondo" type="AudioStreamPlayer" parent="." unique_id=1769771314]
+stream = ExtResource("22_j3qns")
+volume_db = -15.0
+autoplay = true
+
+[node name="SonidoTaco" type="AudioStreamPlayer" parent="." unique_id=1657032163]
+stream = ExtResource("23_d1obb")
+
+[node name="SonidoPocket" type="AudioStreamPlayer" parent="." unique_id=2138343129]
+stream = ExtResource("24_obnxk")
+
+[connection signal="body_entered" from="Ball0" to="." method="_on_ball_0_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball1" to="Bolas/Ball1" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball2" to="Bolas/Ball2" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball3" to="Bolas/Ball3" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball4" to="Bolas/Ball4" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball5" to="Bolas/Ball5" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball6" to="Bolas/Ball6" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball7" to="Bolas/Ball7" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball8" to="Bolas/Ball8" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball9" to="Bolas/Ball9" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball10" to="Bolas/Ball10" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball11" to="Bolas/Ball11" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball12" to="Bolas/Ball12" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball13" to="Bolas/Ball13" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball14" to="Bolas/Ball14" method="_on_body_entered"]
+[connection signal="body_entered" from="Bolas/Ball15" to="Bolas/Ball15" method="_on_body_entered"]
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

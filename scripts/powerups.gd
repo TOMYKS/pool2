@@ -28,7 +28,7 @@ var _posicion_anterior := Vector3.ZERO
 var _listo := false
 @onready var _sala = get_parent()
 @onready var _estado: Label = $HUD/Estado
-
+@onready var sonido_poder = $Powerup
 
 func _ready() -> void:
 	_azar.randomize()
@@ -183,6 +183,7 @@ func _terminar_poder() -> void:
 
 func _quitar_activador() -> void:
 	if is_instance_valid(activador):
+		sonido_poder.play()
 		activador.hide()
 		activador.queue_free()
 	activador = null

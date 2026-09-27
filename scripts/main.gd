@@ -8,6 +8,8 @@ signal tiro_finalizado
 @export var marker: MeshInstance3D
 @export var taco: AnimatableBody3D
 @export var ball: RigidBody3D  # <--- Esta era la l­nea que faltaba
+@onready var sonido_taco = $SonidoTaco
+@onready var sonido_pocket = $SonidoPocket
 
 var time_since_hit: float = 0.0
 var impact_point_global: Vector3
@@ -128,7 +130,7 @@ func _input(event):
 			hit_force = clamp(hit_force, 0.5, 20.0)
 			# 3. IMPULSO LINEAL PURO
 			ball.apply_central_impulse(hit_direction * hit_force)
-			
+			sonido_taco.play()
 			# ============================================
 			# MULTIPLICADORES INDEPENDIENTES
 			# ============================================
@@ -186,14 +188,14 @@ func _on_area_3d_body_entered(body):
 	if body.is_in_group("bolas_color"):
 		print("¡Una bola de color entro!")
 		body.queue_free() # Elimina la bola de la mesa
-		# Ais un punto o cambiaras de turno
+		sonido_pocket.play()# Ais un punto o cambiaras de turno
 		
 	elif body.is_in_group("blanca"):
 		print("¡Falta! Cayo la blanca.")
 		body.linear_velocity = Vector3.ZERO
 		body.angular_velocity = Vector3.ZERO
 		body.global_position = Vector3(2.821, 4.398, 0)
-		# Cdigo para reposicionar la blanca en su punto de inicio (2.821,4.398,0)
+		sonido_pocket.play()# Cdigo para reposicionar la blanca en su punto de inicio (2.821,4.398,0)
 func todas_las_bolas_detenidas() -> bool:
 	# 1. Comprobamos la blanca primero (si se mueve, ya sabemos que no debemos cambiar la cámara)
 	if ball.linear_velocity.length() >= 0.02 or ball.angular_velocity.length() >= 0.02:
