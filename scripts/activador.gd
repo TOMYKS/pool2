@@ -25,7 +25,7 @@ func _process(delta: float) -> void:
 
 
 func _al_entrar(body: Node3D) -> void:
-	if not consumido and body.is_in_group("blanca"):
+	if not consumido and body.is_in_group("blanca") and body.get_meta("puede_recoger", true):
 		consumido = true
 		hide()
 		set_deferred("monitoring", false)

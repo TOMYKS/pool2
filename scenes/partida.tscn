@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://ccddnitu3fc1h"]
+
+[ext_resource type="Script" uid="uid://b7e6jewups2uq" path="res://scripts/partida.gd" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="GuiaMaterial"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.25, 1, 0.55, 0.45)
+
+[sub_resource type="SphereMesh" id="GuiaMesh"]
+radius = 0.14
+height = 0.28
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.025, 0.045, 0.065, 0.9)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Partida" type="Node" unique_id=768644436]
+script = ExtResource("1")
+
+[node name="Guia" type="MeshInstance3D" parent="." unique_id=1833389008]
+visible = false
+material_override = SubResource("GuiaMaterial")
+cast_shadow = 0
+mesh = SubResource("GuiaMesh")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1099638443]
+
+[node name="Panel" type="PanelContainer" parent="HUD" unique_id=698696784]
+offset_left = 725.0
+offset_top = 20.0
+offset_right = 1135.0
+offset_bottom = 103.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Margen" type="MarginContainer" parent="HUD/Panel" unique_id=862573058]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="Contenido" type="VBoxContainer" parent="HUD/Panel/Margen" unique_id=912079002]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Estado" type="Label" parent="HUD/Panel/Margen/Contenido" unique_id=617821126]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="Detalle" type="Label" parent="HUD/Panel/Margen/Contenido" unique_id=2025641654]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 2
+
+[node name="Reiniciar" type="Button" parent="HUD/Panel/Margen/Contenido" unique_id=170293692]
+visible = false
+layout_mode = 2
+text = "Nueva partida"

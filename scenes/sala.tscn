@@ -27,6 +27,7 @@
 [ext_resource type="AudioStream" uid="uid://bi2jm4abdskh3" path="res://assets/audio/Ballpocketed.wav" id="24_obnxk"]
 [ext_resource type="AudioStream" uid="uid://bgfhnr2a3v1xq" path="res://assets/audio/Blancavsball.wav" id="25_obnxk"]
 [ext_resource type="AudioStream" uid="uid://josr1xi4lvly" path="res://assets/audio/BallvsBall.wav" id="27_s1q4q"]
+[ext_resource type="PackedScene" uid="uid://ccddnitu3fc1h" path="res://scenes/partida.tscn" id="partida"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqvpg"]
 vertex_color_use_as_albedo = true
@@ -60,6 +61,8 @@ taco = NodePath("Cue")
 ball = NodePath("Ball0")
 
 [node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
+
+[node name="Partida" parent="." unique_id=2142469568 instance=ExtResource("partida")]
 
 [node name="Ball0" parent="." unique_id=596734405 groups=["blanca"] instance=ExtResource("2_mteyr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.821, 4.398, 0)
@@ -539,7 +542,6 @@ stream = ExtResource("23_d1obb")
 [node name="SonidoPocket" type="AudioStreamPlayer" parent="." unique_id=2138343129]
 stream = ExtResource("24_obnxk")
 
-[connection signal="body_entered" from="Ball0" to="." method="_on_ball_0_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball1" to="Bolas/Ball1" method="_on_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball2" to="Bolas/Ball2" method="_on_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball3" to="Bolas/Ball3" method="_on_body_entered"]

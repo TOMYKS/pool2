@@ -24,6 +24,7 @@ var _originales: Array[Dictionary] = []
 var _azar := RandomNumberGenerator.new()
 var _tiro := 0
 var _tiro_recogida := -1
+var _ultimo_tiro_preparado := -1
 var _posicion_anterior := Vector3.ZERO
 var _listo := false
 @onready var _sala = get_parent()
@@ -56,6 +57,9 @@ func _preparar() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	var partida = _sala.get_node_or_null("Partida")
+	if partida != null and (partida.terminada or partida.reiniciando):
+		return
 	if _listo and event is InputEventKey and event.keycode == KEY_SPACE and event.pressed and not event.echo:
 		alternar_sistema.call_deferred()
 
@@ -87,14 +91,32 @@ func _al_iniciar_tiro() -> void:
 
 
 func _al_finalizar_tiro() -> void:
+	var partida = _sala.get_node_or_null("Partida")
+	if partida != null and (partida.terminada or partida.reiniciando):
+		return
 	if not habilitado:
 		return
+	# Normalmente main prepara el vencimiento antes de resolver las reglas.
+	# Es idempotente para no descontar otra vez al emitir tiro_finalizado.
+	preparar_fin_tiro()
+	_intentar_aparicion()
+	_actualizar_estado()
+
+
+func preparar_fin_tiro() -> bool:
+	if _ultimo_tiro_preparado == _tiro:
+		return false
+	_ultimo_tiro_preparado = _tiro
+	if not habilitado:
+		return false
+	var cambio_fisico := false
 	if poder_actual != -1 and _tiro > _tiro_recogida:
 		tiros_restantes -= 1
 		if tiros_restantes <= 0:
 			_terminar_poder()
-	_intentar_aparicion()
+			cambio_fisico = true
 	_actualizar_estado()
+	return cambio_fisico
 
 
 func _intentar_aparicion(forzar := false) -> void:
@@ -129,6 +151,8 @@ func _solicitar_recogida() -> void:
 
 
 func _recoger() -> void:
+	if not _sala.ball.get_meta("puede_recoger", true):
+		return
 	if not habilitado or poder_actual != -1 or not is_instance_valid(activador):
 		return
 	_quitar_activador()

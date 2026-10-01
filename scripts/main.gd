@@ -10,8 +10,10 @@ signal tiro_finalizado
 @export var ball: RigidBody3D  # <--- Esta era la l­nea que faltaba
 @onready var sonido_taco = $SonidoTaco
 @onready var sonido_pocket = $SonidoPocket
+@onready var partida = $Partida
 
 var time_since_hit: float = 0.0
+var _tiempo_en_reposo: float = 0.0
 var impact_point_global: Vector3
 var is_aiming: bool = false
 var is_hitting_mode: bool = false
@@ -27,16 +29,24 @@ var max_forward_speed: float = 0.0
 ## Torque mÃ¡ximo permitido (clamp) para evitar spins absurdos
 @export var max_torque: float = 3.0
 
+func _ready() -> void:
+	marker.hide()
+	taco.hide()
+	taco.global_position = Vector3(0, -1, 0)
+
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			shoot_raycast(event.position)
+			if partida.bola_en_mano:
+				partida.solicitar_colocacion(event.position)
+			else:
+				shoot_raycast(event.position)
 		else:
 			# Al soltar el clic, el palo deja de seguir al rat
 			is_hitting_mode = false
 			
 func shoot_raycast(mouse_pos: Vector2):
-	if is_waiting_for_ball:
+	if is_waiting_for_ball or not partida.puede_apuntar():
 		return
 	var space_state = get_world_3d().direct_space_state
 	var origin = camera.project_ray_origin(mouse_pos)
@@ -166,39 +176,42 @@ func _input(event):
 
 
 						# 2. CAMBIO DE CMARA A LA MESA
+			is_waiting_for_ball = true
+			time_since_hit = 0.0
 			if camera_mesa:
 				camera_mesa.make_current() 
 				is_waiting_for_ball = true 
 				taco.global_position = Vector3(0,-1,0)
 				time_since_hit = 0.0 #
 func _process(delta):
-	# 3. VIGILAR LA BOLA PARA VOLVER A LA CMARA DEL JUGADOR
+	# El tiro incluye los movimientos causados por el vencimiento del poder.
 	if is_waiting_for_ball:
 		time_since_hit += delta
-		
-		# Esperamos 0.5 segundos antes de empezar a revisar si se detuvo
-		if time_since_hit > 0.5:
-
-			# Alternativa 2 (Recomendada): Comprobar que la velocidad sea casi nula
-			if todas_las_bolas_detenidas():
-				camera.make_current() # Volvemos a la cmara original
-				is_waiting_for_ball = false
-				tiro_finalizado.emit()
+		if time_since_hit <= 0.5 or not todas_las_bolas_detenidas():
+			_tiempo_en_reposo = 0.0
+			return
+		# No decidir el turno por un único frame de velocidad casi nula.
+		_tiempo_en_reposo += delta
+		if _tiempo_en_reposo < 0.3:
+			return
+		var poderes = get_node_or_null("Powerups")
+		if poderes != null and poderes.preparar_fin_tiro():
+			# Encoger bolas o quitar una pared puede liberar una caída.
+			# Las reglas siguen registrando el MISMO tiro y jugador.
+			time_since_hit = 0.0
+			_tiempo_en_reposo = 0.0
+			return
+		is_waiting_for_ball = false
+		_tiempo_en_reposo = 0.0
+		partida.finalizar_tiro()
+		tiro_finalizado.emit()
+	else:
+		_tiempo_en_reposo = 0.0
 func _on_area_3d_body_entered(body):
-	if body.is_in_group("bolas_color"):
-		print("¡Una bola de color entro!")
-		body.queue_free() # Elimina la bola de la mesa
-		sonido_pocket.play()# Ais un punto o cambiaras de turno
-		
-	elif body.is_in_group("blanca"):
-		print("¡Falta! Cayo la blanca.")
-		body.linear_velocity = Vector3.ZERO
-		body.angular_velocity = Vector3.ZERO
-		body.global_position = Vector3(2.821, 4.398, 0)
-		sonido_pocket.play()# Cdigo para reposicionar la blanca en su punto de inicio (2.821,4.398,0)
+	partida.registrar_caida(body)
 func todas_las_bolas_detenidas() -> bool:
 	# 1. Comprobamos la blanca primero (si se mueve, ya sabemos que no debemos cambiar la cámara)
-	if ball.linear_velocity.length() >= 0.02 or ball.angular_velocity.length() >= 0.02:
+	if not ball.freeze and not ball.sleeping and (ball.linear_velocity.length() >= 0.02 or ball.angular_velocity.length() >= 0.02):
 		return false
 		
 	# 2. Obtenemos todas las bolas de color que sigan vivas en la escena
@@ -206,6 +219,8 @@ func todas_las_bolas_detenidas() -> bool:
 	
 	# 3. Revisamos la velocidad de cada una de ellas
 	for bola_color in bolas_restantes:
+		if bola_color.is_queued_for_deletion() or bola_color.sleeping:
+			continue
 		if bola_color.linear_velocity.length() >= 0.02 or bola_color.angular_velocity.length() >= 0.02:
 			return false # Encontramos al menos una moviéndose, cancelamos la comprobación
 			
