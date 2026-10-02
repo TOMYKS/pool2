@@ -1,10 +1,7 @@
 extends Node3D
 
 @export_range(0.0, 1.0, 0.05) var probabilidad_aparicion := 0.65
-@export_range(1, 2) var tiros_pesadas := 2
-@export_range(1, 2) var tiros_rebote := 1
-@export_range(1, 2) var tiros_grandes := 2
-@export_range(1, 2) var tiros_pared := 2
+var _ultimo_poder: int = -1
 
 const ACTIVADOR = preload("res://scenes/activador.tscn")
 enum TipoPoder { PESADAS, REBOTE, GRANDES, PARED }
@@ -159,6 +156,8 @@ func _recoger() -> void:
 	_guardar_originales()
 	# El sorteo ocurre AHORA, nunca al crear el activador.
 	var opciones: Array = PODERES.keys()
+	if _ultimo_poder != -1 and opciones.size() > 1:
+		opciones.erase(_ultimo_poder)
 	while not opciones.is_empty():
 		var indice := _azar.randi_range(0, opciones.size() - 1)
 		var clave: TipoPoder = opciones.pop_at(indice)
@@ -166,7 +165,15 @@ func _recoger() -> void:
 		if clave == TipoPoder.PARED and resultado != true:
 			continue
 		poder_actual = clave
-		tiros_restantes = int(get(PODERES[clave]["duracion"]))
+		_ultimo_poder = clave
+		# Sorteo del 1 al 6 para definir la duración
+		var sorteo_duracion = _azar.randi_range(1, 6)
+		if sorteo_duracion <= 2:
+			tiros_restantes = 1 # 2/6 de probabilidad (Números 1 y 2)
+		elif sorteo_duracion <= 5:
+			tiros_restantes = 2 # 3/6 de probabilidad (Números 3, 4 y 5)
+		else:
+			tiros_restantes = 3 # 1/6 de probabilidad (Número 6)
 		_tiro_recogida = _tiro
 		break
 	_actualizar_estado()
