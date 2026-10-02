@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://87n5eqspvyyb"]
+
+[ext_resource type="PackedScene" uid="uid://cmt7agfyf6nm3" path="res://assets/model2/umamusume_bar.glb" id="1_yt2bf"]
+
+[node name="Sketchfab_Scene" unique_id=465775975 instance=ExtResource("1_yt2bf")]
+
+[node name="Object_51" parent="Sketchfab_model/1e7cc5bbf0ee465280b73c13dcbcd544_fbx/RootNode/pfb_env_cutin1093_23_00 (UmaContainerProp)/pfb_env_cutin1093_23_00 (UmaContainerProp)_arm/Object_5/Skeleton3D" parent_id_path=PackedInt32Array(619786736) index="7" unique_id=1814665821]
+visible = false

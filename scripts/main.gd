@@ -65,11 +65,6 @@ func shoot_raycast(mouse_pos: Vector2):
 		setup_cue_stick()
 
 func setup_cue_stick():
-	print("--- INICIANDO TIRO ---")
-	
-	# 1. Verificamos dnde cree el juego que est la marca
-	print("La marca estÃ¡ en: ", impact_point_global)
-	
 	# 2. Calculamos la posicn deseada
 	var pos_camara = camera.global_position
 	var direccion = Vector3(impact_point_global.x - pos_camara.x, 0, impact_point_global.z - pos_camara.z).normalized()
@@ -140,6 +135,10 @@ func _input(event):
 			hit_force = clamp(hit_force, 0.5, 20.0)
 			# 3. IMPULSO LINEAL PURO
 			ball.apply_central_impulse(hit_direction * hit_force)
+			var peso_golpe = inverse_lerp(0.5, 20.0, hit_force)
+			
+			# Rango muy cerrado: de -8.0 dB (suave) a 0.0 dB (fuerte). Siempre se escuchará.
+			sonido_taco.volume_db = lerp(-14.0, 0.0, peso_golpe)
 			sonido_taco.play()
 			# ============================================
 			# MULTIPLICADORES INDEPENDIENTES
@@ -168,11 +167,6 @@ func _input(event):
 			
 			ball.apply_torque_impulse(spin_torque)
 			tiro_iniciado.emit()
-			
-			print("--- GOLPE ARCADE ---")
-			print("  Fuerza lineal: ", hit_force)
-			print("  Eficiencia: ", power_efficiency)
-			print("  Topspin: ", topspin_amount, " | Sidespin: ", sidespin_amount)
 
 
 						# 2. CAMBIO DE CMARA A LA MESA
