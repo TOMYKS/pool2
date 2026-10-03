@@ -35,7 +35,6 @@ func activar_bolas_pesadas():
 			material.metallic = 0.8
 			material.roughness = 0.3
 			
-	print("🔋 POWER-UP ON: ¡Las bolas de color ahora son de metal oscuro (Masa: ", masa_pesada, ")!")
 
 func desactivar_bolas_pesadas():
 	powerup_pesado_activo = false
@@ -53,21 +52,3 @@ func desactivar_bolas_pesadas():
 			material.metallic = 0.0
 			material.roughness = 1.0
 			
-	print("🔋 POWER-UP OFF: Las bolas de color volvieron a la normalidad.")	
-# ====================================================================
-# 2. IMPLEMENTACIÓN FUTURA CON TRIGGERS (Áreas en la mesa)
-# ====================================================================
-# Cuando tengan un objeto físico en la mesa para el power-up, usarán
-# señales (Signals) de un Area3D para activarlo y desactivarlo.
-#
-# func _on_trigger_encendido_body_entered(body):
-# 	# Si la bola blanca toca el holograma/caja del power up
-# 	if body.is_in_group("blanca") and not powerup_pesado_activo:
-# 		activar_bolas_pesadas()
-#       # Aquí podrías poner: queue_free() al holograma para que desaparezca
-#
-# func _on_trigger_apagado_body_entered(body):
-# 	# Si la bola blanca toca otra zona, o si prefieres apagarlo por tiempo/turnos
-# 	if body.is_in_group("blanca") and powerup_pesado_activo:
-# 		desactivar_bolas_pesadas()
-# ====================================================================

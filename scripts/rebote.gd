@@ -44,7 +44,6 @@ func activar_bolas_rebotonas():
 			# Si usas Godot 4.3+, puedes ajustar la energía. Si te da error, borra la línea de abajo:
 			material.emission_energy_multiplier = 0.2 
 			
-	print("🔋 POWER-UP ON: ¡Bolas saltarinas y vibrantes activadas!")
 
 func desactivar_bolas_rebotonas():
 	powerup_rebote_activo = false
@@ -61,5 +60,3 @@ func desactivar_bolas_rebotonas():
 			# 2. Restauramos los colores y apagamos la emisión
 			material.albedo_color = Color(1.0, 1.0, 1.0)
 			material.emission_enabled = false
-			
-	print("🔋 POWER-UP OFF: Las bolas volvieron a la normalidad.")

@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b536l275o8yqv"]
 
-[ext_resource type="Script" path="res://scripts/pared.gd" id="1_pared"]
+[ext_resource type="Script" uid="uid://60mxhlwppjls" path="res://scripts/pared.gd" id="1_pared"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_banda"]
 friction = 0.0
@@ -32,6 +32,7 @@ void fragment() {
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pared"]
+render_priority = 0
 shader = SubResource("Shader_pared")
 
 [sub_resource type="BoxMesh" id="BoxMesh_pared"]
@@ -41,16 +42,16 @@ size = Vector3(0.18, 1.2, 5.2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_pared"]
 size = Vector3(0.18, 1.2, 5.2)
 
-[node name="Pared" type="Node3D"]
+[node name="Pared" type="Node3D" unique_id=1694620137]
 script = ExtResource("1_pared")
 
-[node name="Barrera" type="StaticBody3D" parent="."]
-position = Vector3(0, 4.7761234, 0)
+[node name="Barrera" type="StaticBody3D" parent="." unique_id=1869226695]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.7761235, 0)
 physics_material_override = SubResource("PhysicsMaterial_banda")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Barrera"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Barrera" unique_id=1098484441]
 mesh = SubResource("BoxMesh_pared")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Barrera"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barrera" unique_id=603848441]
 shape = SubResource("BoxShape3D_pared")
 disabled = true

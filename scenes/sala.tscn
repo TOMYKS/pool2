@@ -689,10 +689,13 @@ shape = SubResource("BoxShape3D_ds2lj")
 
 [node name="Powerups" parent="." unique_id=1316942066 instance=ExtResource("22_powerups")]
 
-[node name="MusicaFondo" type="AudioStreamPlayer" parent="." unique_id=1769771314]
+[node name="MusicaFondo" type="AudioStreamPlayer3D" parent="." unique_id=1440913928]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.98952, 3.2644315, -19.558825)
 stream = ExtResource("22_j3qns")
-volume_db = -15.0
+volume_db = -10.0
+unit_size = 8.0
 autoplay = true
+panning_strength = 2.0
 
 [node name="SonidoTaco" type="AudioStreamPlayer" parent="." unique_id=1657032163]
 stream = ExtResource("23_d1obb")

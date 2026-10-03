@@ -62,7 +62,6 @@ func activar_bolas_grandes() -> void:
 		bola.sleeping = false
 
 	powerup_grandes_activo = true
-	print("POWER-UP ON: Bolas de color de tamaño x", factor)
 
 
 func desactivar_bolas_grandes() -> void:
@@ -85,4 +84,3 @@ func desactivar_bolas_grandes() -> void:
 
 	_bolas_originales.clear()
 	powerup_grandes_activo = false
-	print("POWER-UP OFF: Las bolas recuperaron su tamaño original.")

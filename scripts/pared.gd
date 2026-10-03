@@ -59,7 +59,6 @@ func activar_pared() -> bool:
 			if _posicion_libre(eje, coordenada, bolas):
 				candidatas.append(Vector2(eje, coordenada))
 	if candidatas.is_empty():
-		print("PARED: No hay espacio libre para dividir la mesa. Probá después del tiro.")
 		return false
 
 	var elegida := candidatas[_azar.randi_range(0, candidatas.size() - 1)]
@@ -76,7 +75,6 @@ func activar_pared() -> bool:
 	colision.disabled = false
 	pared.visible = true
 	powerup_pared_activo = true
-	print("POWER-UP ON: Pared aleatoria activada. ", OS.get_keycode_string(tecla_activacion), " para quitarla.")
 	return true
 
 
@@ -109,4 +107,3 @@ func desactivar_pared() -> void:
 	colision.disabled = true
 	pared.visible = false
 	powerup_pared_activo = false
-	print("POWER-UP OFF: Mesa completa disponible.")
