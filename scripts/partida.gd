@@ -1,5 +1,7 @@
 extends Node
 
+signal bola_retirada(bola: RigidBody3D, tronera: bool, jugador: int)
+
 const Reglas = preload("res://scripts/reglas_pool.gd")
 const ALTURA_PANO := 4.1761234
 var reglas = Reglas.new()
@@ -70,7 +72,7 @@ func _contacto(otro: Node, bola: RigidBody3D) -> void:
 	# También observamos el contacto desde la otra bola, por orden de señales.
 	elif otro == sala.ball and bola.is_in_group("bolas_color"):
 		reglas.contacto(int(bola.get_meta("numero", 0)))
-	if otro == sala.get_node("Mesa/Bordes") or otro == sala.get_node("Mesa/Pockets") or otro.name == "Barrera":
+	if otro == sala.get_node("Mesa/Bordes") or otro == sala.get_node("Mesa/Pockets") or otro.name == "Barrera" or otro.is_in_group("bandas_powerup"):
 		reglas.banda(int(bola.get_meta("numero", 0)))
 
 
@@ -128,7 +130,8 @@ func registrar_caida(body: Node3D) -> void:
 	_retiradas[id] = true
 	var tronera := not _salidas.has(id) and _es_tronera(sala.to_local(body.global_position))
 	var numero := int(body.get_meta("numero", 0))
-	reglas.retirar(numero, tronera)
+	reglas.retirar(numero, tronera, bool(body.get_meta("ocho_mortal", false)))
+	bola_retirada.emit(body, tronera, reglas.turno)
 	if tronera:
 		sala.sonido_pocket.play()
 	if body == sala.ball:

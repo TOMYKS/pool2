@@ -22,7 +22,6 @@
 [ext_resource type="ArrayMesh" uid="uid://bwa1a7jo4ihfk" path="res://assets/Ball14.res" id="18_ts382"]
 [ext_resource type="ArrayMesh" uid="uid://ji4mboy4dvrv" path="res://assets/Ball15.res" id="19_kvj3p"]
 [ext_resource type="AudioStream" uid="uid://dcpqa7vp4usji" path="res://assets/audio/ChillPool.ogg" id="22_j3qns"]
-[ext_resource type="PackedScene" uid="uid://byrw1d6y83sfl" path="res://scenes/powerups.tscn" id="22_powerups"]
 [ext_resource type="AudioStream" uid="uid://c6iyct5mpqutb" path="res://assets/audio/Palovsblanca.wav" id="23_d1obb"]
 [ext_resource type="AudioStream" uid="uid://bi2jm4abdskh3" path="res://assets/audio/Ballpocketed.wav" id="24_obnxk"]
 [ext_resource type="AudioStream" uid="uid://bgfhnr2a3v1xq" path="res://assets/audio/Blancavsball.wav" id="25_obnxk"]
@@ -686,8 +685,6 @@ shape = SubResource("BoxShape3D_ds2lj")
 [node name="CollisionShape3D6" type="CollisionShape3D" parent="Area3D" unique_id=2085736341]
 transform = Transform3D(-0.016656984, 0, 0.99986124, 0.9997686, -0.013611656, 0.016655441, 0.013609767, 0.9999074, 0.00022672913, -1.0945601, 11.749845, 1.5888705)
 shape = SubResource("BoxShape3D_ds2lj")
-
-[node name="Powerups" parent="." unique_id=1316942066 instance=ExtResource("22_powerups")]
 
 [node name="MusicaFondo" type="AudioStreamPlayer3D" parent="." unique_id=1440913928]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.98952, 3.2644315, -19.558825)

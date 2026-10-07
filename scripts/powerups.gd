@@ -4,7 +4,7 @@ extends Node3D
 var _ultimo_poder: int = -1
 
 const ACTIVADOR = preload("res://scenes/activador.tscn")
-enum TipoPoder { PESADAS, REBOTE, GRANDES, PARED, INVISIBLES, FANTASMAS }
+enum TipoPoder { PESADAS, REBOTE, GRANDES, PARED, INVISIBLES, FANTASMAS, TRONERAS, OCHOS }
 const PODERES := {
 	TipoPoder.PESADAS: {"activar": "activar_bolas_pesadas", "desactivar": "desactivar_bolas_pesadas", "nombre": "Bolas pesadas", "escena": "pesadas", "duracion": "tiros_pesadas"},
 	TipoPoder.REBOTE: {"activar": "activar_bolas_rebotonas", "desactivar": "desactivar_bolas_rebotonas", "nombre": "Rebote extra", "escena": "rebote", "duracion": "tiros_rebote"},
@@ -12,6 +12,8 @@ const PODERES := {
 	TipoPoder.PARED: {"activar": "activar_pared", "desactivar": "desactivar_pared", "nombre": "Pared", "escena": "pared", "duracion": "tiros_pared"},
 	TipoPoder.INVISIBLES: {"activar": "activar_bolas_invisibles", "desactivar": "desactivar_bolas_invisibles", "nombre": "Bolas invisibles", "escena": "invisibles", "duracion": ""},
 	TipoPoder.FANTASMAS: {"activar": "activar_bolas_fantasmas", "desactivar": "desactivar_bolas_fantasmas", "nombre": "Bolas falsas", "escena": "fantasmas", "duracion": "tiros_fantasmas"},
+	TipoPoder.TRONERAS: {"activar": "activar_troneras", "desactivar": "desactivar_troneras", "nombre": "Troneras bloqueadas", "escena": "troneras", "duracion": ""},
+	TipoPoder.OCHOS: {"activar": "activar_ochos", "desactivar": "desactivar_ochos", "nombre": "Ochos malditos", "escena": "ochos", "duracion": ""},
 }
 
 var habilitado := false

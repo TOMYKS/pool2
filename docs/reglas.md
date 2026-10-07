@@ -5,7 +5,7 @@
 - El saque deja la mesa abierta. El primer tiro válido posterior que emboca asigna lisas (1–7) y rayadas (9–15). Si entran ambos grupos, se asigna el de la primera bola embocada.
 - Una embocada propia válida conserva el turno. Sin embocadas propias pasa al rival. Las bolas del rival embocadas permanecen fuera.
 - La blanca debe tocar primero una bola propia (o la 8 cuando ya se terminó el grupo). En mesa abierta puede tocar primero cualquier bola de color excepto la 8.
-- Después del primer contacto tiene que entrar una bola o alguna bola tocar una banda. La pared del power-up cuenta como banda.
+- Fuera del saque, no es obligatorio tocar banda ni embocar después de un primer contacto válido: si no entra una propia, solo cambia el turno, sin bola en mano.
 - Blanca embocada, bolas fuera de la mesa, primer contacto incorrecto y tiros sin contacto válido son faltas. El rival recibe bola en mano.
 - Bola en mano conserva la cámara general. La guía verde indica una posición válida y la roja una inválida. Clic izquierdo coloca la blanca sin superponer bolas, paredes ni troneras y vuelve a la cámara de apuntado. Colocarla no recoge activadores.
 - Se gana metiendo legalmente la 8 en cualquier tronera cuando el grupo propio ya estaba terminado al comenzar ese tiro. Meterla antes, sacarla o embocarla con falta pierde la partida.

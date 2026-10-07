@@ -15,6 +15,7 @@ var fuera: Array[int] = []
 var blanca_falta := false
 var blanca_embocada := false
 var objetivo_ocho := false
+var ocho_mortal_embocado := false
 
 
 func _init() -> void:
@@ -49,6 +50,7 @@ func iniciar_tiro() -> void:
 	fuera.clear()
 	blanca_falta = false
 	blanca_embocada = false
+	ocho_mortal_embocado = false
 	objetivo_ocho = grupos[turno - 1] != Grupo.SIN_ASIGNAR and pendientes(turno).is_empty()
 
 
@@ -64,7 +66,7 @@ func banda(numero: int) -> void:
 			bolas_en_banda[numero] = true
 
 
-func retirar(numero: int, tronera: bool) -> void:
+func retirar(numero: int, tronera: bool, ocho_mortal := false) -> void:
 	if not en_tiro:
 		return
 	if numero == 0:
@@ -75,6 +77,8 @@ func retirar(numero: int, tronera: bool) -> void:
 		return
 	restantes.erase(numero)
 	if tronera:
+		# Guardar el estado al caer, aunque el poder venza antes de resolver.
+		ocho_mortal_embocado = ocho_mortal_embocado or ocho_mortal
 		embocadas.append(numero)
 	else:
 		fuera.append(numero)
@@ -84,6 +88,9 @@ func finalizar_tiro() -> Dictionary:
 	if not en_tiro:
 		return {}
 	en_tiro = false
+	if ocho_mortal_embocado:
+		ganador = 3 - turno
+		return {"ganador": ganador, "mensaje": "El jugador %d pierde por embocar una bola 8 durante Ochos malditos." % turno}
 	# Regla de esta variante: la 8 embocada en el saque siempre reinicia.
 	if saque and embocadas.has(8):
 		return {"reiniciar": true, "mensaje": "La 8 entró en el saque. Se reinicia la partida."}
@@ -102,8 +109,6 @@ func finalizar_tiro() -> Dictionary:
 		falta = "No se puede tocar primero la 8 con la mesa abierta."
 	elif saque and embocadas.is_empty() and bolas_en_banda.size() < 4:
 		falta = "Saque inválido: debían llegar cuatro bolas a banda o entrar una."
-	elif not saque and embocadas.is_empty() and not banda_despues:
-		falta = "Después del contacto faltó una banda o una bola embocada."
 
 	if embocadas.has(8) or fuera.has(8):
 		ganador = turno if objetivo_ocho and falta.is_empty() and embocadas.has(8) else 3 - turno

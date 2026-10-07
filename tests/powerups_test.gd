@@ -53,7 +53,7 @@ func _probar() -> void:
 	sistema.probabilidad_aparicion = 1.0
 	sistema._azar.seed = 42
 	var vistos := {}
-	for ciclo in range(32):
+	for ciclo in range(128):
 		if not is_instance_valid(sistema.activador):
 			sistema._intentar_aparicion(true)
 		if not is_instance_valid(sistema.activador):
@@ -79,7 +79,7 @@ func _probar() -> void:
 		comprobar(bola.physics_material_override == fisica, "Restaura material físico original")
 		comprobar(visual.get_active_material(0) == material and material.albedo_color == color_original, "Restaura materiales visuales sin mutar recursos")
 		comprobar(is_equal_approx(bola.get_node("CollisionShape3D").shape.radius, radio_original), "Restaura tamaño")
-	comprobar(vistos.size() == 4, "El sorteo incluye los cuatro poderes")
+	comprobar(vistos.size() == sistema.PODERES.size(), "El sorteo incluye todos los poderes registrados")
 	# Apagar durante un efecto también restaura y elimina el activador.
 	sistema.activador._al_entrar(sala.ball)
 	await process_frame
