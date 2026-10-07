@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://hto7xfvfrjvo"]
+
+[ext_resource type="Script" uid="uid://bcjfixr58vg51" path="res://scripts/fantasmas.gd" id="1_xle5p"]
+
+[node name="Fantasmas" type="Node3D" unique_id=225528323]
+script = ExtResource("1_xle5p")

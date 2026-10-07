@@ -1,15 +1,17 @@
 extends Node3D
 
-@export_range(0.0, 1.0, 0.05) var probabilidad_aparicion := 0.65
+@export_range(0.0, 1.0, 0.05) var probabilidad_aparicion := 0.85
 var _ultimo_poder: int = -1
 
 const ACTIVADOR = preload("res://scenes/activador.tscn")
-enum TipoPoder { PESADAS, REBOTE, GRANDES, PARED }
+enum TipoPoder { PESADAS, REBOTE, GRANDES, PARED, INVISIBLES, FANTASMAS }
 const PODERES := {
 	TipoPoder.PESADAS: {"activar": "activar_bolas_pesadas", "desactivar": "desactivar_bolas_pesadas", "nombre": "Bolas pesadas", "escena": "pesadas", "duracion": "tiros_pesadas"},
 	TipoPoder.REBOTE: {"activar": "activar_bolas_rebotonas", "desactivar": "desactivar_bolas_rebotonas", "nombre": "Rebote extra", "escena": "rebote", "duracion": "tiros_rebote"},
 	TipoPoder.GRANDES: {"activar": "activar_bolas_grandes", "desactivar": "desactivar_bolas_grandes", "nombre": "Bolas grandes", "escena": "grandes", "duracion": "tiros_grandes"},
 	TipoPoder.PARED: {"activar": "activar_pared", "desactivar": "desactivar_pared", "nombre": "Pared", "escena": "pared", "duracion": "tiros_pared"},
+	TipoPoder.INVISIBLES: {"activar": "activar_bolas_invisibles", "desactivar": "desactivar_bolas_invisibles", "nombre": "Bolas invisibles", "escena": "invisibles", "duracion": ""},
+	TipoPoder.FANTASMAS: {"activar": "activar_bolas_fantasmas", "desactivar": "desactivar_bolas_fantasmas", "nombre": "Bolas falsas", "escena": "fantasmas", "duracion": "tiros_fantasmas"},
 }
 
 var habilitado := false

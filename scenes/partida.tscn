@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://ccddnitu3fc1h"]
 
 [ext_resource type="Script" uid="uid://b7e6jewups2uq" path="res://scripts/partida.gd" id="1"]
+[ext_resource type="AudioStream" uid="uid://d1jvwnqqtdgsq" path="res://assets/audio/win.wav" id="2_xp6uk"]
+[ext_resource type="AudioStream" uid="uid://wj5jjoudbm3t" path="res://assets/audio/falta.wav" id="3_i2x28"]
 
 [sub_resource type="StandardMaterial3D" id="GuiaMaterial"]
 resource_local_to_scene = true
@@ -65,3 +67,10 @@ autowrap_mode = 2
 visible = false
 layout_mode = 2
 text = "Nueva partida"
+
+[node name="SonidoWin" type="AudioStreamPlayer" parent="." unique_id=176790986]
+stream = ExtResource("2_xp6uk")
+volume_db = -7.0
+
+[node name="SonidoFalta" type="AudioStreamPlayer" parent="." unique_id=712282849]
+stream = ExtResource("3_i2x28")

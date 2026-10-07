@@ -15,7 +15,8 @@ var _clic_pendiente = null
 @onready var detalle: Label = $HUD/Panel/Margen/Contenido/Detalle
 @onready var reiniciar: Button = $HUD/Panel/Margen/Contenido/Reiniciar
 @onready var guia: MeshInstance3D = $Guia
-
+@onready var sonido_win = $SonidoWin
+@onready var sonido_falta = $SonidoFalta
 
 func _ready() -> void:
 	sala.tiro_iniciado.connect(_iniciar_tiro)
@@ -25,7 +26,6 @@ func _ready() -> void:
 	sala.ball.set_meta("puede_recoger", false)
 	sala.ball.body_entered.connect(_contacto.bind(sala.ball))
 	for bola in get_tree().get_nodes_in_group("bolas_color"):
-		# Los nodos Ball10 y Ball11 tienen sus mallas intercambiadas.
 		var numero := int(str(bola.name).trim_prefix("Ball"))
 		for hijo in bola.get_children():
 			if hijo is MeshInstance3D and hijo.mesh != null:
@@ -150,6 +150,7 @@ func _ocultar_blanca() -> void:
 func finalizar_tiro() -> void:
 	sala.ball.set_meta("puede_recoger", false)
 	var resultado: Dictionary = reglas.finalizar_tiro()
+	var jugador_que_tiro = reglas.turno
 	if resultado.is_empty():
 		return
 	_mensaje = resultado["mensaje"]
@@ -160,6 +161,11 @@ func finalizar_tiro() -> void:
 		return
 	if resultado.has("ganador"):
 		terminada = true
+		if resultado["ganador"] == jugador_que_tiro:
+			sonido_win.play()
+		else:
+			sonido_falta.volume_db = -10.0
+			sonido_falta.play()
 		sala.camera_mesa.make_current()
 		_control_camara(false)
 		var poderes = sala.get_node_or_null("Powerups")
@@ -170,6 +176,8 @@ func finalizar_tiro() -> void:
 		_ocultar_blanca()
 		sala.camera_mesa.make_current()
 		_control_camara(false)
+		sonido_falta.volume_db = -16.0
+		sonido_falta.play()
 	else:
 		sala.camera.make_current()
 		_control_camara(true)

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://fcfo3j7nc4ub"]
+
+[ext_resource type="Script" uid="uid://cdch8u2dwnh03" path="res://scripts/invisibles.gd" id="1_4bksr"]
+
+[node name="Invisibles" type="Node3D" unique_id=1709142281]
+script = ExtResource("1_4bksr")
