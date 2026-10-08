@@ -40,13 +40,4 @@ El juego no es el típico simulador de pool. Al presionar Espacio, se habilita e
 * **Bolas invisibles:** Oculta temporalmente los modelos de las bolas de color, dejando solo sus sombras visibles.
 * **Bolas falsas:** Permite que ciertas bolas atraviesen a otras manteniendo la interacción con la mesa.
 * **Troneras bloqueadas:** Cierra entradas de forma aleatoria, obligando a recalcular los tiros.
-* **Ochos malditos:** Transforma gran parte de las bolas en bolas 8 negras; tocar primero una falsa 8 es falta, y embocarla puede significar la derrota.
-
-## 🐛 Bugs Conocidos
-
-1. **Pelotas salen a pasear:** A veces pasa que si hay dos o más pelotas colisionando y girando juntas, giran por mucho más tiempo y más distancia de lo que deberían.
-2. **Rebotes secos en las bandas:** Cuando las pelotas chocan con la pared a una velocidad baja puede que en lugar de rebotar se peguen a la pared y sigan de largo.
-3. **Pelotas saltan de la mesa:** Nunca lo logramos replicar, pero en algunos tiros puede pasar que una bola salga de la mesa. Sigo sin entender qué lo causa, pero planeamos dejarlo ya que agrega al caos y sorpresa.
-4. **Pelotas deslizan:** En el poder de extra rebote las pelotas puede que terminen deslizando por la mesa como si fuera hielo al girar poco en su propio eje.
-5. **Pelotas Fantasma:** Puede pasar que una bola quede dentro de otra al terminar el poder de pelotas fantasma, pero al golpearlas se separan de forma coherente y funciona de forma correcta.
-6. **Límites al colocar:** Todavía hay zonas donde deberías poder colocar la pelota blanca al tenerla en la mano, pero el juego no te lo permite.
+* **Ochos malditos:** Transforma todas las bolas en bolas 8 negras, excepto 1 para cada jugador. 
