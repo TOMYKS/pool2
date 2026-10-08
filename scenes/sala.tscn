@@ -27,6 +27,7 @@
 [ext_resource type="AudioStream" uid="uid://bgfhnr2a3v1xq" path="res://assets/audio/Blancavsball.wav" id="25_obnxk"]
 [ext_resource type="AudioStream" uid="uid://josr1xi4lvly" path="res://assets/audio/BallvsBall.wav" id="27_s1q4q"]
 [ext_resource type="PackedScene" uid="uid://87n5eqspvyyb" path="res://scenes/Bar.tscn" id="29_p1vf7"]
+[ext_resource type="PackedScene" uid="uid://byrw1d6y83sfl" path="res://scenes/powerups.tscn" id="29_ts382"]
 [ext_resource type="PackedScene" uid="uid://ccddnitu3fc1h" path="res://scenes/partida.tscn" id="partida"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqvpg"]
@@ -182,6 +183,50 @@ light_indirect_energy = 1.81
 light_volumetric_fog_energy = 4.111
 spot_range = 14.133
 spot_attenuation = 1.4
+spot_angle = 55.17
+spot_angle_attenuation = 0.08537742
+
+[node name="SpotLight3D22" type="SpotLight3D" parent="Luces" unique_id=643241670]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.159709, 8.734098, -18.305923)
+light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
+light_energy = 16.0
+light_indirect_energy = 1.81
+light_volumetric_fog_energy = 4.111
+spot_range = 14.133
+spot_attenuation = 4.05
+spot_angle = 55.17
+spot_angle_attenuation = 0.08537742
+
+[node name="SpotLight3D23" type="SpotLight3D" parent="Luces" unique_id=1181421582]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -6.6234922, 8.734098, -18.39556)
+light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
+light_energy = 16.0
+light_indirect_energy = 1.81
+light_volumetric_fog_energy = 4.111
+spot_range = 14.133
+spot_attenuation = 4.05
+spot_angle = 55.17
+spot_angle_attenuation = 0.08537742
+
+[node name="SpotLight3D24" type="SpotLight3D" parent="Luces" unique_id=270929855]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.159709, 8.734098, 15.044737)
+light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
+light_energy = 16.0
+light_indirect_energy = 1.81
+light_volumetric_fog_energy = 4.111
+spot_range = 14.133
+spot_attenuation = 4.05
+spot_angle = 55.17
+spot_angle_attenuation = 0.08537742
+
+[node name="SpotLight3D25" type="SpotLight3D" parent="Luces" unique_id=756211046]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -6.6234922, 8.734098, 15.112595)
+light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
+light_energy = 16.0
+light_indirect_energy = 1.81
+light_volumetric_fog_energy = 4.111
+spot_range = 14.133
+spot_attenuation = 4.05
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
@@ -698,6 +743,8 @@ stream = ExtResource("23_d1obb")
 
 [node name="SonidoPocket" type="AudioStreamPlayer" parent="." unique_id=2138343129]
 stream = ExtResource("24_obnxk")
+
+[node name="Powerups" parent="." unique_id=676774078 instance=ExtResource("29_ts382")]
 
 [connection signal="body_entered" from="Bolas/Ball1" to="Bolas/Ball1" method="_on_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball2" to="Bolas/Ball2" method="_on_body_entered"]
