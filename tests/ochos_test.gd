@@ -80,7 +80,7 @@ func _probar() -> void:
 			comprobar(visibles(3 - jugador).size() == 1, "La bola visible del rival no cambia")
 			partida.finalizar_tiro()
 			comprobar(not partida.terminada and not partida.bola_en_mano and partida.reglas.turno == jugador, "Embocar la visible propia conserva turno")
-		# Aunque ya pueda jugar la 8, embocarla durante el efecto hace perder.
+		# Con el grupo terminado, una 8 legal permite ganar durante el efecto.
 		sala.tiro_iniciado.emit()
 		partida.reglas.contacto(8)
 		caer(partida, sala.get_node("Bolas/Ball8"))
@@ -89,8 +89,8 @@ func _probar() -> void:
 			if not bola.is_queued_for_deletion():
 				comprobar(not bola.has_meta("ocho_mortal") and bola.get_child(0).mesh == originales[bola.get_instance_id()], "Restaurar exactamente cada modelo original")
 		partida.finalizar_tiro()
-		comprobar(partida.terminada and partida.reglas.ganador == 3 - jugador, "La derrota sobrevive al fin del efecto, para ambos jugadores")
-		comprobar(partida.detalle.text.contains("Ochos malditos"), "HUD explica el motivo de derrota")
+		comprobar(partida.terminada and partida.reglas.ganador == jugador, "La victoria sobrevive al fin del efecto, para ambos jugadores")
+		comprobar(partida.detalle.text.contains("Ochos malditos"), "HUD explica la victoria por el poder")
 		sala.queue_free()
 		await process_frame
 

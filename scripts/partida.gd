@@ -55,7 +55,7 @@ func _iniciar_tiro() -> void:
 		if cuerpo.is_in_group("bolas_color"):
 			var hacia: Vector3 = cuerpo.global_position - sala.ball.global_position
 			if sala.ball.linear_velocity.dot(hacia) > 0.0:
-				reglas.contacto(int(cuerpo.get_meta("numero", 0)))
+				reglas.contacto(int(cuerpo.get_meta("numero", 0)), bool(cuerpo.get_meta("ocho_mortal", false)))
 				break
 	_retiradas.clear()
 	_salidas.clear()
@@ -68,10 +68,10 @@ func _contacto(otro: Node, bola: RigidBody3D) -> void:
 	if not reglas.en_tiro:
 		return
 	if bola == sala.ball and otro.is_in_group("bolas_color"):
-		reglas.contacto(int(otro.get_meta("numero", 0)))
+		reglas.contacto(int(otro.get_meta("numero", 0)), bool(otro.get_meta("ocho_mortal", false)))
 	# También observamos el contacto desde la otra bola, por orden de señales.
 	elif otro == sala.ball and bola.is_in_group("bolas_color"):
-		reglas.contacto(int(bola.get_meta("numero", 0)))
+		reglas.contacto(int(bola.get_meta("numero", 0)), bool(bola.get_meta("ocho_mortal", false)))
 	if otro == sala.get_node("Mesa/Bordes") or otro == sala.get_node("Mesa/Pockets") or otro.name == "Barrera" or otro.is_in_group("bandas_powerup"):
 		reglas.banda(int(bola.get_meta("numero", 0)))
 

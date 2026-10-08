@@ -54,9 +54,10 @@ func iniciar_tiro() -> void:
 	objetivo_ocho = grupos[turno - 1] != Grupo.SIN_ASIGNAR and pendientes(turno).is_empty()
 
 
-func contacto(numero: int) -> void:
+func contacto(numero: int, ocho_mortal := false) -> void:
 	if en_tiro and primer_contacto == -1 and numero > 0:
-		primer_contacto = numero
+		# Juzgar el aspecto al chocar, sin cambiar la identidad de la bola.
+		primer_contacto = 8 if ocho_mortal else numero
 
 
 func banda(numero: int) -> void:
@@ -88,11 +89,8 @@ func finalizar_tiro() -> Dictionary:
 	if not en_tiro:
 		return {}
 	en_tiro = false
-	if ocho_mortal_embocado:
-		ganador = 3 - turno
-		return {"ganador": ganador, "mensaje": "El jugador %d pierde por embocar una bola 8 durante Ochos malditos." % turno}
 	# Regla de esta variante: la 8 embocada en el saque siempre reinicia.
-	if saque and embocadas.has(8):
+	if saque and embocadas.has(8) and not ocho_mortal_embocado:
 		return {"reiniciar": true, "mensaje": "La 8 entró en el saque. Se reinicia la partida."}
 	var falta := ""
 	if blanca_falta:
@@ -109,6 +107,14 @@ func finalizar_tiro() -> Dictionary:
 		falta = "No se puede tocar primero la 8 con la mesa abierta."
 	elif saque and embocadas.is_empty() and bolas_en_banda.size() < 4:
 		falta = "Saque inválido: debían llegar cuatro bolas a banda o entrar una."
+
+	if ocho_mortal_embocado:
+		if not saque and objetivo_ocho and falta.is_empty():
+			ganador = turno
+			return {"ganador": ganador, "mensaje": "El jugador %d gana por embocar una bola 8 legalmente durante Ochos malditos." % turno}
+		ganador = 3 - turno
+		var motivo := "antes de terminar su grupo en un tiro anterior" if not objetivo_ocho else "con falta: %s" % falta
+		return {"ganador": ganador, "mensaje": "El jugador %d pierde por embocar una bola 8 durante Ochos malditos %s." % [turno, motivo]}
 
 	if embocadas.has(8) or fuera.has(8):
 		ganador = turno if objetivo_ocho and falta.is_empty() and embocadas.has(8) else 3 - turno
