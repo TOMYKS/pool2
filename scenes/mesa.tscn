@@ -11,16 +11,13 @@ absorbent = true
 size = Vector3(9.813324, 1, 4.849365)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
+resource_name = "Bandas y bordes de troneras"
 friction = 0.0
 bounce = 0.2
 absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oimtj"]
 size = Vector3(0.9647827, 1, 4.119812)
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_3rsqy"]
-bounce = 1.0
-absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iwtcp"]
 size = Vector3(0.79541016, 3.9, 0.73339844)
@@ -84,7 +81,7 @@ shape = SubResource("BoxShape3D_oimtj")
 debug_color = Color(0.99607843, 0, 0.17254902, 1)
 
 [node name="Pockets" type="StaticBody3D" parent="." unique_id=1495795868]
-physics_material_override = SubResource("PhysicsMaterial_3rsqy")
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
 
 [node name="Pk1" type="CollisionShape3D" parent="Pockets" unique_id=1213577881]
 transform = Transform3D(0.76767254, 0, -0.6408423, 0, 1, 0, 0.6408423, 0, 0.76767254, -4.5571637, 2.4624846, -3.0051923)

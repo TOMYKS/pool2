@@ -3,6 +3,8 @@ extends RefCounted
 enum Grupo { SIN_ASIGNAR, LISAS, RAYADAS }
 var turno := 1
 var grupos := [Grupo.SIN_ASIGNAR, Grupo.SIN_ASIGNAR]
+# Solo cuentan tiros terminados que empezaron con los grupos ya asignados.
+var tiros_con_grupo: Array[bool] = [false, false]
 var restantes: Array[int] = []
 var saque := true
 var ganador := 0
@@ -37,6 +39,10 @@ func pendientes(jugador: int) -> Array[int]:
 		if grupo_de(numero) == grupos[jugador - 1] and numero != 8:
 			lista.append(numero)
 	return lista
+
+
+func poderes_desbloqueados() -> bool:
+	return not grupos.has(Grupo.SIN_ASIGNAR) and tiros_con_grupo[0] and tiros_con_grupo[1]
 
 
 func iniciar_tiro() -> void:
@@ -89,6 +95,9 @@ func finalizar_tiro() -> Dictionary:
 	if not en_tiro:
 		return {}
 	en_tiro = false
+	# Registrar antes de asignar grupos: el tiro de asignación todavía no cuenta.
+	if not grupos.has(Grupo.SIN_ASIGNAR):
+		tiros_con_grupo[turno - 1] = true
 	# Regla de esta variante: la 8 embocada en el saque siempre reinicia.
 	if saque and embocadas.has(8) and not ocho_mortal_embocado:
 		return {"reiniciar": true, "mensaje": "La 8 entró en el saque. Se reinicia la partida."}

@@ -36,6 +36,16 @@ func _probar() -> void:
 	# Aislamos el ciclo de turnos del movimiento de la mesa.
 	for cuerpo in get_nodes_in_group("bolas_color") + get_nodes_in_group("blanca"):
 		cuerpo.freeze = true
+	# Este test cubre el ciclo de poderes una vez pasada la introducción.
+	# inicio_powerups_test cubre el bloqueo y la progresión desde el saque.
+	var reglas = sala.get_node("Partida").reglas
+	reglas.saque = false
+	reglas.grupos = [reglas.Grupo.LISAS, reglas.Grupo.RAYADAS]
+	for contacto in [1, 9]:
+		reglas.iniciar_tiro()
+		reglas.contacto(contacto)
+		reglas.finalizar_tiro()
+	sistema.probabilidad_aparicion = 1.0
 	var tecla := InputEventKey.new()
 	tecla.keycode = KEY_SPACE
 	tecla.pressed = true

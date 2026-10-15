@@ -4,8 +4,10 @@ extends RigidBody3D
 @export var magnus_speed_reference: float = 15.0
 @export var magnus_speed_curve: float = 1
 @export var max_magnus_force: float = 10.0
+var _reposo := preload("res://scripts/reposo_bola.gd").new()
 
-func _physics_process(_delta):
+func _physics_process(delta):
+	_reposo.actualizar(self, delta)
 	# Limitamos la velocidad lineal como medida de seguridad final
 	if linear_velocity.length() > 30.0:
 		linear_velocity = linear_velocity.normalized() * 30.0

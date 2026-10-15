@@ -1,5 +1,10 @@
 extends RigidBody3D
 
+var _reposo := preload("res://scripts/reposo_bola.gd").new()
+
+func _physics_process(delta: float) -> void:
+	_reposo.actualizar(self, delta)
+
 # Referencia rápida al nodo de sonido que acabamos de crear
 @onready var sonido_choque = $SonidoChoque
 @onready var sonido_choque_blanca = $SonidoChoqueBlanca

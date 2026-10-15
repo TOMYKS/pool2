@@ -69,7 +69,7 @@ func alternar_sistema() -> void:
 	habilitado = not habilitado
 	if habilitado:
 		_posicion_anterior = _sala.ball.global_position
-		_intentar_aparicion(true)
+		_intentar_aparicion()
 	else:
 		_quitar_activador()
 		_terminar_poder()
@@ -123,9 +123,15 @@ func preparar_fin_tiro() -> bool:
 func _intentar_aparicion(forzar := false) -> void:
 	if not habilitado or poder_actual != -1 or is_instance_valid(activador):
 		return
+	var partida = _sala.get_node_or_null("Partida")
+	if partida != null and (partida.terminada or partida.reiniciando):
+		return
+	# Ni siquiera una aparición forzada puede saltarse los tiros iniciales.
+	if not _espera_inicial().is_empty():
+		return
 	if get_tree().get_nodes_in_group("bolas_color").is_empty():
 		return
-	if not forzar and _azar.randf() > probabilidad_aparicion:
+	if not forzar and (probabilidad_aparicion <= 0.0 or _azar.randf() >= probabilidad_aparicion):
 		return
 	var forma := SphereShape3D.new()
 	forma.radius = 0.42
@@ -224,9 +230,27 @@ func _quitar_activador() -> void:
 	activador = null
 
 
+func _espera_inicial() -> String:
+	var partida = _sala.get_node_or_null("Partida")
+	# Las escenas de prueba sin reglas conservan su funcionamiento independiente.
+	if partida == null:
+		return ""
+	var reglas = partida.reglas
+	if reglas.grupos.has(reglas.Grupo.SIN_ASIGNAR):
+		return "Esperando asignación de lisas y rayadas"
+	if reglas.poderes_desbloqueados():
+		return ""
+	if not reglas.tiros_con_grupo[0] and not reglas.tiros_con_grupo[1]:
+		return "Esperando un tiro de cada jugador"
+	var jugador := 1 if not reglas.tiros_con_grupo[0] else 2
+	return "Esperando un tiro del jugador %d" % jugador
+
+
 func _actualizar_estado() -> void:
 	if not habilitado:
 		_estado.text = "Power-ups apagados · Espacio para activar"
+	elif not _espera_inicial().is_empty():
+		_estado.text = "Power-ups encendidos · %s · Espacio para apagar" % _espera_inicial()
 	elif poder_actual != -1:
 		_estado.text = "%s · %d tiro(s) restantes · Espacio para apagar" % [PODERES[poder_actual]["nombre"], tiros_restantes]
 	elif is_instance_valid(activador):
