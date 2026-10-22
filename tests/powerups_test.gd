@@ -14,6 +14,7 @@ func comprobar(condicion: bool, mensaje: String) -> void:
 func _probar() -> void:
 	var sala = load("res://scenes/sala.tscn").instantiate()
 	root.add_child(sala)
+	sala.get_node("Partida").comenzar_partida(false)
 	# La sala de trabajo puede estar probando un power-up individual.
 	if sala.get_node_or_null("Powerups") == null:
 		var administrador = load("res://scenes/powerups.tscn").instantiate()

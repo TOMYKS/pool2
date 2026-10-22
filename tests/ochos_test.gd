@@ -29,6 +29,7 @@ func _probar() -> void:
 	for jugador in [1, 2]:
 		var sala = load("res://scenes/sala.tscn").instantiate()
 		root.add_child(sala)
+		sala.get_node("Partida").comenzar_partida(false)
 		current_scene = sala
 		var poder = load("res://scenes/ochos.tscn").instantiate()
 		sala.add_child(poder)
@@ -126,6 +127,7 @@ func _casos_limite() -> void:
 	for caso in ["convertida", "visible_primero", "negra_primero", "vence", "rival"]:
 		var sala = load("res://scenes/sala.tscn").instantiate()
 		root.add_child(sala)
+		sala.get_node("Partida").comenzar_partida(false)
 		current_scene = sala
 		var poder = load("res://scenes/ochos.tscn").instantiate()
 		sala.add_child(poder)

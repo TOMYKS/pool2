@@ -31,6 +31,7 @@ func tiro(sala: Node, contacto: int, embocada := -1) -> void:
 func _probar() -> void:
 	var sala = load("res://scenes/sala.tscn").instantiate()
 	root.add_child(sala)
+	sala.get_node("Partida").comenzar_partida(false)
 	if sala.get_node_or_null("Powerups") == null:
 		var administrador = load("res://scenes/powerups.tscn").instantiate()
 		administrador.name = "Powerups"

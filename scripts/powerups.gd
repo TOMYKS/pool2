@@ -59,7 +59,7 @@ func _preparar() -> void:
 
 func _input(event: InputEvent) -> void:
 	var partida = _sala.get_node_or_null("Partida")
-	if partida != null and (partida.terminada or partida.reiniciando):
+	if partida != null and not partida.permite_input_humano():
 		return
 	if _listo and event is InputEventKey and event.keycode == KEY_SPACE and event.pressed and not event.echo:
 		alternar_sistema.call_deferred()

@@ -8,6 +8,10 @@ var reglas = Reglas.new()
 var bola_en_mano := false
 var terminada := false
 var reiniciando := false
+var configurando := true
+var jugador_2_cpu := false
+@onready var cpu: Node = $CPU
+var configuracion: Control
 var _retiradas: Dictionary = {}
 var _salidas: Dictionary = {}
 var _mensaje := "Jugador 1 realiza el saque. Mesa abierta."
@@ -40,14 +44,35 @@ func _ready() -> void:
 		bola.max_contacts_reported = 16
 		bola.body_entered.connect(_contacto.bind(bola))
 	_actualizar_hud()
+	configuracion = preload("res://scripts/configurar_partida.gd").new()
+	$HUD.add_child(configuracion)
+	_control_camara(false)
+
+
+func comenzar_partida(usar_cpu: bool) -> void:
+	if not configurando:
+		return
+	jugador_2_cpu = usar_cpu
+	configurando = false
+	configuracion.hide()
+	_control_camara(true)
+	_actualizar_hud()
+
+
+func es_turno_cpu() -> bool:
+	return jugador_2_cpu and reglas.turno == 2
+
+
+func permite_input_humano() -> bool:
+	return not configurando and not terminada and not reiniciando and not es_turno_cpu()
 
 
 func puede_apuntar() -> bool:
-	return not bola_en_mano and not terminada and not reiniciando and not reglas.en_tiro
+	return not configurando and not bola_en_mano and not terminada and not reiniciando and not reglas.en_tiro
 
 
 func _iniciar_tiro() -> void:
-	if terminada or bola_en_mano or reiniciando:
+	if configurando or terminada or bola_en_mano or reiniciando:
 		return
 	reglas.iniciar_tiro()
 	# Un contacto que ya existía al empezar no emite otro body_entered.
@@ -77,7 +102,7 @@ func _contacto(otro: Node, bola: RigidBody3D) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if bola_en_mano:
+	if bola_en_mano and not es_turno_cpu():
 		_actualizar_guia()
 		if _clic_pendiente != null:
 			var clic: Vector2 = _clic_pendiente
@@ -182,12 +207,20 @@ func finalizar_tiro() -> void:
 		sonido_falta.volume_db = -16.0
 		sonido_falta.play()
 	else:
-		sala.camera.make_current()
-		_control_camara(true)
+		_camara_del_turno()
 	_actualizar_hud()
 
 
+func _camara_del_turno() -> void:
+	if es_turno_cpu():
+		sala.camera_mesa.make_current()
+	else:
+		sala.camera.make_current()
+	_control_camara(true)
+
+
 func _control_camara(permitir: bool) -> void:
+	permitir = permitir and permite_input_humano()
 	var pivote = sala.get_node("Pivot")
 	pivote.set_process(permitir)
 	pivote.set_process_unhandled_input(permitir)
@@ -196,7 +229,7 @@ func _control_camara(permitir: bool) -> void:
 
 
 func solicitar_colocacion(pantalla: Vector2) -> void:
-	if bola_en_mano:
+	if bola_en_mano and permite_input_humano():
 		_clic_pendiente = pantalla
 
 
@@ -240,8 +273,7 @@ func colocar_blanca(punto: Vector3) -> bool:
 	sala.ball.sleeping = false
 	bola_en_mano = false
 	guia.hide()
-	_control_camara(true)
-	sala.camera.make_current()
+	_camara_del_turno()
 	_mensaje = "Blanca colocada. Podés apuntar y tirar."
 	_actualizar_hud()
 	return true
@@ -268,7 +300,13 @@ func _actualizar_hud() -> void:
 			objetivo = " · Va por la 8" if pendientes.is_empty() else " · Quedan %d" % pendientes.size()
 		lineas.append("J%d · %s%s" % [jugador, nombre, objetivo])
 	texto.text = "\n".join(lineas)
+	if jugador_2_cpu:
+		texto.text = texto.text.replace("jugador 2", "CPU").replace("J2 ·", "CPU ·")
 	detalle.text = _mensaje + ("\nBOLA EN MANO: clic en un lugar libre para colocar la blanca." if bola_en_mano else "")
+	if configurando:
+		detalle.text = "Elegí el jugador 2 para comenzar."
+	elif es_turno_cpu() and not terminada:
+		detalle.text = "CPU jugando…" if reglas.en_tiro else "CPU pensando…"
 	reiniciar.visible = terminada
 
 

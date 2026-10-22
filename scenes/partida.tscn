@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b7e6jewups2uq" path="res://scripts/partida.gd" id="1"]
 [ext_resource type="AudioStream" uid="uid://d1jvwnqqtdgsq" path="res://assets/audio/win.wav" id="2_xp6uk"]
 [ext_resource type="AudioStream" uid="uid://wj5jjoudbm3t" path="res://assets/audio/falta.wav" id="3_i2x28"]
+[ext_resource type="PackedScene" path="res://scenes/cpu/cpu.tscn" id="4_cpu"]
 
 [sub_resource type="StandardMaterial3D" id="GuiaMaterial"]
 resource_local_to_scene = true
@@ -23,6 +24,8 @@ corner_radius_bottom_left = 10
 
 [node name="Partida" type="Node" unique_id=768644436]
 script = ExtResource("1")
+
+[node name="CPU" parent="." instance=ExtResource("4_cpu")]
 
 [node name="Guia" type="MeshInstance3D" parent="." unique_id=1833389008]
 visible = false

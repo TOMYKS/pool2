@@ -16,6 +16,7 @@ func comprobar(condicion: bool, mensaje: String) -> void:
 func _probar() -> void:
 	sala = load("res://scenes/sala.tscn").instantiate()
 	root.add_child(sala)
+	sala.get_node("Partida").comenzar_partida(false)
 	current_scene = sala
 	await process_frame
 	await physics_frame
@@ -90,6 +91,7 @@ func _probar() -> void:
 	comprobar(nueva != sala and nueva.get_node("Partida").reglas.saque, "La 8 en saque recarga la partida")
 	comprobar(get_nodes_in_group("bolas_color").size() == 15, "Reinicio recupera las 15 bolas")
 	var final = nueva.get_node("Partida")
+	final.comenzar_partida(false)
 	final.reglas.saque = false
 	final.reglas.grupos = [1, 2]
 	final.reglas.restantes.assign([8, 9])

@@ -15,6 +15,7 @@ func _probar() -> void:
 	for turno in [1, 2]:
 		var sala = load("res://scenes/sala.tscn").instantiate()
 		root.add_child(sala)
+		sala.get_node("Partida").comenzar_partida(false)
 		await process_frame
 		await physics_frame
 		sala.set_process(false)

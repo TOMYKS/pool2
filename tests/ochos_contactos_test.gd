@@ -76,6 +76,7 @@ func _probar() -> void:
 func _contacto_fisico(jugador: int, listo: bool) -> void:
 	var sala = load("res://scenes/sala.tscn").instantiate()
 	root.add_child(sala)
+	sala.get_node("Partida").comenzar_partida(false)
 	current_scene = sala
 	var poder = load("res://scenes/ochos.tscn").instantiate()
 	sala.add_child(poder)

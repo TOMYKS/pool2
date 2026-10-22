@@ -7,6 +7,7 @@ func _initialize() -> void:
 func _probar() -> void:
 	var sala = load("res://scenes/sala.tscn").instantiate()
 	root.add_child(sala)
+	sala.get_node("Partida").comenzar_partida(false)
 	current_scene = sala
 	await process_frame
 	for paso in range(30):

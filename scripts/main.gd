@@ -17,9 +17,15 @@ var _tiempo_en_reposo: float = 0.0
 var impact_point_global: Vector3
 var is_aiming: bool = false
 var is_hitting_mode: bool = false
-@export var cue_speed_multiplier: float = 0.5 
+# El collider de la punta sobresale 0.114 m del origen del taco.
+@export var cue_initial_distance: float = 0.15
+@export var cue_max_pullback: float = 0.9
+@export var cue_mouse_travel: float = 0.01
+@export var cue_stop_seconds: float = 0.16
+@export var cue_power_curve: float = 1.5
 var is_waiting_for_ball: bool = false
-var max_forward_speed: float = 0.0
+var _recorrido_golpe: float = 0.0
+var _pausa_golpe: float = 0.0
 
 # --- CONFIGURACIN DE SPIN (Arcade) ---
 ## Radio de la bola (debe coincidir con el CollisionShape3D SphereShape3D)
@@ -35,6 +41,8 @@ func _ready() -> void:
 	taco.global_position = Vector3(0, -1, 0)
 
 func _unhandled_input(event):
+	if not partida.permite_input_humano():
+		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			if partida.bola_en_mano:
@@ -46,7 +54,7 @@ func _unhandled_input(event):
 			is_hitting_mode = false
 			
 func shoot_raycast(mouse_pos: Vector2):
-	if is_waiting_for_ball or not partida.puede_apuntar():
+	if is_waiting_for_ball or not partida.puede_apuntar() or not partida.permite_input_humano():
 		return
 	var space_state = get_world_3d().direct_space_state
 	var origin = camera.project_ray_origin(mouse_pos)
@@ -69,7 +77,7 @@ func setup_cue_stick():
 	var pos_camara = camera.global_position
 	var direccion = Vector3(impact_point_global.x - pos_camara.x, 0, impact_point_global.z - pos_camara.z).normalized()
 	
-	var distancia_retiro = 1.0 
+	var distancia_retiro = cue_initial_distance
 	var posicion_final = impact_point_global - (direccion * distancia_retiro)
 	posicion_final.y = impact_point_global.y
 
@@ -81,22 +89,30 @@ func setup_cue_stick():
 	taco.look_at(impact_point_global, Vector3.UP)
 	
 	is_hitting_mode = true
-	max_forward_speed = 0.0
+	_recorrido_golpe = 0.0
+	_pausa_golpe = 0.0
 func _input(event):
+	if not partida.permite_input_humano():
+		return
 	# Si ya hicimos clic en la bola, el movimiento del ratn mueve el palo
 	if is_hitting_mode and event is InputEventMouseMotion:
 		var mouse_movement = event.relative.y
 		var forward_vector = -taco.global_transform.basis.z
 		
-		# Track forward speed (negative mouse_movement means pushing forward usually, or positive depending on godot)
-		# Let's just track the maximum absolute speed if it's pushing towards the ball
-		var push_speed = abs(mouse_movement)
-		if push_speed > max_forward_speed:
-			max_forward_speed = push_speed
-		
 		# move_and_collide devuelve los datos de la colisn si choca con algo
-		var motion = forward_vector * -mouse_movement * cue_speed_multiplier
+		# Recorrido independiente de la potencia: retirar el taco no lo saca de vista.
+		var distancia_actual: float = (impact_point_global - taco.global_position).dot(forward_vector)
+		var retroceso_disponible: float = maxf(0.0, cue_initial_distance + cue_max_pullback - distancia_actual)
+		var avance: float = maxf(-mouse_movement * cue_mouse_travel, -retroceso_disponible)
+		var motion = forward_vector * avance
 		var collision = taco.move_and_collide(motion)
+		# Contar solo el recorrido real hasta el contacto, no el mouse sobrante.
+		var recorrido_real: float = collision.get_travel().dot(forward_vector) if collision else avance
+		if mouse_movement > 0.0:
+			_recorrido_golpe = 0.0
+		elif recorrido_real > 0.0:
+			_recorrido_golpe += recorrido_real
+			_pausa_golpe = 0.0
 		
 		# Si chocamos con la bola, terminamos el modo de golpe
 		if collision and collision.get_collider() == ball:
@@ -125,13 +141,13 @@ func _input(event):
 			distancia_del_centro = clamp(distancia_del_centro, 0.0, 1.0) # Seguridad de 0 a 1
 			
 			# 4. POTENCIA Y EFICIENCIA
-			var final_speed = max(max_forward_speed, abs(mouse_movement))
+			var raw_force := _potencia_del_recorrido()
 			
 			# Ahora sí: Centro exacto = distancia 0.0 (Eficiencia 100%)
 			# Borde extremo = distancia 1.0 (Eficiencia 65%)
 			var power_efficiency = 1.0 - (distancia_del_centro * 0.80) 
 			
-			var hit_force = final_speed * cue_speed_multiplier * 2.5 * power_efficiency
+			var hit_force = raw_force * power_efficiency
 			hit_force = clamp(hit_force, 0.5, 20.0)
 			# 3. IMPULSO LINEAL PURO
 			ball.apply_central_impulse(hit_direction * hit_force)
@@ -155,9 +171,7 @@ func _input(event):
 			spin_torque += Vector3.UP * (sidespin_amount * sidespin_multiplier)
 			
 			# Aplicamos la fuerza del golpe al giro resultante
-			# NOTA: Usamos la velocidad antes de aplicar la eficiencia para que el efecto sea pronunciado
-			var raw_force = final_speed * cue_speed_multiplier * 2.5
-			raw_force = clamp(raw_force, 0.5, 20.0)
+			# El giro usa la misma potencia del recorrido, antes de la eficiencia.
 			spin_torque *= raw_force
 			
 			# Para que el sidespin sea l, subimos el max_torque temporalmente si es necesario
@@ -177,7 +191,17 @@ func _input(event):
 				is_waiting_for_ball = true 
 				taco.global_position = Vector3(0,-1,0)
 				time_since_hit = 0.0 #
+func _potencia_del_recorrido() -> float:
+	# Curva suave: deja más recorrido disponible para tiros bajos y medios.
+	var proporcion := clampf(_recorrido_golpe / maxf(cue_max_pullback, 0.01), 0.0, 1.0)
+	return lerpf(0.5, 20.0, pow(proporcion, cue_power_curve))
+
+
 func _process(delta):
+	if is_hitting_mode:
+		_pausa_golpe += delta
+		if _pausa_golpe >= cue_stop_seconds:
+			_recorrido_golpe = 0.0
 	# El tiro incluye los movimientos causados por el vencimiento del poder.
 	if is_waiting_for_ball:
 		time_since_hit += delta

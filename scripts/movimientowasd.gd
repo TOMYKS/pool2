@@ -10,10 +10,30 @@ extends Node3D
 @export var zoom_speed: float = 0.2
 @export var min_zoom: float = 0.4 # Distancia mínima
 @export var max_zoom: float = 5.0 # Distancia máxima
+@export var zoom_inicial: float = 2.8
+@export var inclinacion_inicial: float = -18.0
 
 var is_dragging_camera: bool = false # Rastrea si el clic derecho está apretado
 
+func _ready() -> void:
+	# El taco no debe acortar el brazo de la cámara al apuntar o retroceder.
+	var taco: CollisionObject3D = get_parent().get_node("Cue")
+	spring_arm.add_excluded_object(taco.get_rid())
+	spring_arm.spring_length = clampf(zoom_inicial, min_zoom, max_zoom)
+	rotation.x = deg_to_rad(inclinacion_inicial)
+	if ball:
+		global_position = ball.global_position
+
+
+func _controles_habilitados() -> bool:
+	var partida = get_parent().get_node_or_null("Partida")
+	return partida != null and partida.permite_input_humano() and not partida.bola_en_mano
+
+
 func _process(delta):
+	# El estado de la partida manda incluso si el nodo acaba de entrar al árbol.
+	if not _controles_habilitados():
+		return
 	# El pivote sigue a la bola
 	if ball:
 		global_position = ball.global_position
@@ -27,6 +47,9 @@ func _process(delta):
 		rotation.x = clamp(rotation.x, deg_to_rad(-80), deg_to_rad(-10))
 
 func _unhandled_input(event):
+	if not _controles_habilitados():
+		is_dragging_camera = false
+		return
 	# 1. Detectar si presionamos o soltamos el clic derecho
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.pressed:

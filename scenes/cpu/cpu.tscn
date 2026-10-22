@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ritq0x8cf076"]
+
+[ext_resource type="Script" uid="uid://dhmphi1mba1ap" path="res://scenes/cpu/cpu.gd" id="1_cpu"]
+
+[node name="CPU" type="Node" unique_id=264428812]
+script = ExtResource("1_cpu")
