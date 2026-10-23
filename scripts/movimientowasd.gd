@@ -27,7 +27,7 @@ func _ready() -> void:
 
 func _controles_habilitados() -> bool:
 	var partida = get_parent().get_node_or_null("Partida")
-	return partida != null and partida.permite_input_humano() and not partida.bola_en_mano
+	return partida != null and partida.permite_input_humano() and not partida.bola_en_mano and not get_parent().camara_en_transicion()
 
 
 func _process(delta):

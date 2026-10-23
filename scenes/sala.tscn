@@ -745,6 +745,7 @@ stream = ExtResource("23_d1obb")
 stream = ExtResource("24_obnxk")
 
 [node name="Powerups" parent="." unique_id=676774078 instance=ExtResource("29_ts382")]
+probabilidad_aparicion = 1.0
 
 [connection signal="body_entered" from="Bolas/Ball1" to="Bolas/Ball1" method="_on_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball2" to="Bolas/Ball2" method="_on_body_entered"]

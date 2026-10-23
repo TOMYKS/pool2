@@ -192,9 +192,9 @@ func finalizar_tiro() -> void:
 		if resultado["ganador"] == jugador_que_tiro:
 			sonido_win.play()
 		else:
-			sonido_falta.volume_db = -10.0
+			sonido_falta.volume_db = -20.0
 			sonido_falta.play()
-		sala.camera_mesa.make_current()
+		sala.cambiar_camara(sala.camera_mesa)
 		_control_camara(false)
 		var poderes = sala.get_node_or_null("Powerups")
 		if poderes != null and poderes.habilitado:
@@ -202,9 +202,9 @@ func finalizar_tiro() -> void:
 	elif resultado.get("bola_en_mano", false):
 		bola_en_mano = true
 		_ocultar_blanca()
-		sala.camera_mesa.make_current()
+		sala.cambiar_camara(sala.camera_mesa)
 		_control_camara(false)
-		sonido_falta.volume_db = -16.0
+		sonido_falta.volume_db = -25.0
 		sonido_falta.play()
 	else:
 		_camara_del_turno()
@@ -213,9 +213,9 @@ func finalizar_tiro() -> void:
 
 func _camara_del_turno() -> void:
 	if es_turno_cpu():
-		sala.camera_mesa.make_current()
+		sala.cambiar_camara(sala.camera_mesa)
 	else:
-		sala.camera.make_current()
+		sala.cambiar_camara(sala.camera)
 	_control_camara(true)
 
 
@@ -229,7 +229,7 @@ func _control_camara(permitir: bool) -> void:
 
 
 func solicitar_colocacion(pantalla: Vector2) -> void:
-	if bola_en_mano and permite_input_humano():
+	if bola_en_mano and permite_input_humano() and not sala.camara_en_transicion():
 		_clic_pendiente = pantalla
 
 
@@ -244,9 +244,13 @@ func posicion_valida(punto: Vector3) -> bool:
 	var radio: float = sala.ball_radius
 	if absf(local.y - (ALTURA_PANO + radio + 0.01)) > 0.03:
 		return false
-	if absf(local.x) > 4.90 - radio - 0.03 or absf(local.z) > 2.42 - radio - 0.03:
-		return false
-	if absf(local.x) > 4.35 and absf(local.z) > 1.95:
+	# Usar el paño real como apoyo; las bandas se comprueban con la esfera.
+	var rayo := PhysicsRayQueryParameters3D.create(
+		punto, punto + Vector3.DOWN * (radio + 0.03), 1,
+		[sala.ball.get_rid(), sala.taco.get_rid()]
+	)
+	var apoyo: Dictionary = sala.get_world_3d().direct_space_state.intersect_ray(rayo)
+	if apoyo.is_empty() or apoyo.collider != sala.get_node("Mesa/Pano") or apoyo.normal.y < 0.9:
 		return false
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	var esfera := SphereShape3D.new()
@@ -255,7 +259,7 @@ func posicion_valida(punto: Vector3) -> bool:
 	consulta.transform = Transform3D(Basis.IDENTITY, punto)
 	consulta.collision_mask = 3
 	consulta.exclude = [sala.ball.get_rid(), sala.taco.get_rid()]
-	consulta.margin = 0.004
+	consulta.margin = 0.001
 	return sala.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
 
 

@@ -3,6 +3,8 @@ extends Node3D
 signal tiro_iniciado
 signal tiro_finalizado
 
+const ReposoBola = preload("res://scripts/reposo_bola.gd")
+
 @export var camera: Camera3D
 @export var camera_mesa: Camera3D
 @export var marker: MeshInstance3D
@@ -19,13 +21,61 @@ var is_aiming: bool = false
 var is_hitting_mode: bool = false
 # El collider de la punta sobresale 0.114 m del origen del taco.
 @export var cue_initial_distance: float = 0.15
-@export var cue_max_pullback: float = 0.9
+@export var cue_max_pullback: float = 1.35
 @export var cue_mouse_travel: float = 0.01
 @export var cue_stop_seconds: float = 0.16
 @export var cue_power_curve: float = 1.5
+@export var cue_max_force: float = 30.0
 var is_waiting_for_ball: bool = false
 var _recorrido_golpe: float = 0.0
 var _pausa_golpe: float = 0.0
+var _material_potencia: StandardMaterial3D
+
+## Duración del viaje entre la cámara de apuntado y la vista general (0 = corte).
+@export_range(0.0, 3.0, 0.05) var camera_transition_seconds: float = 0.65
+var _camara_viaje: Camera3D
+var _destino_camara: Camera3D
+var _tween_camara: Tween
+
+
+func camara_en_transicion() -> bool:
+	return _tween_camara != null and _tween_camara.is_running()
+
+
+func cambiar_camara(destino: Camera3D) -> void:
+	if camara_en_transicion() and _destino_camara == destino:
+		return
+	var actual := get_viewport().get_camera_3d()
+	if actual == destino:
+		return
+	if _tween_camara != null:
+		_tween_camara.kill()
+	_destino_camara = destino
+	if actual == null or camera_transition_seconds <= 0.0:
+		destino.make_current()
+		return
+	if destino == camera:
+		$Pivot.global_position = ball.global_position
+	var origen := actual.global_transform
+	var fov_origen := actual.fov
+	if _camara_viaje == null:
+		_camara_viaje = Camera3D.new()
+		_camara_viaje.name = "CamaraTransicion"
+		add_child(_camara_viaje)
+	_camara_viaje.global_transform = origen
+	_camara_viaje.fov = fov_origen
+	_camara_viaje.near = destino.near
+	_camara_viaje.far = destino.far
+	_camara_viaje.cull_mask = destino.cull_mask
+	_camara_viaje.environment = destino.environment
+	_camara_viaje.make_current()
+	# Trayecto recto como una cámara en cable, con arranque y frenado suaves.
+	_tween_camara = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_tween_camara.tween_method(func(peso: float):
+		_camara_viaje.global_transform = origen.interpolate_with(destino.global_transform, peso)
+		_camara_viaje.fov = lerpf(fov_origen, destino.fov, peso)
+	, 0.0, 1.0, camera_transition_seconds)
+	_tween_camara.tween_callback(destino.make_current)
 
 # --- CONFIGURACIN DE SPIN (Arcade) ---
 ## Radio de la bola (debe coincidir con el CollisionShape3D SphereShape3D)
@@ -36,12 +86,15 @@ var _pausa_golpe: float = 0.0
 @export var max_torque: float = 3.0
 
 func _ready() -> void:
+	_material_potencia = StandardMaterial3D.new()
+	_material_potencia.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	marker.material_override = _material_potencia
 	marker.hide()
 	taco.hide()
 	taco.global_position = Vector3(0, -1, 0)
 
 func _unhandled_input(event):
-	if not partida.permite_input_humano():
+	if not partida.permite_input_humano() or camara_en_transicion():
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
@@ -54,7 +107,7 @@ func _unhandled_input(event):
 			is_hitting_mode = false
 			
 func shoot_raycast(mouse_pos: Vector2):
-	if is_waiting_for_ball or not partida.puede_apuntar() or not partida.permite_input_humano():
+	if camara_en_transicion() or is_waiting_for_ball or not partida.puede_apuntar() or not partida.permite_input_humano():
 		return
 	var space_state = get_world_3d().direct_space_state
 	var origin = camera.project_ray_origin(mouse_pos)
@@ -91,6 +144,7 @@ func setup_cue_stick():
 	is_hitting_mode = true
 	_recorrido_golpe = 0.0
 	_pausa_golpe = 0.0
+	_actualizar_indicador_potencia()
 func _input(event):
 	if not partida.permite_input_humano():
 		return
@@ -113,6 +167,7 @@ func _input(event):
 		elif recorrido_real > 0.0:
 			_recorrido_golpe += recorrido_real
 			_pausa_golpe = 0.0
+		_actualizar_indicador_potencia()
 		
 		# Si chocamos con la bola, terminamos el modo de golpe
 		if collision and collision.get_collider() == ball:
@@ -148,10 +203,10 @@ func _input(event):
 			var power_efficiency = 1.0 - (distancia_del_centro * 0.80) 
 			
 			var hit_force = raw_force * power_efficiency
-			hit_force = clamp(hit_force, 0.5, 20.0)
+			hit_force = clamp(hit_force, 0.5, cue_max_force)
 			# 3. IMPULSO LINEAL PURO
 			ball.apply_central_impulse(hit_direction * hit_force)
-			var peso_golpe = inverse_lerp(0.5, 20.0, hit_force)
+			var peso_golpe = inverse_lerp(0.5, cue_max_force, hit_force)
 			
 			# Rango muy cerrado: de -8.0 dB (suave) a 0.0 dB (fuerte). Siempre se escuchará.
 			sonido_taco.volume_db = lerp(-14.0, 0.0, peso_golpe)
@@ -187,14 +242,33 @@ func _input(event):
 			is_waiting_for_ball = true
 			time_since_hit = 0.0
 			if camera_mesa:
-				camera_mesa.make_current() 
+				cambiar_camara(camera_mesa)
 				is_waiting_for_ball = true 
 				taco.global_position = Vector3(0,-1,0)
 				time_since_hit = 0.0 #
 func _potencia_del_recorrido() -> float:
+	return _potencia_para_recorrido(_recorrido_golpe)
+
+
+func _potencia_para_recorrido(recorrido: float) -> float:
 	# Curva suave: deja más recorrido disponible para tiros bajos y medios.
-	var proporcion := clampf(_recorrido_golpe / maxf(cue_max_pullback, 0.01), 0.0, 1.0)
-	return lerpf(0.5, 20.0, pow(proporcion, cue_power_curve))
+	var proporcion := clampf(recorrido / maxf(cue_max_pullback, 0.01), 0.0, 1.0)
+	return lerpf(0.5, cue_max_force, pow(proporcion, cue_power_curve))
+
+
+func _actualizar_indicador_potencia() -> void:
+	# Prever la potencia al llegar a la bola, no solo el avance ya recorrido.
+	var direccion := -taco.global_basis.z.normalized()
+	var restante := maxf(0.0, (impact_point_global - taco.global_position).dot(direccion) - 0.114)
+	var potencia := _potencia_para_recorrido(_recorrido_golpe + restante)
+	var offset := (impact_point_global - ball.global_position) / ball_radius
+	var distancia := clampf(Vector2(offset.dot(direccion.cross(Vector3.UP)), offset.y).length(), 0.0, 1.0)
+	potencia = clampf(potencia * (1.0 - distancia * 0.80), 0.5, cue_max_force)
+	var peso := inverse_lerp(0.5, cue_max_force, potencia)
+	var verde := Color(0.1, 1.0, 0.15)
+	var amarillo := Color(1.0, 0.9, 0.0)
+	var rojo := Color(1.0, 0.08, 0.02)
+	_material_potencia.albedo_color = verde.lerp(amarillo, peso * 2.0) if peso <= 0.5 else amarillo.lerp(rojo, (peso - 0.5) * 2.0)
 
 
 func _process(delta):
@@ -202,6 +276,7 @@ func _process(delta):
 		_pausa_golpe += delta
 		if _pausa_golpe >= cue_stop_seconds:
 			_recorrido_golpe = 0.0
+		_actualizar_indicador_potencia()
 	# El tiro incluye los movimientos causados por el vencimiento del poder.
 	if is_waiting_for_ball:
 		time_since_hit += delta
@@ -212,6 +287,13 @@ func _process(delta):
 		_tiempo_en_reposo += delta
 		if _tiempo_en_reposo < 0.3:
 			return
+		# El rack puede despertarse por contactos mínimos entre bolas vecinas.
+		# Tras reposo estable, eliminar ese residuo antes de resolver el turno.
+		for bola in [ball] + get_tree().get_nodes_in_group("bolas_color"):
+			if not bola.is_queued_for_deletion() and not bola.freeze:
+				bola.linear_velocity = Vector3.ZERO
+				bola.angular_velocity = Vector3.ZERO
+				bola.sleeping = true
 		var poderes = get_node_or_null("Powerups")
 		if poderes != null and poderes.preparar_fin_tiro():
 			# Encoger bolas o quitar una pared puede liberar una caída.
@@ -229,7 +311,7 @@ func _on_area_3d_body_entered(body):
 	partida.registrar_caida(body)
 func todas_las_bolas_detenidas() -> bool:
 	# 1. Comprobamos la blanca primero (si se mueve, ya sabemos que no debemos cambiar la cámara)
-	if not ball.freeze and not ball.sleeping and (ball.linear_velocity.length() >= 0.02 or ball.angular_velocity.length() >= 0.02):
+	if not ball.freeze and not ball.sleeping and not ReposoBola.puede_detenerse(ball):
 		return false
 		
 	# 2. Obtenemos todas las bolas de color que sigan vivas en la escena
@@ -237,9 +319,9 @@ func todas_las_bolas_detenidas() -> bool:
 	
 	# 3. Revisamos la velocidad de cada una de ellas
 	for bola_color in bolas_restantes:
-		if bola_color.is_queued_for_deletion() or bola_color.sleeping:
+		if bola_color.is_queued_for_deletion() or bola_color.sleeping or bola_color.freeze:
 			continue
-		if bola_color.linear_velocity.length() >= 0.02 or bola_color.angular_velocity.length() >= 0.02:
+		if not ReposoBola.puede_detenerse(bola_color):
 			return false # Encontramos al menos una moviéndose, cancelamos la comprobación
 			
 	# Si el código llega hasta aquí, significa que absolutamente nada se está moviendo

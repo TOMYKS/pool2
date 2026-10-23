@@ -24,6 +24,7 @@ La CPU elige la bola válida más cercana e intenta empujarla hacia la tronera m
 * **Apuntar:** Mueve la cámara con las flechas del teclado o arrastrando el ratón con el botón derecho.
 * **Zoom:** Ajusta el acercamiento con la rueda del ratón.
 * **Golpear:** Haz clic izquierdo para elegir el punto de impacto sobre la blanca y mueve el ratón para impulsar el taco. Cuanto más recorrido continuo hacia adelante hagas, mayor será la fuerza. Si frenás durante 0,16 segundos o retrocedés, el recorrido vuelve a contarse desde esa posición. Para un tiro suave, acercá el taco, frená y completá el golpe desde cerca.
+* **Indicador de potencia:** La marca sobre la blanca pasa de verde (suave) a amarillo (medio) y rojo (fuerte). Anticipa la fuerza al completar el avance desde la posición del taco y tiene en cuenta el punto de impacto. Al frenar cerca de la bola, vuelve a indicar un golpe suave. El recorrido máximo del taco es de 1,35 unidades.
 * **Colocar blanca (Bola en mano):** Tras una falta, haz clic en un lugar libre del paño para reubicar la bola blanca.
 * **Habilitar/Deshabilitar Poderes:** Presiona la barra espaciadora (`Espacio`).
 
@@ -47,3 +48,14 @@ El juego no es el típico simulador de pool. Al presionar Espacio, se habilita e
 * **Bolas falsas:** Permite que ciertas bolas atraviesen a otras manteniendo la interacción con la mesa.
 * **Troneras bloqueadas:** Cierra entradas de forma aleatoria, obligando a recalcular los tiros.
 * **Ochos malditos:** Transforma todas las bolas en bolas 8 negras, excepto 1 para cada jugador.
+
+## Ajustes de cámara y potencia
+
+En el nodo raíz `Sala`, el Inspector expone los ajustes del script `scripts/main.gd`:
+
+* `cue_max_pullback = 1.35`: recorrido máximo hacia atrás. Subirlo permite dosificar la potencia en una distancia mayor.
+* `cue_mouse_travel = 0.01`: distancia del taco por píxel de movimiento. Bajarlo requiere más movimiento del ratón para el mismo recorrido.
+* `cue_max_force = 30.0`: potencia máxima.
+* `camera_transition_seconds = 0.65`: duración del cambio de cámara. Probar 1.0–1.2 para un viaje más pausado; 0 desactiva el tween.
+
+`cambiar_camara(destino)` crea una cámara auxiliar llamada `CamaraTransicion` y la mueve desde la vista que se está mostrando hasta la cámara de destino. Interpola posición, orientación y campo de visión, con una curva `TRANS_SINE` / `EASE_IN_OUT`: acelera y frena suavemente. Al llegar, activa la cámara de destino. Así ya se obtiene un movimiento recto como una cámara en cable, tanto al pasar a `CameraMesa` como al regresar al apuntado. La posición y rotación de `CameraMesa` en `scenes/sala.tscn` determinan el extremo del viaje; las cámaras originales conservan sus posiciones. Para velocidad constante se puede usar `TRANS_LINEAR`. El trayecto actual no esquiva obstáculos.

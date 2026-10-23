@@ -21,7 +21,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if partida.configurando or partida.terminada or partida.reiniciando or not partida.es_turno_cpu() or partida.reglas.en_tiro or sala.is_waiting_for_ball:
+	if partida.configurando or partida.terminada or partida.reiniciando or not partida.es_turno_cpu() or partida.reglas.en_tiro or sala.is_waiting_for_ball or sala.camara_en_transicion():
 		espera = 0.0
 		return
 	if not sala.todas_las_bolas_detenidas():
@@ -32,7 +32,7 @@ func _physics_process(delta: float) -> void:
 		return
 	espera = 0.0
 	partida._control_camara(false)
-	sala.camera_mesa.make_current()
+	sala.cambiar_camara(sala.camera_mesa)
 	if partida.bola_en_mano:
 		_colocar_blanca()
 		return
@@ -155,4 +155,4 @@ func disparar(direccion: Vector3, fuerza: float) -> void:
 	sala.is_waiting_for_ball = true
 	sala.time_since_hit = 0.0
 	sala._tiempo_en_reposo = 0.0
-	sala.camera_mesa.make_current()
+	sala.cambiar_camara(sala.camera_mesa)
