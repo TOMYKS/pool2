@@ -60,6 +60,7 @@ camera_mesa = NodePath("CameraMesa")
 marker = NodePath("Marca")
 taco = NodePath("Cue")
 ball = NodePath("Ball0")
+camera_transition_seconds = 0.4
 
 [node name="Bar" parent="." unique_id=465775975 instance=ExtResource("29_p1vf7")]
 transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, 7.149632, 0, -2.1322384)
@@ -69,7 +70,7 @@ transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, 7.
 [node name="Partida" parent="." unique_id=2142469568 instance=ExtResource("partida")]
 
 [node name="Ball0" parent="." unique_id=596734405 groups=["blanca"] instance=ExtResource("2_mteyr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.821, 4.398, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.821, 4.3171234, 0)
 contact_monitor = true
 max_contacts_reported = 1
 
@@ -357,10 +358,9 @@ transform = Transform3D(1, 0, 0, 0, 0.7403895, 0.67217815, 0, -0.67217815, 0.740
 fov = 62.0
 
 [node name="Bolas" type="Node3D" parent="." unique_id=1903889870]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.002)
 
 [node name="Ball1" type="RigidBody3D" parent="Bolas" unique_id=946964474 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5800989, 4.3169107, -0.021022052)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58, 4.317959, 0)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -384,7 +384,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball2" type="RigidBody3D" parent="Bolas" unique_id=133560216 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0787535, 4.346054, 0.2732979)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0713332, 4.317959, 0.28367132)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -407,7 +407,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball3" type="RigidBody3D" parent="Bolas" unique_id=593540977 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0764754, 4.346054, -0.30455247)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, -0.28367132)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -430,7 +430,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball4" type="RigidBody3D" parent="Bolas" unique_id=1891736032 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5889993, 4.346054, -0.5815642)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3169997, 4.317959, -0.42550698)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -453,7 +453,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball5" type="RigidBody3D" parent="Bolas" unique_id=400224148 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5796869, 4.346054, -0.0062836707)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8256665, 4.317959, -0.14183566)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -476,7 +476,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball6" type="RigidBody3D" parent="Bolas" unique_id=1598605605 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5919242, 4.346054, 0.587201)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, 0.56734264)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -499,7 +499,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball7" type="RigidBody3D" parent="Bolas" unique_id=1744184685 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3331697, 4.346054, -0.14908196)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3169997, 4.317959, 0.14183566)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -522,7 +522,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball8" type="RigidBody3D" parent="Bolas" unique_id=1586697203 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0681546, 4.346054, -0.018173933)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0713332, 4.317959, 0)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -545,7 +545,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball9" type="RigidBody3D" parent="Bolas" unique_id=1194143713 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8193471, 4.346054, 0.14796767)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3169997, 4.317959, 0.42550698)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -567,8 +567,8 @@ stream = ExtResource("27_s1q4q")
 [node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball9" unique_id=2138668142]
 stream = ExtResource("25_obnxk")
 
-[node name="Ball10" type="RigidBody3D" parent="Bolas" unique_id=1011331708 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3364449, 4.346054, -0.43458426)
+[node name="Ball10" type="RigidBody3D" parent="Bolas" unique_id=2029226822 groups=["bolas_color"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0713332, 4.317959, -0.28367132)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -577,44 +577,44 @@ max_contacts_reported = 3
 angular_damp = 2.0
 script = ExtResource("6_xtqig")
 
-[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball10" unique_id=538189526]
-transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
-mesh = ExtResource("15_s1q4q")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball10" unique_id=721315704]
-shape = SubResource("SphereShape3D_iwtcp")
-
-[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball10" unique_id=1197862919]
-stream = ExtResource("27_s1q4q")
-
-[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball10" unique_id=387467650]
-stream = ExtResource("25_obnxk")
-
-[node name="Ball11" type="RigidBody3D" parent="Bolas" unique_id=2029226822 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5858722, 4.346054, -0.2907647)
-mass = 0.8
-physics_material_override = SubResource("PhysicsMaterial_mteyr")
-continuous_cd = true
-contact_monitor = true
-max_contacts_reported = 3
-angular_damp = 2.0
-script = ExtResource("6_xtqig")
-
-[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball11" unique_id=220251600]
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball10" unique_id=220251600]
 transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
 mesh = ExtResource("16_nw2fu")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball11" unique_id=2015782694]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball10" unique_id=2015782694]
 shape = SubResource("SphereShape3D_iwtcp")
 
-[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball11" unique_id=926346296]
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball10" unique_id=926346296]
 stream = ExtResource("27_s1q4q")
 
-[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball11" unique_id=1805260862]
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball10" unique_id=1805260862]
+stream = ExtResource("25_obnxk")
+
+[node name="Ball11" type="RigidBody3D" parent="Bolas" unique_id=1011331708 groups=["bolas_color"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8256665, 4.317959, 0.14183566)
+mass = 0.8
+physics_material_override = SubResource("PhysicsMaterial_mteyr")
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
+angular_damp = 2.0
+script = ExtResource("6_xtqig")
+
+[node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball11" unique_id=538189526]
+transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07, 0, 0, 0)
+mesh = ExtResource("15_s1q4q")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball11" unique_id=721315704]
+shape = SubResource("SphereShape3D_iwtcp")
+
+[node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball11" unique_id=1197862919]
+stream = ExtResource("27_s1q4q")
+
+[node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball11" unique_id=387467650]
 stream = ExtResource("25_obnxk")
 
 [node name="Ball12" type="RigidBody3D" parent="Bolas" unique_id=96526948 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8102844, 4.346054, -0.17846946)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, -0.56734264)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -637,7 +637,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball13" type="RigidBody3D" parent="Bolas" unique_id=1737047792 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3369687, 4.346054, 0.1433863)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, 0)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -660,7 +660,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball14" type="RigidBody3D" parent="Bolas" unique_id=1320554984 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.329833, 4.346054, 0.42492312)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3169997, 4.317959, -0.14183566)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
@@ -683,7 +683,7 @@ stream = ExtResource("27_s1q4q")
 stream = ExtResource("25_obnxk")
 
 [node name="Ball15" type="RigidBody3D" parent="Bolas" unique_id=1903657130 groups=["bolas_color"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5893216, 4.346054, 0.2863626)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, 0.28367132)
 mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true

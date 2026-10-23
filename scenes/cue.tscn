@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cv3d7xjq2qhtd"]
 
 [ext_resource type="ArrayMesh" uid="uid://c7ab7qbqka6r7" path="res://assets/cue.res" id="1_nqers"]
+[ext_resource type="Script" path="res://scripts/taco_visual.gd" id="2_visual"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_i6w6a"]
 height = 0.061523438
@@ -9,8 +10,12 @@ radius = 0.0107421875
 [node name="Cue" type="AnimatableBody3D" unique_id=827978359]
 sync_to_physics = false
 
-[node name="Pool Cue _Mark Peters on Sketchfab_PoolCue_MTL_0" type="MeshInstance3D" parent="." unique_id=262967423]
-transform = Transform3D(-2.1418583e-07, 0, 4.9, 0, 4.9000006, 0, -4.9000006, 0, -2.141858e-07, 0, 0, 6.1194983)
+[node name="Visual" type="Node3D" parent="."]
+position = Vector3(0, 0, -0.113305)
+script = ExtResource("2_visual")
+
+[node name="Pool Cue _Mark Peters on Sketchfab_PoolCue_MTL_0" type="MeshInstance3D" parent="Visual" unique_id=262967423]
+transform = Transform3D(-2.1418583e-07, 0, 4.9, 0, 4.9000006, 0, -4.9000006, 0, -2.141858e-07, 0, 0, 6.2328033)
 mesh = ExtResource("1_nqers")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1497822578]

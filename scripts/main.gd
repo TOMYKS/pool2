@@ -140,6 +140,7 @@ func setup_cue_stick():
 	
 	# 4. Apuntamos
 	taco.look_at(impact_point_global, Vector3.UP)
+	taco.get_node("Visual").preparar(impact_point_global, cue_initial_distance + cue_max_pullback)
 	
 	is_hitting_mode = true
 	_recorrido_golpe = 0.0
@@ -160,6 +161,7 @@ func _input(event):
 		var avance: float = maxf(-mouse_movement * cue_mouse_travel, -retroceso_disponible)
 		var motion = forward_vector * avance
 		var collision = taco.move_and_collide(motion)
+		taco.get_node("Visual").actualizar()
 		# Contar solo el recorrido real hasta el contacto, no el mouse sobrante.
 		var recorrido_real: float = collision.get_travel().dot(forward_vector) if collision else avance
 		if mouse_movement > 0.0:
