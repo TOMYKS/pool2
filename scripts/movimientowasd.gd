@@ -42,6 +42,7 @@ func _process(delta):
 	var input_dir = Input.get_vector("ui_right", "ui_left", "ui_down", "ui_up") 
 	
 	if input_dir != Vector2.ZERO:
+		get_parent().cancelar_apuntado()
 		rotation.y -= input_dir.x * rotation_speed * delta
 		rotation.x -= input_dir.y * rotation_speed * delta
 		rotation.x = clamp(rotation.x, deg_to_rad(-80), deg_to_rad(-10))
@@ -53,6 +54,7 @@ func _unhandled_input(event):
 	# 1. Detectar si presionamos o soltamos el clic derecho
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.pressed:
+			get_parent().cancelar_apuntado()
 			is_dragging_camera = true
 			# Atrapa el ratón para que no se salga de la ventana al girar
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

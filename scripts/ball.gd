@@ -6,6 +6,16 @@ extends RigidBody3D
 @export var max_magnus_force: float = 10.0
 var _reposo := preload("res://scripts/reposo_bola.gd").new()
 
+# Comparte el ajuste de ascenso de las bolas de color desde Sala.
+var velocidad_vertical_maxima: float = 1.0
+
+
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	if velocidad_vertical_maxima > 0.0 and state.linear_velocity.y > velocidad_vertical_maxima:
+		var velocidad := state.linear_velocity
+		velocidad.y = velocidad_vertical_maxima
+		state.linear_velocity = velocidad
+
 func _physics_process(delta):
 	_reposo.actualizar(self, delta)
 	# Limitamos la velocidad lineal como medida de seguridad final

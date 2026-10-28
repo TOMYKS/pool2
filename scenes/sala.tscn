@@ -60,6 +60,9 @@ camera_mesa = NodePath("CameraMesa")
 marker = NodePath("Marca")
 taco = NodePath("Cue")
 ball = NodePath("Ball0")
+cue_max_force = 28.0
+saque_max_force = 28.0
+velocidad_vertical_maxima_color = 0.8
 camera_transition_seconds = 0.4
 
 [node name="Bar" parent="." unique_id=465775975 instance=ExtResource("29_p1vf7")]

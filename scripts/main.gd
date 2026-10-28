@@ -26,10 +26,18 @@ var is_hitting_mode: bool = false
 @export var cue_stop_seconds: float = 0.16
 @export var cue_power_curve: float = 1.5
 @export var cue_max_force: float = 30.0
+## Solo en el saque: comprime el tramo alto de potencia. 0 lo desactiva.
+@export_range(0.0, 30.0, 0.5) var saque_max_force: float = 24.0
 var is_waiting_for_ball: bool = false
 var _recorrido_golpe: float = 0.0
 var _pausa_golpe: float = 0.0
+var _golpe_armado: bool = false
 var _material_potencia: StandardMaterial3D
+
+## Tope de ascenso de TODAS las bolas, incluida la blanca, en m/s. 0 lo desactiva.
+## Se conserva el nombre anterior para respetar los valores guardados en Sala.
+## Solo afecta Y positiva; no modifica potencia, giro, rebote horizontal ni caídas.
+@export_range(0.0, 5.0, 0.1) var velocidad_vertical_maxima_color: float = 1.0
 
 ## Duración del viaje entre la cámara de apuntado y la vista general (0 = corte).
 @export_range(0.0, 3.0, 0.05) var camera_transition_seconds: float = 0.65
@@ -86,9 +94,24 @@ func cambiar_camara(destino: Camera3D) -> void:
 @export var max_torque: float = 3.0
 
 func _ready() -> void:
+	for bola in [ball] + get_tree().get_nodes_in_group("bolas_color"):
+		bola.velocidad_vertical_maxima = velocidad_vertical_maxima_color
 	_material_potencia = StandardMaterial3D.new()
 	_material_potencia.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	marker.material_override = _material_potencia
+	marker.hide()
+	taco.hide()
+	taco.global_position = Vector3(0, -1, 0)
+	# El taco consulta contactos, pero las bolas no reciben empujes del cuerpo.
+	# El único impulso del golpe es el que aplicamos explícitamente abajo.
+	taco.collision_layer = 0
+
+
+func cancelar_apuntado() -> void:
+	is_hitting_mode = false
+	_golpe_armado = false
+	_recorrido_golpe = 0.0
+	_pausa_golpe = 0.0
 	marker.hide()
 	taco.hide()
 	taco.global_position = Vector3(0, -1, 0)
@@ -98,16 +121,18 @@ func _unhandled_input(event):
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
+			cancelar_apuntado()
 			if partida.bola_en_mano:
 				partida.solicitar_colocacion(event.position)
 			else:
 				shoot_raycast(event.position)
 		else:
-			# Al soltar el clic, el palo deja de seguir al rat
-			is_hitting_mode = false
+			cancelar_apuntado()
 			
 func shoot_raycast(mouse_pos: Vector2):
 	if camara_en_transicion() or is_waiting_for_ball or not partida.puede_apuntar() or not partida.permite_input_humano():
+		return
+	if $Pivot.is_dragging_camera:
 		return
 	var space_state = get_world_3d().direct_space_state
 	var origin = camera.project_ray_origin(mouse_pos)
@@ -143,10 +168,15 @@ func setup_cue_stick():
 	taco.get_node("Visual").preparar(impact_point_global, cue_initial_distance + cue_max_pullback)
 	
 	is_hitting_mode = true
+	_golpe_armado = false
 	_recorrido_golpe = 0.0
 	_pausa_golpe = 0.0
 	_actualizar_indicador_potencia()
 func _input(event):
+	# Procesar la cancelación incluso si una interfaz consume el clic.
+	if event is InputEventMouseButton:
+		if (event.button_index == MOUSE_BUTTON_LEFT and not event.pressed) or (event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
+			cancelar_apuntado()
 	if not partida.permite_input_humano():
 		return
 	# Si ya hicimos clic en la bola, el movimiento del ratn mueve el palo
@@ -159,12 +189,19 @@ func _input(event):
 		var distancia_actual: float = (impact_point_global - taco.global_position).dot(forward_vector)
 		var retroceso_disponible: float = maxf(0.0, cue_initial_distance + cue_max_pullback - distancia_actual)
 		var avance: float = maxf(-mouse_movement * cue_mouse_travel, -retroceso_disponible)
+		# Un avance inicial nunca puede tocar la bola: primero hay que retirar
+		# el taco, aunque sea mínimamente. La pausa no desarma ese retroceso.
+		if not _golpe_armado and avance >= 0.0:
+			return
 		var motion = forward_vector * avance
-		var collision = taco.move_and_collide(motion)
+		var collision = taco.move_and_collide(motion, true)
+		taco.global_position += collision.get_travel() if collision else motion
 		taco.get_node("Visual").actualizar()
 		# Contar solo el recorrido real hasta el contacto, no el mouse sobrante.
 		var recorrido_real: float = collision.get_travel().dot(forward_vector) if collision else avance
 		if mouse_movement > 0.0:
+			if recorrido_real < 0.0:
+				_golpe_armado = true
 			_recorrido_golpe = 0.0
 		elif recorrido_real > 0.0:
 			_recorrido_golpe += recorrido_real
@@ -174,6 +211,7 @@ func _input(event):
 		# Si chocamos con la bola, terminamos el modo de golpe
 		if collision and collision.get_collider() == ball:
 			is_hitting_mode = false
+			_golpe_armado = false
 			marker.visible = false
 			taco.visible = false # Ocultamos el palo
 			
@@ -198,7 +236,7 @@ func _input(event):
 			distancia_del_centro = clamp(distancia_del_centro, 0.0, 1.0) # Seguridad de 0 a 1
 			
 			# 4. POTENCIA Y EFICIENCIA
-			var raw_force := _potencia_del_recorrido()
+			var raw_force := ajustar_fuerza_tiro(_potencia_del_recorrido())
 			
 			# Ahora sí: Centro exacto = distancia 0.0 (Eficiencia 100%)
 			# Borde extremo = distancia 1.0 (Eficiencia 65%)
@@ -252,6 +290,19 @@ func _potencia_del_recorrido() -> float:
 	return _potencia_para_recorrido(_recorrido_golpe)
 
 
+func ajustar_fuerza_tiro(fuerza: float) -> float:
+	if not partida.reglas.saque or saque_max_force <= 0.0:
+		return fuerza
+	var maximo := minf(saque_max_force, cue_max_force)
+	# Conservar intacto el 70 % inferior del control de potencia. Por encima,
+	# comprimir suavemente hasta el máximo del saque, sin un escalón ni meseta.
+	var umbral := minf(cue_max_force * 0.7, maximo)
+	if fuerza <= umbral:
+		return fuerza
+	var peso := clampf((fuerza - umbral) / maxf(cue_max_force - umbral, 0.001), 0.0, 1.0)
+	return lerpf(umbral, maximo, peso)
+
+
 func _potencia_para_recorrido(recorrido: float) -> float:
 	# Curva suave: deja más recorrido disponible para tiros bajos y medios.
 	var proporcion := clampf(recorrido / maxf(cue_max_pullback, 0.01), 0.0, 1.0)
@@ -262,7 +313,7 @@ func _actualizar_indicador_potencia() -> void:
 	# Prever la potencia al llegar a la bola, no solo el avance ya recorrido.
 	var direccion := -taco.global_basis.z.normalized()
 	var restante := maxf(0.0, (impact_point_global - taco.global_position).dot(direccion) - 0.114)
-	var potencia := _potencia_para_recorrido(_recorrido_golpe + restante)
+	var potencia := ajustar_fuerza_tiro(_potencia_para_recorrido(_recorrido_golpe + restante))
 	var offset := (impact_point_global - ball.global_position) / ball_radius
 	var distancia := clampf(Vector2(offset.dot(direccion.cross(Vector3.UP)), offset.y).length(), 0.0, 1.0)
 	potencia = clampf(potencia * (1.0 - distancia * 0.80), 0.5, cue_max_force)
