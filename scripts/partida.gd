@@ -10,6 +10,8 @@ var terminada := false
 var reiniciando := false
 var configurando := true
 var jugador_2_cpu := false
+var con_powerups := false
+var nombres := ["Jugador 1", "Jugador 2"]
 @onready var cpu: Node = $CPU
 var configuracion: Control
 var _retiradas: Dictionary = {}
@@ -312,7 +314,12 @@ func _actualizar_hud() -> void:
 	elif es_turno_cpu() and not terminada:
 		detalle.text = "CPU jugando…" if reglas.en_tiro else "CPU pensando…"
 	reiniciar.visible = terminada
+	# Refrescar las dos filas al asignar grupos o registrar cualquier caída.
+	get_node("HUD/Panel").actualizar()
 
 
 func reiniciar_partida() -> void:
 	get_tree().reload_current_scene()
+
+func nombre_jugador(jugador: int) -> String:
+	return "CPU" if jugador == 2 and jugador_2_cpu else nombres[jugador - 1]

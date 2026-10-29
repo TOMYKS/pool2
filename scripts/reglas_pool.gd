@@ -6,6 +6,8 @@ var grupos := [Grupo.SIN_ASIGNAR, Grupo.SIN_ASIGNAR]
 # Solo cuentan tiros terminados que empezaron con los grupos ya asignados.
 var tiros_con_grupo: Array[bool] = [false, false]
 var restantes: Array[int] = []
+var embocadas_partida: Array[int] = []
+var jugador_que_emboco_ocho := 0
 var saque := true
 var ganador := 0
 var en_tiro := false
@@ -87,6 +89,9 @@ func retirar(numero: int, tronera: bool, ocho_mortal := false) -> void:
 		# Guardar el estado al caer, aunque el poder venza antes de resolver.
 		ocho_mortal_embocado = ocho_mortal_embocado or ocho_mortal
 		embocadas.append(numero)
+		embocadas_partida.append(numero)
+		if numero == 8:
+			jugador_que_emboco_ocho = turno
 	else:
 		fuera.append(numero)
 

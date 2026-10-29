@@ -66,7 +66,7 @@ velocidad_vertical_maxima_color = 0.8
 camera_transition_seconds = 0.4
 
 [node name="Bar" parent="." unique_id=465775975 instance=ExtResource("29_p1vf7")]
-transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, 7.149632, 0, -2.1322384)
+transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, 7.1115875, 9.536743e-07, -2.1328049)
 
 [node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
 

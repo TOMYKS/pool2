@@ -33,6 +33,7 @@ var _listo := false
 @onready var sonido_poder = $Powerup
 
 func _ready() -> void:
+	$HUD.hide()
 	_azar.randomize()
 	_preparar.call_deferred()
 
@@ -55,14 +56,6 @@ func _preparar() -> void:
 	_sala.tiro_finalizado.connect(_al_finalizar_tiro)
 	_posicion_anterior = _sala.ball.global_position
 	_listo = true
-
-
-func _input(event: InputEvent) -> void:
-	var partida = _sala.get_node_or_null("Partida")
-	if partida != null and not partida.permite_input_humano():
-		return
-	if _listo and event is InputEventKey and event.keycode == KEY_SPACE and event.pressed and not event.echo:
-		alternar_sistema.call_deferred()
 
 
 func alternar_sistema() -> void:
