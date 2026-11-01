@@ -9,6 +9,8 @@ var numero := 0:
 var embocada := false
 var vista: SubViewport
 var imagen: TextureRect
+var rotulo: Label
+var parche_numero: Control
 var modelo: MeshInstance3D
 
 func _ready() -> void:
@@ -21,6 +23,10 @@ func _actualizar() -> void:
 	if numero == 0:
 		if imagen != null:
 			imagen.hide()
+		if rotulo != null:
+			rotulo.hide()
+		if parche_numero != null:
+			parche_numero.hide()
 		return
 	if vista == null:
 		vista = SubViewport.new()
@@ -55,13 +61,37 @@ func _actualizar() -> void:
 		imagen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		imagen.texture = vista.get_texture()
 		add_child(imagen)
+		rotulo = Label.new()
+		rotulo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		rotulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		rotulo.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		rotulo.add_theme_font_size_override("font_size", 11)
+		rotulo.add_theme_color_override("font_color", Color.BLACK)
+		rotulo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# Dibujar el parche en el centro exacto, independiente del alto de la fuente.
+		var parche := Control.new()
+		parche_numero = parche
+		parche.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		parche.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(parche)
+		parche.draw.connect(func():
+			if numero != 0:
+				parche.draw_circle(parche.size * 0.5, 7.0, Color.WHITE)
+		)
+		parche.resized.connect(parche.queue_redraw)
+		rotulo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		add_child(rotulo)
 	# Mismas mallas, UV y materiales que las bolas de Sala, sin recolorearlas.
 	modelo.mesh = load("res://assets/Ball%d.res" % numero)
 	var limites := modelo.mesh.get_aabb()
 	var escala := 2.0 / maxf(limites.size.x, maxf(limites.size.y, limites.size.z))
-	modelo.transform = Transform3D(Basis(Vector3.UP, PI / 2) * escala, Vector3.ZERO)
+	modelo.transform = Transform3D(Basis(Vector3.BACK, PI / 2 if numero >= 9 else 0.0) * escala, Vector3.ZERO)
 	modelo.position = -(modelo.basis * limites.get_center())
 	imagen.show()
+	rotulo.text = str(numero)
+	rotulo.show()
+	parche_numero.show()
+	parche_numero.queue_redraw()
 	vista.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 func _draw() -> void:

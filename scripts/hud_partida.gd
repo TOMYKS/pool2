@@ -7,6 +7,7 @@ var efecto: Label
 var mensaje: Label
 var icono_poder: TextureRect
 var duracion_poder: Label
+var nombre_poder: Label
 var ficha_poder: HBoxContainer
 var ultimo_icono := -1
 var jugadores: Array[Label] = []
@@ -40,10 +41,10 @@ func _ready() -> void:
 	var centro := VBoxContainer.new()
 	centro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	centro.size_flags_stretch_ratio = 2.0
-	centro.add_theme_constant_override("separation", 0)
+	centro.add_theme_constant_override("separation", 5)
 	fila.add_child(centro)
-	var cabecera := HBoxContainer.new()
-	cabecera.add_theme_constant_override("separation", 18)
+	var cabecera := VBoxContainer.new()
+	cabecera.add_theme_constant_override("separation", 2)
 	centro.add_child(cabecera)
 	modo = etiqueta(cabecera, 11)
 	turno = etiqueta(cabecera, 16)
@@ -54,7 +55,7 @@ func _ready() -> void:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	modo.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	modo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	efecto.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	centro.custom_minimum_size.x = 400
 	# Los laterales ocupan menos y el turno recibe la mayor parte del centro.
@@ -65,11 +66,18 @@ func _ready() -> void:
 	ficha_poder.add_theme_constant_override("separation", 8)
 	centrado.add_child(ficha_poder)
 	icono_poder = TextureRect.new()
-	icono_poder.custom_minimum_size = Vector2(38, 38)
+	icono_poder.custom_minimum_size = Vector2(30, 30)
 	icono_poder.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icono_poder.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	ficha_poder.add_child(icono_poder)
-	duracion_poder = etiqueta(ficha_poder, 13)
+	var textos := VBoxContainer.new()
+	textos.alignment = BoxContainer.ALIGNMENT_CENTER
+	textos.add_theme_constant_override("separation", 2)
+	ficha_poder.add_child(textos)
+	nombre_poder = etiqueta(textos, 13)
+	nombre_poder.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	duracion_poder = etiqueta(textos, 12)
+	duracion_poder.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	duracion_poder.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	ficha_poder.hide()
 	mensaje.hide()
@@ -78,6 +86,7 @@ func _ready() -> void:
 
 func crear_jugador() -> void:
 	var columna := VBoxContainer.new()
+	columna.custom_minimum_size.x = 240
 	columna.size_flags_horizontal = Control.SIZE_FILL
 	columna.add_theme_constant_override("separation", 0)
 	fila.add_child(columna)
@@ -138,7 +147,7 @@ func actualizar() -> void:
 			bola.embocada = false
 			bola.queue_redraw()
 	# El turno se indica junto al nombre; no mostrar mensajes narrativos.
-	turno.visible = partida.terminada
+	turno.visible = true
 	mensaje.hide()
 	efecto.hide()
 	var sistema = partida.sala.get_node_or_null("Powerups")
@@ -150,6 +159,7 @@ func actualizar() -> void:
 			var archivo: String = sistema.PODERES[ultimo_icono]["escena"]
 			icono_poder.texture = load("res://assets/powerups/iconos/%s.svg" % archivo)
 		ficha_poder.tooltip_text = sistema.PODERES[sistema.poder_actual]["nombre"]
+		nombre_poder.text = ficha_poder.tooltip_text
 		duracion_poder.text = "%d tiro%s" % [sistema.tiros_restantes, "" if sistema.tiros_restantes == 1 else "s"]
 	modo.tooltip_text = modo.text
 	turno.tooltip_text = turno.text
