@@ -29,7 +29,7 @@ func _ready() -> void:
 	get_node("Margen/Contenido/Estado").hide()
 	get_node("Margen/Contenido/Detalle").hide()
 	var estilo := StyleBoxFlat.new()
-	estilo.bg_color = Color(0.025, 0.055, 0.085, 0.96)
+	estilo.bg_color = Color(0.025, 0.055, 0.085, 0.75)
 	estilo.border_color = Color("#b79a64")
 	estilo.border_width_bottom = 2
 	add_theme_stylebox_override("panel", estilo)

@@ -156,6 +156,8 @@ func _recoger() -> void:
 	if not habilitado or poder_actual != -1 or not is_instance_valid(activador):
 		return
 	_quitar_activador()
+	# El sonido corresponde a recogerlo, no a retirarlo al cerrar la partida.
+	sonido_poder.play()
 	_guardar_originales()
 	# El sorteo ocurre AHORA, nunca al crear el activador.
 	var opciones: Array = PODERES.keys()
@@ -217,7 +219,6 @@ func _terminar_poder() -> void:
 
 func _quitar_activador() -> void:
 	if is_instance_valid(activador):
-		sonido_poder.play()
 		activador.hide()
 		activador.queue_free()
 	activador = null

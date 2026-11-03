@@ -11,6 +11,7 @@ var camara_anterior: Camera3D
 var tiempo_cine := 0.0
 var sensibilidad := 0.005
 var filtro: ColorRect
+var musica_menu: AudioStreamPlayer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -81,6 +82,7 @@ func _ready() -> void:
 		volumen_efectos = config.get_value("ajustes", "efectos", config.get_value("ajustes", "volumen", 0.8))
 		sensibilidad = config.get_value("ajustes", "sensibilidad", sensibilidad)
 	_preparar_audio()
+	visibility_changed.connect(func(): _cambiar_musica(visible))
 	_aplicar()
 	_preparar_cine.call_deferred()
 	var panel: Control = partida.get_node("HUD/Panel")
@@ -186,7 +188,6 @@ func abrir_pausa() -> void:
 	if not get_tree().paused:
 		camara_anterior = get_viewport().get_camera_3d()
 	get_tree().paused = true
-	camara_menu.make_current()
 	partida.get_node("HUD/Panel").hide()
 	show()
 	pausa.hide()
@@ -278,6 +279,27 @@ func _preparar_audio() -> void:
 			AudioServer.set_bus_send(indice, "Master")
 	_enrutar_arbol(partida.sala)
 	get_tree().node_added.connect(_enrutar_audio)
+	var musica_3d: AudioStreamPlayer3D = partida.sala.get_node("MusicaFondo")
+	musica_menu = AudioStreamPlayer.new()
+	musica_menu.name = "MusicaMenu"
+	musica_menu.stream = musica_3d.stream
+	musica_menu.volume_db = musica_3d.volume_db - 15.0
+	musica_menu.pitch_scale = musica_3d.pitch_scale
+	musica_menu.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(musica_menu)
+	_cambiar_musica(true)
+
+func _cambiar_musica(en_menu: bool) -> void:
+	if not is_instance_valid(musica_menu):
+		return
+	var musica_3d: AudioStreamPlayer3D = partida.sala.get_node("MusicaFondo")
+	var origen: Node = musica_3d if en_menu else musica_menu
+	var destino: Node = musica_menu if en_menu else musica_3d
+	if destino.playing:
+		return
+	var posicion: float = origen.get_playback_position() if origen.playing else 0.0
+	origen.stop()
+	destino.play(posicion)
 
 func _enrutar_arbol(nodo: Node) -> void:
 	_enrutar_audio(nodo)
@@ -286,8 +308,9 @@ func _enrutar_arbol(nodo: Node) -> void:
 
 func _enrutar_audio(nodo: Node) -> void:
 	if nodo is AudioStreamPlayer or nodo is AudioStreamPlayer3D or nodo is AudioStreamPlayer2D:
-		nodo.bus = "Musica" if nodo.name == &"MusicaFondo" else "Efectos"
-		if nodo.name == &"MusicaFondo":
+		var es_musica := nodo.name in [&"MusicaFondo", &"MusicaMenu"]
+		nodo.bus = "Musica" if es_musica else "Efectos"
+		if es_musica:
 			nodo.process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _preparar_cine() -> void:
@@ -306,7 +329,7 @@ func _preparar_cine() -> void:
 	camara_menu.make_current()
 
 func _process(delta: float) -> void:
-	if partida != null and visible and get_tree().paused and is_instance_valid(camara_menu):
+	if partida != null and partida.configurando and visible and get_tree().paused and is_instance_valid(camara_menu):
 		tiempo_cine += delta
 		_actualizar_cine()
 
