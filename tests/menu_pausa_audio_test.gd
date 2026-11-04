@@ -18,6 +18,29 @@ func probar() -> void:
 		await process_frame
 	var p = sala.get_node("Partida")
 	var config = p.configuracion
+	var musica_anterior: float = config.volumen_musica
+	var efectos_anteriores: float = config.volumen_efectos
+	config.volumen_musica = 1.0
+	config.volumen_efectos = 0.8
+	config.ajustes()
+	var controles_audio: Array[HSlider] = []
+	for control in config.contenido.get_children():
+		if control is HSlider:
+			controles_audio.append(control)
+	comprobar(controles_audio.size() == 3, "Ajustes debe mostrar solo brillo, música y efectos")
+	comprobar(is_equal_approx(controles_audio[1].value, 0.5) and is_equal_approx(controles_audio[2].value, 0.5), "Los niveles originales de música y efectos deben aparecer al 50%")
+	for indice in [1, 2]:
+		var bus := AudioServer.get_bus_index("Musica" if indice == 1 else "Efectos")
+		controles_audio[indice].value = 1.0
+		comprobar(is_equal_approx(AudioServer.get_bus_volume_linear(bus), 2.0 if indice == 1 else 1.6), "El máximo debe permitir subir el volumen por encima de la mezcla original")
+		controles_audio[indice].value = 0.0
+		comprobar(is_zero_approx(AudioServer.get_bus_volume_linear(bus)), "El mínimo debe silenciar el canal")
+		controles_audio[indice].value = 0.5
+		comprobar(is_equal_approx(AudioServer.get_bus_volume_linear(bus), 1.0 if indice == 1 else 0.8), "El 50% debe conservar exactamente la mezcla original")
+	config.volumen_musica = musica_anterior
+	config.volumen_efectos = efectos_anteriores
+	config._aplicar()
+	config.principal()
 	var musica_3d = sala.get_node("MusicaFondo")
 	comprobar(paused and config.musica_menu.playing and not musica_3d.playing, "El menú debe reproducir únicamente música simple, incluso con el árbol pausado")
 	comprobar(config.musica_menu.bus == &"Musica" and musica_3d.bus == &"Musica", "Ambos reproductores deben respetar el ajuste de volumen de música")

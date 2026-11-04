@@ -1,5 +1,6 @@
 extends VBoxContainer
 
+const Estilo = preload("res://scripts/estilo_menu.gd")
 const PODERES := [
 	["pesadas", "Bolas pesadas", "Más peso, otra respuesta", "Las bolas de color ganan masa. Tené en cuenta su nueva respuesta al elegir la potencia."],
 	["rebote", "Rebote extra", "La mesa se vuelve impredecible", "Las bolas de color rebotan mucho más. Cuidado con los tiros fuertes."],
@@ -40,7 +41,7 @@ func _ready() -> void:
 func nota(titulo: String, detalle: String) -> void:
 	var panel := PanelContainer.new()
 	var estilo := StyleBoxFlat.new()
-	estilo.bg_color = Color(0.03, 0.10, 0.13, 0.9)
+	estilo.bg_color = Color(0.045, 0.09, 0.06, 0.9)
 	estilo.set_corner_radius_all(12)
 	estilo.content_margin_left = 18
 	estilo.content_margin_right = 18
@@ -53,11 +54,11 @@ func nota(titulo: String, detalle: String) -> void:
 	panel.add_child(caja)
 	var encabezado := Label.new()
 	encabezado.text = titulo
-	encabezado.add_theme_color_override("font_color", Color("#e4c58a"))
+	encabezado.add_theme_color_override("font_color", Estilo.ORO)
 	caja.add_child(encabezado)
 	var texto := Label.new()
 	texto.text = detalle
-	texto.custom_minimum_size.x = 460
+	texto.custom_minimum_size.x = 230
 	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	texto.add_theme_font_size_override("font_size", 18)
 	caja.add_child(texto)
@@ -103,7 +104,7 @@ func mostrar_poder() -> void:
 		var b := Button.new()
 		b.icon = load("res://assets/powerups/iconos/%s.svg" % PODERES[i][0])
 		b.add_theme_constant_override("icon_max_width", 48)
-		b.custom_minimum_size = Vector2(115, 72)
+		b.custom_minimum_size = Vector2(56, 64)
 		b.tooltip_text = PODERES[i][1]
 		b.toggle_mode = true
 		b.button_pressed = i == indice
@@ -121,6 +122,8 @@ func mostrar_poder() -> void:
 	var nombre := Label.new()
 	nombre.text = "%d / 8 · %s" % [indice + 1, PODERES[indice][1]]
 	nombre.add_theme_font_size_override("font_size", 24)
+	nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	nombre.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	cabecera.add_child(nombre)
 	nota(PODERES[indice][2], PODERES[indice][3])
 	var navegacion := HBoxContainer.new()

@@ -1,4 +1,7 @@
 extends Control
+
+const Estilo = preload("res://scripts/estilo_menu.gd")
+
 var numero := 0:
 	set(valor):
 		if numero == valor:
@@ -70,5 +73,5 @@ func _draw() -> void:
 	if numero == 0:
 		var centro := size * 0.5
 		var radio := minf(size.x, size.y) * 0.44
-		draw_circle(centro, radio, Color("#071018"))
-		draw_arc(centro, radio, 0, TAU, 48, Color("#53616d"), 1.2, true)
+		draw_circle(centro, radio, Estilo.FONDO.darkened(0.35))
+		draw_arc(centro, radio, 0, TAU, 48, Estilo.SUAVE.darkened(0.4), 1.2, true)

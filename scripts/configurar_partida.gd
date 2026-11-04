@@ -1,10 +1,21 @@
 extends ColorRect
 
+const Estilo = preload("res://scripts/estilo_menu.gd")
+# El centro de los controles conserva el nivel de mezcla original.
+const VOLUMEN_MUSICA_MAX := 2.0
+const VOLUMEN_EFECTOS_MAX := 1.6
+
 var contenido: VBoxContainer
+var composicion: BoxContainer
+var cartel: PanelContainer
+var marca: VBoxContainer
+var logo: TextureRect
+var scroll: ScrollContainer
+var _en_principal := false
 var partida: Node
 var pausa: Button
 var brillo := 1.0
-var volumen_musica := 0.8
+var volumen_musica := 1.0
 var volumen_efectos := 0.8
 var camara_menu: Camera3D
 var camara_anterior: Camera3D
@@ -22,36 +33,52 @@ func _ready() -> void:
 	var fondo := ShaderMaterial.new()
 	fondo.shader = preload("res://scripts/fondo_menu.gdshader")
 	material = fondo
-	var tema := Theme.new()
-	tema.default_font_size = 20
-	for estado in ["normal", "hover", "pressed", "focus"]:
-		var estilo := StyleBoxFlat.new()
-		estilo.bg_color = Color("#244c50") if estado != "normal" else Color("#16363e")
-		estilo.set_corner_radius_all(12)
-		estilo.content_margin_left = 22
-		estilo.content_margin_right = 22
-		estilo.content_margin_top = 12
-		estilo.content_margin_bottom = 12
-		estilo.border_color = Color("#d6b777")
-		if estado == "focus":
-			estilo.set_border_width_all(2)
-		tema.set_stylebox(estado, "Button", estilo)
+	var tema := Estilo.crear()
 	theme = tema
 	var margen := MarginContainer.new()
 	margen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for lado in ["left", "right", "top", "bottom"]:
 		margen.add_theme_constant_override("margin_" + lado, 24)
 	add_child(margen)
-	var scroll := ScrollContainer.new()
+	scroll = ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	margen.add_child(scroll)
 	var centro := CenterContainer.new()
 	centro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	centro.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.add_child(centro)
+	composicion = BoxContainer.new()
+	composicion.alignment = BoxContainer.ALIGNMENT_CENTER
+	composicion.add_theme_constant_override("separation", 48)
+	centro.add_child(composicion)
+	marca = VBoxContainer.new()
+	marca.alignment = BoxContainer.ALIGNMENT_CENTER
+	marca.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	marca.add_theme_constant_override("separation", 18)
+	composicion.add_child(marca)
+	var marco_logo := PanelContainer.new()
+	var esquinas_logo := StyleBoxFlat.new()
+	esquinas_logo.bg_color = Color.WHITE
+	esquinas_logo.set_corner_radius_all(8)
+	marco_logo.add_theme_stylebox_override("panel", esquinas_logo)
+	marco_logo.clip_children = CanvasItem.CLIP_CHILDREN_ONLY
+	marca.add_child(marco_logo)
+	logo = TextureRect.new()
+	logo.texture = preload("res://LogoNuevo.png")
+	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	marco_logo.add_child(logo)
+	cartel = PanelContainer.new()
+	cartel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	cartel.add_theme_stylebox_override("panel", Estilo.cartel())
+	composicion.add_child(cartel)
+	var interior := VBoxContainer.new()
+	interior.add_theme_constant_override("separation", 12)
+	cartel.add_child(interior)
 	contenido = VBoxContainer.new()
-	contenido.custom_minimum_size.x = 540
-	contenido.add_theme_constant_override("separation", 12)
-	centro.add_child(contenido)
+	contenido.add_theme_constant_override("separation", 10)
+	interior.add_child(contenido)
+	resized.connect(_ajustar_diseno)
 	pausa = Button.new()
 	pausa.text = "Ⅱ  Pausa"
 	pausa.position = Vector2(16, 16)
@@ -78,7 +105,7 @@ func _ready() -> void:
 	var config := ConfigFile.new()
 	if config.load("user://ajustes.cfg") == OK:
 		brillo = config.get_value("ajustes", "brillo", brillo)
-		volumen_musica = config.get_value("ajustes", "musica", config.get_value("ajustes", "volumen", 0.8))
+		volumen_musica = config.get_value("ajustes", "musica", config.get_value("ajustes", "volumen", volumen_musica))
 		volumen_efectos = config.get_value("ajustes", "efectos", config.get_value("ajustes", "volumen", 0.8))
 		sensibilidad = config.get_value("ajustes", "sensibilidad", sensibilidad)
 	_preparar_audio()
@@ -102,15 +129,21 @@ func _ready() -> void:
 	get_tree().paused = true
 
 func limpiar(titulo: String, subtitulo := "") -> void:
+	_en_principal = false
+	_ajustar_diseno()
+	scroll.scroll_vertical = 0
 	for hijo in contenido.get_children():
 		contenido.remove_child(hijo)
 		hijo.queue_free()
 	var etiqueta := Label.new()
 	etiqueta.text = titulo
 	etiqueta.visible = not titulo.is_empty()
-	etiqueta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	etiqueta.add_theme_color_override("font_color", Color("#e4c58a"))
-	etiqueta.add_theme_font_size_override("font_size", 34)
+	etiqueta.add_theme_color_override("font_color", Estilo.ROSA)
+	etiqueta.add_theme_font_override("font", Estilo.FUENTE_TITULO)
+	etiqueta.add_theme_color_override("font_shadow_color", Color(0.95, 0.2, 0.6, 0.35))
+	etiqueta.add_theme_constant_override("shadow_outline_size", 5)
+	etiqueta.add_theme_font_size_override("font_size", 44)
+	etiqueta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	contenido.add_child(etiqueta)
 	if not subtitulo.is_empty():
 		texto(subtitulo)
@@ -118,28 +151,48 @@ func limpiar(titulo: String, subtitulo := "") -> void:
 func texto(valor: String) -> void:
 	var etiqueta := Label.new()
 	etiqueta.text = valor
-	etiqueta.custom_minimum_size.x = 500
+	etiqueta.add_theme_color_override("font_color", Estilo.SUAVE)
+	etiqueta.add_theme_font_size_override("font_size", 16)
 	etiqueta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	contenido.add_child(etiqueta)
 
 func boton(nombre: String, accion: Callable) -> void:
 	var b := Button.new()
 	b.text = nombre
+	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.custom_minimum_size.y = 50
+	var icono := ""
+	match nombre:
+		"Ajustes": icono = "ajustes"
+		"Cómo jugar": icono = "guia"
+		"Salir del juego", "Volver al menú", "Volver", "Cancelar": icono = "salir"
+	if not icono.is_empty():
+		b.icon = load("res://assets/menu/%s.svg" % icono)
+	if nombre in ["Nuevo juego", "Jugar", "Continuar"]:
+		for estado in ["normal", "hover", "pressed", "hover_pressed"]:
+			b.add_theme_stylebox_override(estado, Estilo.principal(estado))
+			b.add_theme_color_override("font_" + estado + "_color", Color("#272518"))
+			b.add_theme_color_override("icon_" + estado + "_color", Color("#272518"))
+		b.add_theme_color_override("font_color", Color("#272518"))
+		b.add_theme_color_override("font_focus_color", Color("#272518"))
+		b.add_theme_color_override("icon_focus_color", Color("#272518"))
+		b.custom_minimum_size.y = 56
+	if nombre == "Salir del juego":
+		b.add_theme_color_override("font_color", Estilo.SUAVE)
+		b.add_theme_font_size_override("font_size", 23)
 	b.pressed.connect(accion)
 	contenido.add_child(b)
-	if contenido.get_child_count() <= 3:
-		b.grab_focus()
+	if nombre in ["Nuevo juego", "Jugar", "Continuar", "Cancelar", "Volver"]:
+		var enfocado := get_viewport().gui_get_focus_owner()
+		if enfocado == null or not contenido.is_ancestor_of(enfocado):
+			b.grab_focus()
 
 func principal() -> void:
 	show()
 	pausa.hide()
 	limpiar("")
-	var logo := TextureRect.new()
-	logo.texture = load("res://LogoNuevo.png")
-	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	logo.custom_minimum_size = Vector2(300, 240)
-	contenido.add_child(logo)
+	_en_principal = true
+	_ajustar_diseno()
 	boton("Nuevo juego", nuevo)
 	boton("Ajustes", ajustes)
 	boton("Cómo jugar", informacion)
@@ -148,19 +201,27 @@ func principal() -> void:
 func nuevo() -> void:
 	limpiar("Nueva partida", "Elegí tu rival y las reglas de la mesa.")
 	var rival := OptionButton.new()
+	rival.custom_minimum_size.y = 52
 	rival.add_item("Dos jugadores locales")
 	rival.add_item("Contra la CPU")
 	contenido.add_child(rival)
+	var jugadores := HBoxContainer.new()
+	jugadores.add_theme_constant_override("separation", 12)
+	contenido.add_child(jugadores)
 	var nombre1 := LineEdit.new()
+	nombre1.custom_minimum_size.y = 50
+	nombre1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nombre1.placeholder_text = "Nombre del jugador 1"
 	nombre1.max_length = 18
 	nombre1.name = "NombreJugador1"
-	contenido.add_child(nombre1)
+	jugadores.add_child(nombre1)
 	var nombre2 := LineEdit.new()
+	nombre2.custom_minimum_size.y = 50
+	nombre2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nombre2.placeholder_text = "Nombre del jugador 2"
 	nombre2.max_length = 18
 	nombre2.name = "NombreJugador2"
-	contenido.add_child(nombre2)
+	jugadores.add_child(nombre2)
 	rival.item_selected.connect(func(opcion): nombre2.visible = opcion == 0)
 	var poderes := CheckButton.new()
 	poderes.text = "Activar power-ups sorpresa"
@@ -198,7 +259,7 @@ func abrir_pausa() -> void:
 	partida.get_node("HUD/Panel").hide()
 	show()
 	pausa.hide()
-	limpiar("Pausa", "La mesa te espera.")
+	limpiar("Pausa")
 	boton("Continuar", continuar)
 	boton("Ajustes", ajustes)
 	boton("Cómo jugar", informacion)
@@ -227,16 +288,17 @@ func volver() -> void:
 		abrir_pausa()
 
 func ajustes() -> void:
-	limpiar("Ajustes", "Se guardan automáticamente en este equipo.")
+	limpiar("Ajustes")
 	deslizador("Brillo", 0.5, 1.5, 0.05, brillo, func(v): brillo = v; _aplicar())
-	deslizador("Música", 0.0, 1.0, 0.05, volumen_musica, func(v): volumen_musica = v; _aplicar())
-	deslizador("Efectos de sonido", 0.0, 1.0, 0.05, volumen_efectos, func(v): volumen_efectos = v; _aplicar())
-	deslizador("Sensibilidad del ratón", 0.001, 0.015, 0.001, sensibilidad, func(v): sensibilidad = v; _aplicar())
+	deslizador("Música", 0.0, 1.0, 0.05, volumen_musica / VOLUMEN_MUSICA_MAX, func(v): volumen_musica = v * VOLUMEN_MUSICA_MAX; _aplicar())
+	deslizador("Efectos de sonido", 0.0, 1.0, 0.05, volumen_efectos / VOLUMEN_EFECTOS_MAX, func(v): volumen_efectos = v * VOLUMEN_EFECTOS_MAX; _aplicar())
 	boton("Volver", volver)
 
 func deslizador(nombre: String, minimo: float, maximo: float, paso: float, valor: float, accion: Callable) -> void:
 	var etiqueta := Label.new()
-	etiqueta.text = "%s: %.3f" % [nombre, valor]
+	etiqueta.text = _valor_ajuste(nombre, valor)
+	etiqueta.add_theme_color_override("font_color", Estilo.ORO)
+	etiqueta.add_theme_font_size_override("font_size", 16)
 	contenido.add_child(etiqueta)
 	var slider := HSlider.new()
 	slider.min_value = minimo
@@ -245,9 +307,25 @@ func deslizador(nombre: String, minimo: float, maximo: float, paso: float, valor
 	slider.value = valor
 	slider.custom_minimum_size.y = 36
 	slider.value_changed.connect(func(v):
-		etiqueta.text = "%s: %.3f" % [nombre, v]
+		etiqueta.text = _valor_ajuste(nombre, v)
 		accion.call(v))
 	contenido.add_child(slider)
+
+func _valor_ajuste(nombre: String, valor: float) -> String:
+	return "%s   ·   %d%%" % [nombre, roundi(valor * 100.0)]
+
+func _ajustar_diseno() -> void:
+	if not is_instance_valid(cartel):
+		return
+	var ancho := get_viewport_rect().size.x
+	var alto := get_viewport_rect().size.y
+	var horizontal := ancho >= 1000.0
+	composicion.vertical = not horizontal
+	composicion.add_theme_constant_override("separation", 48 if horizontal else 22)
+	marca.visible = _en_principal
+	var lado := clampf(alto * 0.63, 280.0, 480.0) if horizontal else 150.0
+	logo.custom_minimum_size = Vector2(lado, lado)
+	contenido.custom_minimum_size.x = minf(360.0 if _en_principal else 490.0, maxf(240.0, ancho - 120.0))
 
 func _aplicar() -> void:
 	AudioServer.set_bus_volume_linear(0, 1.0)
