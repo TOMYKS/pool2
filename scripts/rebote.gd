@@ -7,9 +7,9 @@ func _ready():
 	# Creamos un material físico nuevo exclusivamente para el rebote
 	material_reboton = PhysicsMaterial.new()
 	# El rebote va de 0.0 a 1.0. (1.0 significa que nunca pierde energía al chocar)
-	material_reboton.bounce = 1 
+	material_reboton.bounce = 2 
 	material_reboton.absorbent = false # Asegura que la fuerza no se absorba
-	material_reboton.friction = 0.01
+	material_reboton.friction = -0.01
 func _input(event):
 	if event is InputEventKey and event.keycode == KEY_SPACE and event.pressed and not event.echo:
 		if powerup_rebote_activo:
@@ -32,7 +32,7 @@ func activar_bolas_rebotonas():
 	for bola in bolas:
 		# 1. Sustituimos temporalmente las físicas de la bola por nuestro material rebotón
 		bola.physics_material_override = material_reboton
-		bola.mass = 0.4
+		bola.mass = 0.2
 		var mesh = obtener_mesh(bola)
 		if mesh and mesh.get_active_material(0):
 			var material = mesh.get_active_material(0)

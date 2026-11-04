@@ -12,6 +12,8 @@ var icono_poder: TextureRect
 var duracion_poder: Label
 var nombre_poder: Label
 var ficha_poder: HBoxContainer
+var reiniciar: Button
+var accion_final: CenterContainer
 var ultimo_icono := -1
 var jugadores: Array[Label] = []
 var grupos: Array[Label] = []
@@ -40,12 +42,17 @@ func _ready() -> void:
 	estilo.shadow_color = Color(Estilo.ROSA, 0.10)
 	estilo.shadow_size = 6
 	add_theme_stylebox_override("panel", estilo)
-	var reiniciar: Button = get_node("Margen/Contenido/Reiniciar")
+	reiniciar = get_node("Margen/Contenido/Reiniciar")
 	for estado in ["normal", "hover", "pressed", "hover_pressed"]:
-		reiniciar.add_theme_stylebox_override(estado, Estilo.principal(estado))
+		var compacto := Estilo.principal(estado)
+		compacto.content_margin_top = 6
+		compacto.content_margin_bottom = 6
+		reiniciar.add_theme_stylebox_override(estado, compacto)
 		reiniciar.add_theme_color_override("font_" + estado + "_color", Color("#272518"))
 	reiniciar.add_theme_color_override("font_color", Color("#272518"))
 	reiniciar.add_theme_color_override("font_focus_color", Color("#272518"))
+	reiniciar.add_theme_font_size_override("font_size", 22)
+	reiniciar.custom_minimum_size = Vector2(180, 38)
 	fila = HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 18)
 	caja.add_child(fila)
@@ -55,6 +62,7 @@ func _ready() -> void:
 	centro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	centro.size_flags_stretch_ratio = 2.0
 	centro.add_theme_constant_override("separation", 5)
+	centro.alignment = BoxContainer.ALIGNMENT_CENTER
 	fila.add_child(centro)
 	var cabecera := VBoxContainer.new()
 	cabecera.add_theme_constant_override("separation", 2)
@@ -96,6 +104,10 @@ func _ready() -> void:
 	duracion_poder.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	duracion_poder.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	ficha_poder.hide()
+	accion_final = CenterContainer.new()
+	centro.add_child(accion_final)
+	reiniciar.reparent(accion_final)
+	accion_final.hide()
 	mensaje.hide()
 	efecto.hide()
 	crear_jugador()
@@ -146,6 +158,10 @@ func actualizar() -> void:
 		return
 	var r = partida.reglas
 	modo.text = "MODO: CON POWER-UPS" if partida.con_powerups else "MODO: SIN POWER-UPS"
+	if partida.terminada:
+		modo.text = "Ganó %s" % partida.nombre_jugador(r.ganador)
+	modo.add_theme_font_size_override("font_size", 18 if partida.terminada else 14)
+	modo.add_theme_color_override("font_color", Estilo.ORO if partida.terminada else Estilo.SUAVE)
 	var nombre: String = partida.nombre_jugador(r.turno)
 	turno.text = "Turno: %s" % nombre
 	if r.saque:
@@ -169,7 +185,8 @@ func actualizar() -> void:
 			bola.embocada = false
 			bola.queue_redraw()
 	# El turno se indica junto al nombre; no mostrar mensajes narrativos.
-	turno.visible = true
+	turno.visible = not partida.terminada
+	accion_final.visible = partida.terminada
 	mensaje.hide()
 	efecto.hide()
 	var sistema = partida.sala.get_node_or_null("Powerups")

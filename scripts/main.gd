@@ -259,6 +259,9 @@ func _input(event):
 			var hit_force = raw_force * power_efficiency
 			hit_force = clamp(hit_force, 0.5, cue_max_force)
 			# 3. IMPULSO LINEAL PURO
+			# Una blanca recién colocada queda fija hasta este contacto real.
+			ball.freeze = false
+			ball.sleeping = false
 			ball.apply_central_impulse(hit_direction * hit_force)
 			var peso_golpe = inverse_lerp(0.5, cue_max_force, hit_force)
 			

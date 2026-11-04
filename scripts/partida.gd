@@ -21,7 +21,7 @@ var _clic_pendiente = null
 @onready var sala = get_parent()
 @onready var texto: Label = $HUD/Panel/Margen/Contenido/Estado
 @onready var detalle: Label = $HUD/Panel/Margen/Contenido/Detalle
-@onready var reiniciar: Button = $HUD/Panel/Margen/Contenido/Reiniciar
+@onready var reiniciar: Button = $HUD/Panel.reiniciar
 @onready var guia: MeshInstance3D = $Guia
 @onready var sonido_win = $SonidoWin
 @onready var sonido_falta = $SonidoFalta
@@ -246,7 +246,7 @@ func posicion_valida(punto: Vector3) -> bool:
 	var radio: float = sala.ball_radius
 	if absf(local.y - (ALTURA_PANO + radio + 0.01)) > 0.03:
 		return false
-	# Usar el paño real como apoyo; las bandas se comprueban con la esfera.
+	# Basta con apoyo bajo el centro; permitir colocarla pegada a las bandas.
 	var rayo := PhysicsRayQueryParameters3D.create(
 		punto, punto + Vector3.DOWN * (radio + 0.03), 1,
 		[sala.ball.get_rid(), sala.taco.get_rid()]
@@ -275,7 +275,9 @@ func colocar_blanca(punto: Vector3) -> bool:
 	sala.ball.angular_velocity = Vector3.ZERO
 	sala.ball.get_node("CollisionShape3D").disabled = false
 	sala.ball.show()
-	sala.ball.freeze = false
+	# Mantener la posición elegida, incluso en el labio de una tronera.
+	# El golpe humano o de CPU la libera justo antes de aplicar el impulso.
+	sala.ball.freeze = true
 	sala.ball.sleeping = false
 	bola_en_mano = false
 	guia.hide()

@@ -187,6 +187,7 @@ func _impactar(direccion: Vector3, fuerza: float) -> void:
 	sala.marker.hide()
 	sala.taco.hide()
 	sala.taco.global_position = Vector3(0, -1, 0)
+	sala.ball.freeze = false
 	sala.ball.sleeping = false
 	var fuerza_real: float = sala.ajustar_fuerza_tiro(clampf(fuerza, 5.5, 20.0))
 	sala.ball.apply_central_impulse(direccion * fuerza_real)
