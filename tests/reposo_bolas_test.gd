@@ -33,14 +33,14 @@ func _probar() -> void:
 			bola.linear_velocity = Vector3(0.04 if i == 0 else -0.04, 0, 0)
 			root.add_child(bola)
 			bolas.append(bola)
-		for paso in range(90):
+		for paso in range(int(round(90 * Engine.physics_ticks_per_second / 60.0))):
 			await physics_frame
 		for bola in bolas:
 			comprobar(bola.sleeping and bola.linear_velocity.is_zero_approx() and bola.angular_velocity.is_zero_approx(), "Detener movimiento residual con %d bolas en contacto" % cantidad)
 		# Una bola dormida debe despertar al recibir el golpe de la blanca.
 		bolas[0].apply_central_impulse(Vector3(0.8, 0, 0))
 		var desperto_color := false
-		for paso in range(20):
+		for paso in range(int(round(20 * Engine.physics_ticks_per_second / 60.0))):
 			await physics_frame
 			desperto_color = desperto_color or (not bolas[1].sleeping and bolas[1].linear_velocity.length() > 0.1)
 		comprobar(desperto_color, "Un nuevo choque despierta las bolas detenidas")
@@ -55,7 +55,7 @@ func _probar() -> void:
 		bola.linear_velocity = Vector3(0.4, 0, 0)
 		bola.angular_velocity = Vector3(0, 0, -0.4 / radio)
 		root.add_child(bola)
-		for paso in range(30):
+		for paso in range(int(round(30 * Engine.physics_ticks_per_second / 60.0))):
 			await physics_frame
 		comprobar(not bola.sleeping and bola.position.x > 0.1, "Conservar un tiro suave que todavía tiene velocidad")
 		bola.queue_free()
@@ -64,7 +64,7 @@ func _probar() -> void:
 		bola = modelo.duplicate() as RigidBody3D
 		bola.position = Vector3(0, ALTURA_PANO + radio, 2.65)
 		root.add_child(bola)
-		for paso in range(45):
+		for paso in range(int(round(45 * Engine.physics_ticks_per_second / 60.0))):
 			await physics_frame
 		comprobar(bola.position.y < 3.5, "La bola quieta sobre una tronera debe seguir cayendo")
 		bola.queue_free()

@@ -45,12 +45,12 @@ func _probar() -> void:
 		poder.activar_bolas_grandes()
 		bola.linear_velocity = Vector3(0.05, 0, 0)
 		bola.angular_velocity = Vector3(0, 0, -0.05 / colision.shape.radius)
-		for paso in range(180):
+		for paso in range(int(round(180 * Engine.physics_ticks_per_second / 60.0))):
 			await physics_frame
 		print("x", factor, " velocidad=", bola.linear_velocity.length(), " giro=", bola.angular_velocity.length(), " dormida=", bola.sleeping)
 		comprobar(bola.sleeping, "Una bola grande casi detenida debe entrar en reposo")
 		bola.apply_central_impulse(Vector3(1, 0, 0))
-		for paso in range(4):
+		for paso in range(int(round(4 * Engine.physics_ticks_per_second / 60.0))):
 			await physics_frame
 		comprobar(not bola.sleeping and bola.linear_velocity.x > 0.2, "Debe volver a moverse con un golpe")
 		# Sin apoyo, como al entrar en una tronera, nunca debe dormirse en el aire.
@@ -58,7 +58,7 @@ func _probar() -> void:
 		bola.linear_velocity = Vector3.ZERO
 		bola.angular_velocity = Vector3.ZERO
 		bola.sleeping = false
-		for paso in range(40):
+		for paso in range(int(round(40 * Engine.physics_ticks_per_second / 60.0))):
 			await physics_frame
 		comprobar(bola.position.y < 3.5, "Debe seguir cayendo sin apoyo")
 		poder.desactivar_bolas_grandes()

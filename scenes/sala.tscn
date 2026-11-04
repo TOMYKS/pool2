@@ -41,8 +41,8 @@ emission = Color(0, 0, 0.7050794, 1)
 material = SubResource("StandardMaterial3D_wqvpg")
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
-friction = 0.4
-bounce = 0.9
+friction = 0.08
+bounce = 0.48
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_iwtcp"]
 radius = 0.14083566
@@ -61,6 +61,8 @@ marker = NodePath("Marca")
 taco = NodePath("Cue")
 ball = NodePath("Ball0")
 cue_max_force = 28.0
+variacion_triangulo = 0.005
+angulo_triangulo = 0.5
 saque_max_force = 28.0
 velocidad_vertical_maxima_color = 0.8
 camera_transition_seconds = 0.4
@@ -364,12 +366,12 @@ fov = 62.0
 
 [node name="Ball1" type="RigidBody3D" parent="Bolas" unique_id=946964474 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58, 4.317959, 0)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball1" unique_id=1762413033]
@@ -388,12 +390,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball2" type="RigidBody3D" parent="Bolas" unique_id=133560216 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0713332, 4.317959, 0.28367132)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball2" unique_id=1526116746]
@@ -411,12 +413,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball3" type="RigidBody3D" parent="Bolas" unique_id=593540977 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, -0.28367132)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball3" unique_id=2049366716]
@@ -434,12 +436,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball4" type="RigidBody3D" parent="Bolas" unique_id=1891736032 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3169997, 4.317959, -0.42550698)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball4" unique_id=1814620678]
@@ -457,12 +459,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball5" type="RigidBody3D" parent="Bolas" unique_id=400224148 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8256665, 4.317959, -0.14183566)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball5" unique_id=1619320431]
@@ -480,12 +482,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball6" type="RigidBody3D" parent="Bolas" unique_id=1598605605 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, 0.56734264)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball6" unique_id=188165199]
@@ -503,12 +505,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball7" type="RigidBody3D" parent="Bolas" unique_id=1744184685 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3169997, 4.317959, 0.14183566)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball7" unique_id=1689083906]
@@ -526,12 +528,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball8" type="RigidBody3D" parent="Bolas" unique_id=1586697203 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0713332, 4.317959, 0)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball8" unique_id=838213018]
@@ -549,12 +551,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball9" type="RigidBody3D" parent="Bolas" unique_id=1194143713 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3169997, 4.317959, 0.42550698)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball9" unique_id=2126970292]
@@ -572,12 +574,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball10" type="RigidBody3D" parent="Bolas" unique_id=2029226822 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0713332, 4.317959, -0.28367132)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball10" unique_id=220251600]
@@ -595,12 +597,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball11" type="RigidBody3D" parent="Bolas" unique_id=1011331708 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8256665, 4.317959, 0.14183566)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball11" unique_id=538189526]
@@ -618,12 +620,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball12" type="RigidBody3D" parent="Bolas" unique_id=96526948 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, -0.56734264)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball12" unique_id=1162491701]
@@ -641,12 +643,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball13" type="RigidBody3D" parent="Bolas" unique_id=1737047792 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, 0)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball13" unique_id=1540178252]
@@ -664,12 +666,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball14" type="RigidBody3D" parent="Bolas" unique_id=1320554984 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3169997, 4.317959, -0.14183566)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball14" unique_id=935852888]
@@ -687,12 +689,12 @@ stream = ExtResource("25_obnxk")
 
 [node name="Ball15" type="RigidBody3D" parent="Bolas" unique_id=1903657130 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5626662, 4.317959, 0.28367132)
-mass = 0.8
 physics_material_override = SubResource("PhysicsMaterial_mteyr")
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
-angular_damp = 2.0
+linear_damp = 0.04
+angular_damp = 0.1
 script = ExtResource("6_xtqig")
 
 [node name="Pool Table - white _Mark Peters on Sketchfab_PoolTableBallWhite_MTL_0" type="MeshInstance3D" parent="Bolas/Ball15" unique_id=1151321031]

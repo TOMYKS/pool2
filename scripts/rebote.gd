@@ -52,7 +52,7 @@ func desactivar_bolas_rebotonas():
 	for bola in bolas:
 		# 1. Al asignarle 'null', la bola vuelve a usar su física normal por defecto
 		bola.physics_material_override = null
-		bola.mass = 0.8
+		bola.mass = 1.0
 		var mesh = obtener_mesh(bola)
 		if mesh and mesh.get_active_material(0):
 			var material = mesh.get_active_material(0)

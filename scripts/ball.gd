@@ -8,20 +8,15 @@ var _reposo := preload("res://scripts/reposo_bola.gd").new()
 
 # Comparte el ajuste de ascenso de las bolas de color desde Sala.
 var velocidad_vertical_maxima: float = 1.0
+var desaceleracion_rodadura: float = 0.2
+var roce_velocidad: float = 0.6
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	if velocidad_vertical_maxima > 0.0 and state.linear_velocity.y > velocidad_vertical_maxima:
-		var velocidad := state.linear_velocity
-		velocidad.y = velocidad_vertical_maxima
-		state.linear_velocity = velocidad
+	preload("res://scripts/fisica_bola.gd").integrar(state, velocidad_vertical_maxima, desaceleracion_rodadura, roce_velocidad)
 
 func _physics_process(delta):
 	_reposo.actualizar(self, delta)
-	# Limitamos la velocidad lineal como medida de seguridad final
-	if linear_velocity.length() > 30.0:
-		linear_velocity = linear_velocity.normalized() * 30.0
-		
 	# Si la pelota se est moviendo y además está girando sobre s misma...
 	if linear_velocity.length() > 0.1 and angular_velocity.length() > 0.1:
 		

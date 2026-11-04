@@ -28,7 +28,7 @@ var _clic_pendiente = null
 
 func _ready() -> void:
 	sala.tiro_iniciado.connect(_iniciar_tiro)
-	reiniciar.pressed.connect(reiniciar_partida)
+	reiniciar.pressed.connect(nueva_partida)
 	sala.ball.contact_monitor = true
 	sala.ball.max_contacts_reported = 16
 	sala.ball.set_meta("puede_recoger", false)
@@ -316,6 +316,12 @@ func _actualizar_hud() -> void:
 	reiniciar.visible = terminada
 	# Refrescar las dos filas al asignar grupos o registrar cualquier caída.
 	get_node("HUD/Panel").actualizar()
+
+
+func nueva_partida() -> void:
+	# La escena nueva limpia la mesa y abre directamente la selección de reglas.
+	get_tree().set_meta("abrir_nueva_partida", true)
+	reiniciar_partida()
 
 
 func reiniciar_partida() -> void:

@@ -27,7 +27,9 @@ static func puede_detenerse(bola: RigidBody3D) -> bool:
 		return false
 	var radio: float = colision.shape.radius * absf(colision.global_basis.get_scale().y)
 	# Medir la velocidad en la superficie también sirve con bolas grandes.
-	if bola.angular_velocity.length() * radio >= VELOCIDAD_GIRO_MINIMA:
+	# El giro vertical no desplaza una esfera: no debe mantener abierto el turno.
+	# El giro horizontal sí puede producir retroceso o avance y se conserva.
+	if Vector2(bola.angular_velocity.x, bola.angular_velocity.z).length() * radio >= VELOCIDAD_GIRO_MINIMA:
 		return false
 	var origen := colision.global_position
 	var consulta := PhysicsRayQueryParameters3D.create(

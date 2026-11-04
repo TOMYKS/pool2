@@ -1,7 +1,7 @@
 extends Node3D
 
 var powerup_pesado_activo: bool = false
-var masa_original: float = 0.8
+var masa_original: float = 1.0
 var masa_pesada: float = 3.5 
 
 func _input(event):

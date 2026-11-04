@@ -26,6 +26,11 @@ var is_hitting_mode: bool = false
 @export var cue_stop_seconds: float = 0.16
 @export var cue_power_curve: float = 1.5
 @export var cue_max_force: float = 30.0
+## Pequeñas diferencias entre armados, conservando la composición manual.
+@export_range(0.0, 0.005, 0.0005) var variacion_triangulo: float = 0.0015
+@export_range(0.0, 1.0, 0.1) var angulo_triangulo: float = 0.4
+## Separación adicional de 1.5 % para evitar contactos especulativos del rack.
+@export_range(1.0, 1.03, 0.001) var separacion_triangulo: float = 1.015
 ## Solo en el saque: comprime el tramo alto de potencia. 0 lo desactiva.
 @export_range(0.0, 30.0, 0.5) var saque_max_force: float = 24.0
 var is_waiting_for_ball: bool = false
@@ -38,6 +43,10 @@ var _material_potencia: StandardMaterial3D
 ## Se conserva el nombre anterior para respetar los valores guardados en Sala.
 ## Solo afecta Y positiva; no modifica potencia, giro, rebote horizontal ni caídas.
 @export_range(0.0, 5.0, 0.1) var velocidad_vertical_maxima_color: float = 1.0
+## Resistencia de rodadura del paño en m/s², común a blanca y bolas de color.
+@export_range(0.0, 0.3, 0.01) var desaceleracion_rodadura: float = 0.2
+## Roce extra a velocidades mayores a 2 m/s. No altera los tiros muy suaves.
+@export_range(0.0, 2.0, 0.1) var roce_velocidad: float = 0.6
 
 ## Duración del viaje entre la cámara de apuntado y la vista general (0 = corte).
 @export_range(0.0, 3.0, 0.05) var camera_transition_seconds: float = 0.65
@@ -94,8 +103,13 @@ func cambiar_camara(destino: Camera3D) -> void:
 @export var max_torque: float = 3.0
 
 func _ready() -> void:
+	var azar_triangulo := RandomNumberGenerator.new()
+	azar_triangulo.randomize()
+	preload("res://scripts/armado_triangulo.gd").preparar($Bolas.get_children(), variacion_triangulo, angulo_triangulo, azar_triangulo, separacion_triangulo)
 	for bola in [ball] + get_tree().get_nodes_in_group("bolas_color"):
 		bola.velocidad_vertical_maxima = velocidad_vertical_maxima_color
+		bola.desaceleracion_rodadura = desaceleracion_rodadura
+		bola.roce_velocidad = roce_velocidad
 	_material_potencia = StandardMaterial3D.new()
 	_material_potencia.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	marker.material_override = _material_potencia

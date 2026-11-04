@@ -11,6 +11,8 @@ var demora := 1.0
 var distancia_colocacion := 1.0 # Separación detrás de la bola objetivo.
 var variacion_colocacion := 0.25 # Variación máxima en metros alrededor del punto ideal.
 var espera := 0.1
+var animando_golpe := false
+var _animacion_golpe: Tween
 var azar := RandomNumberGenerator.new()
 @onready var partida = get_parent()
 @onready var sala = partida.get_parent()
@@ -21,6 +23,10 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if animando_golpe:
+		if partida.terminada or partida.reiniciando or not partida.es_turno_cpu():
+			_cancelar_golpe()
+		return
 	if partida.configurando or partida.terminada or partida.reiniciando or not partida.es_turno_cpu() or partida.reglas.en_tiro or sala.is_waiting_for_ball or sala.camara_en_transicion():
 		espera = 0.0
 		return
@@ -141,7 +147,41 @@ func _camino_libre(desde: Vector3, objetivo: RigidBody3D) -> bool:
 
 
 func disparar(direccion: Vector3, fuerza: float) -> void:
+	if animando_golpe or not partida.es_turno_cpu() or not partida.puede_apuntar() or sala.is_waiting_for_ball:
+		return
+	direccion.y = 0.0
+	if direccion.length_squared() < 0.0001:
+		return
+	direccion = direccion.normalized()
+	animando_golpe = true
+	sala.cancelar_apuntado()
+	var punto: Vector3 = sala.ball.global_position - direccion * sala.ball_radius
+	var retiro: float = lerpf(0.25, 1.0, clampf(fuerza / 20.0, 0.0, 1.0))
+	sala.taco.global_position = punto - direccion * sala.cue_initial_distance
+	sala.taco.look_at(punto, Vector3.UP)
+	sala.taco.show()
+	sala.taco.get_node("Visual").preparar(punto, sala.cue_initial_distance + retiro)
+	var mover := func(distancia: float):
+		sala.taco.global_position = punto - direccion * distancia
+		sala.taco.get_node("Visual").actualizar()
+	_animacion_golpe = create_tween()
+	_animacion_golpe.tween_method(mover, sala.cue_initial_distance, sala.cue_initial_distance + retiro, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_animacion_golpe.tween_interval(0.12)
+	_animacion_golpe.tween_method(mover, sala.cue_initial_distance + retiro, 0.114, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_animacion_golpe.tween_callback(_impactar.bind(direccion, fuerza))
+
+
+func _cancelar_golpe() -> void:
+	if _animacion_golpe != null:
+		_animacion_golpe.kill()
+	animando_golpe = false
+	sala.cancelar_apuntado()
+
+
+func _impactar(direccion: Vector3, fuerza: float) -> void:
+	animando_golpe = false
 	if not partida.es_turno_cpu() or not partida.puede_apuntar() or sala.is_waiting_for_ball:
+		sala.cancelar_apuntado()
 		return
 	sala.is_hitting_mode = false
 	sala.marker.hide()

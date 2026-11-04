@@ -13,6 +13,7 @@ func comprobar(condicion: bool, mensaje: String) -> void:
 func probar() -> void:
 	var sala = load("res://scenes/sala.tscn").instantiate()
 	root.add_child(sala)
+	current_scene = sala
 	for i in range(3):
 		await process_frame
 	var p = sala.get_node("Partida")
@@ -23,12 +24,19 @@ func probar() -> void:
 	var hud = p.get_node("HUD/Panel")
 	comprobar(is_equal_approx(hud.get_theme_stylebox("panel").bg_color.a, 0.75), "Solo el fondo del HUD debe ser más transparente")
 	config.nuevo()
+	var poderes: CheckButton
+	for control in config.contenido.get_children():
+		if control is CheckButton:
+			poderes = control
+	comprobar(poderes != null and poderes.button_pressed, "Nueva partida debe ofrecer poderes activados por defecto")
+	poderes.button_pressed = false
 	for boton in config.contenido.get_children():
 		if boton is Button and boton.text == "Jugar":
 			boton.pressed.emit()
 			break
 	await process_frame
 	comprobar(not paused and not config.visible and musica_3d.playing and not config.musica_menu.playing, "Al jugar debe volver únicamente la música espacial")
+	comprobar(not p.con_powerups and not sala.get_node("Powerups").habilitado, "El jugador debe poder desactivar los poderes antes de jugar")
 	var camara: Camera3D = root.get_camera_3d()
 	var vista := camara.global_transform
 	config.abrir_pausa()
@@ -43,7 +51,40 @@ func probar() -> void:
 	config.continuar()
 	await process_frame
 	comprobar(not paused and root.get_camera_3d() == camara and musica_3d.playing and not config.musica_menu.playing, "Continuar debe recuperar la misma cámara y la música espacial")
-	sala.queue_free()
+	p.terminada = true
+	p._actualizar_hud()
+	p.reiniciar.pressed.emit()
+	await scene_changed
+	for i in range(3):
+		await process_frame
+	sala = current_scene
+	p = sala.get_node("Partida")
+	config = p.configuracion
+	comprobar(paused and p.configurando and not p.terminada, "Nueva partida debe cargar una mesa limpia y pausada para elegir las reglas")
+	comprobar(config.contenido.get_child(0).text == "Nueva partida", "El botón de fin de partida debe abrir la selección, sin pasar por el menú principal")
+	comprobar(not has_meta("abrir_nueva_partida"), "La navegación debe consumirse para no afectar las próximas vueltas al menú")
+	for control in config.contenido.get_children():
+		if control is CheckButton:
+			comprobar(control.button_pressed, "Los poderes deben volver a estar activados al entrar de nuevo")
+		if control is OptionButton:
+			control.select(1)
+	for control in config.contenido.get_children():
+		if control is Button and control.text == "Jugar":
+			control.pressed.emit()
+			break
+	comprobar(not paused and p.jugador_2_cpu and p.con_powerups and sala.get_node("Powerups").habilitado, "La nueva selección debe iniciar una partida contra CPU con poderes")
+	# Un reinicio automático conserva su ruta al menú, sin heredar la del botón.
+	p.reiniciar_partida()
+	await scene_changed
+	for i in range(3):
+		await process_frame
+	config = current_scene.get_node("Partida").configuracion
+	var hay_menu := false
+	for control in config.contenido.get_children():
+		if control is Button and control.text == "Nuevo juego":
+			hay_menu = true
+	comprobar(hay_menu, "Los otros reinicios deben conservar la entrada normal al menú")
+	current_scene.queue_free()
 	await process_frame
 	print("MENU PAUSA AUDIO: ", errores, " errores")
 	quit(1 if errores else 0)

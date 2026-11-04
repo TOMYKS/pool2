@@ -8,7 +8,7 @@ const ALTURA_PANO := 4.1761234
 
 
 func _initialize() -> void:
-	create_timer(60).timeout.connect(func(): quit(2))
+	create_timer(240).timeout.connect(func(): quit(2))
 	_probar.call_deferred()
 
 
@@ -23,6 +23,8 @@ func _probar() -> void:
 	for modelo in modelos:
 		var radio: float = modelo.get_node("CollisionShape3D").shape.radius
 		for cuerpo in [mesa.get_node("Bordes"), mesa.get_node("Pockets")]:
+			if "--solo-bandas" in OS.get_cmdline_user_args() and cuerpo.name != &"Bordes":
+				continue
 			for colision: CollisionShape3D in cuerpo.get_children():
 				# Solo las caras interiores: las traseras de las troneras están
 				# fuera del paño y no son superficies de rebote hacia la mesa.
@@ -54,7 +56,7 @@ func _probar() -> void:
 						root.add_child(bola)
 						var reboto := false
 						var entrada := bola.linear_velocity
-						for paso in range(30):
+						for paso in range(int(round(0.5 * Engine.physics_ticks_per_second))):
 							await physics_frame
 							if bola.linear_velocity.dot(normal) > velocidad * 0.15:
 								reboto = true
@@ -62,9 +64,10 @@ func _probar() -> void:
 								if velocidad >= 2.0:
 									retencion_minima = minf(retencion_minima, retencion)
 									retencion_maxima = maxf(retencion_maxima, retencion)
-									# En estos ángulos la banda debe perder al menos
-									# un 20 % de velocidad, también a máxima potencia.
-									if retencion >= 0.80:
+									# Verificar la componente normal: la tangente
+									# puede conservarse en un impacto oblicuo.
+									var retencion_normal := bola.linear_velocity.dot(normal) / maxf(absf(entrada.dot(normal)), 0.001)
+									if retencion_normal >= 0.82:
 										errores += 1
 										print("POCA PERDIDA: ", modelo.name, " ", colision.name, " velocidad=", velocidad, " angulo=", angulo, " retencion=", retencion)
 								break

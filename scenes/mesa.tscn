@@ -4,7 +4,9 @@
 [ext_resource type="ArrayMesh" uid="uid://bpf81swinj310" path="res://assets/mesa2.res" id="2_8ehb7"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_57gcm"]
-bounce = 0.5
+friction = 0.1
+rough = true
+bounce = 1.0
 absorbent = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ds2lj"]
@@ -13,8 +15,7 @@ size = Vector3(9.813324, 1, 4.849365)
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
 resource_name = "Bandas y bordes de troneras"
 friction = 0.0
-bounce = 0.2
-absorbent = true
+bounce = 0.3
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oimtj"]
 size = Vector3(0.9647827, 1, 4.119812)

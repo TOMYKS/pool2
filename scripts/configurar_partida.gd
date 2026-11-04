@@ -94,7 +94,11 @@ func _ready() -> void:
 
 	partida.texto.add_theme_font_size_override("font_size", 18)
 	partida.detalle.custom_minimum_size.x = 330
-	principal()
+	if get_tree().get_meta("abrir_nueva_partida", false):
+		get_tree().remove_meta("abrir_nueva_partida")
+		nuevo()
+	else:
+		principal()
 	get_tree().paused = true
 
 func limpiar(titulo: String, subtitulo := "") -> void:
@@ -160,6 +164,7 @@ func nuevo() -> void:
 	rival.item_selected.connect(func(opcion): nombre2.visible = opcion == 0)
 	var poderes := CheckButton.new()
 	poderes.text = "Activar power-ups sorpresa"
+	poderes.button_pressed = true
 	contenido.add_child(poderes)
 	texto("Los poderes aparecen después de asignar grupos y completar un tiro de cada jugador.")
 	boton("Jugar", func():
@@ -182,7 +187,9 @@ func nuevo() -> void:
 func abrir_pausa() -> void:
 	if partida.configurando:
 		return
-	partida.sala.cancelar_apuntado()
+	# El tween de la CPU se congela con el árbol; conservar su taco al reanudar.
+	if not partida.cpu.animando_golpe:
+		partida.sala.cancelar_apuntado()
 	partida.sala.get_node("Pivot").is_dragging_camera = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if not get_tree().paused:
