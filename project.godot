@@ -13,10 +13,13 @@ config_version=5
 config/name="Pool2"
 run/main_scene="uid://dhggdj3hxtgsm"
 config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://LogoNuevo.png"
 
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 

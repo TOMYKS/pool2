@@ -27,6 +27,18 @@ var _clic_pendiente = null
 @onready var sonido_falta = $SonidoFalta
 
 func _ready() -> void:
+	# Texturas con margen de color: mipmaps suaves sin uniones negras.
+	for cuerpo in get_tree().get_nodes_in_group("bolas_color") + [sala.ball]:
+		for visual in cuerpo.get_children():
+			if visual is MeshInstance3D and visual.mesh != null:
+				for superficie in range(visual.mesh.get_surface_count()):
+					var material_bola = visual.mesh.surface_get_material(superficie)
+					if material_bola is BaseMaterial3D:
+						material_bola.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+						var original: String = material_bola.albedo_texture.resource_path
+						var corregida = preload("res://scripts/texturas_bolas.gd").ALBEDOS.get(original)
+						if corregida != null:
+							material_bola.albedo_texture = corregida
 	sala.tiro_iniciado.connect(_iniciar_tiro)
 	reiniciar.pressed.connect(nueva_partida)
 	sala.ball.contact_monitor = true
