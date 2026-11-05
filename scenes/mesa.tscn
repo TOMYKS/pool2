@@ -3,8 +3,6 @@
 [ext_resource type="Texture2D" uid="uid://t5ah01djjk4l" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_27.png" id="1_12636"]
 [ext_resource type="Texture2D" uid="uid://u5d5x6g0idlp" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_28.png" id="2_u1ain"]
 [ext_resource type="Texture2D" uid="uid://dvcsqav2r3of6" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_29.png" id="3_aj2bx"]
-[ext_resource type="Texture2D" uid="uid://dg017xcw45a8f" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_282.png" id="4_l2cc3"]
-[ext_resource type="Texture2D" uid="uid://dtdapqo0j1qxh" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_292.png" id="5_v13h0"]
 
 [ext_resource type="ArrayMesh" path="res://assets/mesa_tablero.res" id="6_table_mesh"]
 [ext_resource type="ArrayMesh" path="res://assets/mesa_patas.res" id="7_legs_mesh"]
@@ -24,13 +22,13 @@ metadata/_gltf_primary_texture_coord = 0
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k6lhg"]
 resource_name = "PoolTable_MTL2"
 albedo_texture = ExtResource("1_12636")
-metallic_texture = ExtResource("4_l2cc3")
+metallic_texture = ExtResource("2_u1ain")
 metallic_texture_channel = 2
-roughness_texture = ExtResource("4_l2cc3")
+roughness_texture = ExtResource("2_u1ain")
 roughness_texture_channel = 1
 normal_enabled = true
 normal_scale = 0.1
-normal_texture = ExtResource("5_v13h0")
+normal_texture = ExtResource("3_aj2bx")
 metadata/_gltf_primary_texture_coord = 0
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_57gcm"]
