@@ -28,6 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://josr1xi4lvly" path="res://assets/audio/BallvsBall.wav" id="27_s1q4q"]
 [ext_resource type="PackedScene" uid="uid://87n5eqspvyyb" path="res://scenes/Bar.tscn" id="29_p1vf7"]
 [ext_resource type="PackedScene" uid="uid://byrw1d6y83sfl" path="res://scenes/powerups.tscn" id="29_ts382"]
+[ext_resource type="PackedScene" uid="uid://r8ipf7so0wy8" path="res://assets/SimplyPool-Neon.glb" id="30_ts382"]
 [ext_resource type="PackedScene" uid="uid://ccddnitu3fc1h" path="res://scenes/partida.tscn" id="partida"]
 
 [sub_resource type="Gradient" id="Gradient_sombra_patas"]
@@ -157,7 +158,6 @@ spot_angle = 65.0
 spot_angle_attenuation = 0.08537742
 
 [node name="LucesBar" type="Node3D" parent="Ambiente/Luces" unique_id=1549197894]
-visible = false
 
 [node name="SpotLight3D18" type="SpotLight3D" parent="Ambiente/Luces/LucesBar" unique_id=2145002231]
 transform = Transform3D(-0.64144963, 7.175005e-08, 0.7671651, 0.7671652, -3.353386e-08, 0.64144963, 7.1750044e-08, 1, -3.353386e-08, -15.285118, 14.342785, -17.416)
@@ -838,6 +838,7 @@ probabilidad_aparicion = 1.0
 environment = SubResource("Environment_i6w6a")
 
 [node name="NieblaBar" type="Node3D" parent="WorldEnvironment" unique_id=1837480803]
+visible = false
 
 [node name="FogVolume" type="FogVolume" parent="WorldEnvironment/NieblaBar" unique_id=1222904083]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.715152, 8.351074, 0.017615318)
@@ -874,6 +875,9 @@ spot_angle_attenuation = 2.5491161
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14888859, -6.0388174, -0.090854645)
 size = Vector3(12.88777, 15.614258, 7.7327347)
 material = SubResource("FogMaterial_p1vf7")
+
+[node name="Cartel Neon" parent="." unique_id=1513337646 instance=ExtResource("30_ts382")]
+transform = Transform3D(-1.6501049e-07, 0, 3.775, 0, 3.775, 0, -3.775, 0, -1.6501049e-07, -25.362999, 9.056067, -2.0991416)
 
 [connection signal="body_entered" from="Bolas/Ball1" to="Bolas/Ball1" method="_on_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball2" to="Bolas/Ball2" method="_on_body_entered"]
