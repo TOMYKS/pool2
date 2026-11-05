@@ -110,6 +110,10 @@ func _ready() -> void:
 	else:
 		principal()
 	get_tree().paused = true
+	if get_tree().has_meta("revancha_pool"):
+		var revancha: Dictionary = get_tree().get_meta("revancha_pool")
+		get_tree().remove_meta("revancha_pool")
+		_iniciar_partida.call_deferred(revancha.cpu, revancha.nombres, revancha.poderes)
 
 func limpiar(titulo: String, subtitulo := "", accion_titulo: Control = null) -> void:
 	_en_principal = false
@@ -158,11 +162,11 @@ func boton(nombre: String, accion: Callable) -> void:
 		"Cómo jugar": icono = "guia"
 		"Volver al menú": icono = "salir"
 		"Volver": icono = "volver"
-		"Salir del juego", "Cancelar": icono = "cerrar"
+		"Salir del juego": icono = "cerrar"
 	if not icono.is_empty():
 		b.icon = load("res://assets/menu/%s.svg" % icono)
 		b.add_theme_constant_override("icon_max_width", 24)
-	if nombre in ["Nuevo juego", "Jugar", "Continuar"]:
+	if nombre in ["Nuevo juego", "Jugar", "Continuar", "Revancha"]:
 		for estado in ["normal", "hover", "pressed", "hover_pressed"]:
 			b.add_theme_stylebox_override(estado, Estilo.principal(estado))
 			b.add_theme_color_override("font_" + estado + "_color", Color("#272518"))
@@ -176,7 +180,7 @@ func boton(nombre: String, accion: Callable) -> void:
 		b.add_theme_font_size_override("font_size", 23)
 	b.pressed.connect(accion)
 	contenido.add_child(b)
-	if nombre in ["Nuevo juego", "Jugar", "Continuar", "Cancelar", "Volver"]:
+	if nombre in ["Nuevo juego", "Jugar", "Continuar", "Volver", "Revancha"]:
 		var enfocado := get_viewport().gui_get_focus_owner()
 		if enfocado == null or not contenido.is_ancestor_of(enfocado):
 			b.grab_focus()
@@ -189,7 +193,7 @@ func principal() -> void:
 	boton("Nuevo juego", nuevo)
 	boton("Ajustes", ajustes)
 	boton("Cómo jugar", informacion)
-	boton("Salir del juego", func(): get_tree().quit())
+	boton("Salir del juego", confirmar_salida.bind(true, true))
 
 func nuevo() -> void:
 	limpiar("Nueva partida", "Elegí tu rival y las reglas de la mesa.")
@@ -222,21 +226,45 @@ func nuevo() -> void:
 	contenido.add_child(poderes)
 	texto("Los poderes aparecen después de asignar grupos y completar un tiro de cada jugador.")
 	boton("Jugar", func():
-		partida.sala.camera.make_current()
-		partida.get_node("HUD/Panel").show()
-		var hud_poderes = partida.sala.get_node_or_null("Powerups/HUD")
-		if hud_poderes != null:
-			hud_poderes.hide()
-		get_tree().paused = false
-		partida.nombres = [nombre1.text.strip_edges() if not nombre1.text.strip_edges().is_empty() else "Jugador 1", nombre2.text.strip_edges() if not nombre2.text.strip_edges().is_empty() else "Jugador 2"]
-		partida.con_powerups = poderes.button_pressed
-		partida.comenzar_partida(rival.selected == 1)
-		var sistema = partida.sala.get_node_or_null("Powerups")
-		if sistema != null and sistema.habilitado != poderes.button_pressed:
-			sistema.alternar_sistema()
-		hide()
+		var nombres := [nombre1.text.strip_edges(), nombre2.text.strip_edges()]
+		for i in range(nombres.size()):
+			if nombres[i].is_empty():
+				nombres[i] = "Jugador %d" % (i + 1)
+		_iniciar_partida(rival.selected == 1, nombres, poderes.button_pressed)
 	)
 	boton("Volver", principal)
+
+func _iniciar_partida(usar_cpu: bool, nombres: Array, con_poderes: bool) -> void:
+	partida.sala.camera.make_current()
+	partida.get_node("HUD/Panel").show()
+	var hud_poderes = partida.sala.get_node_or_null("Powerups/HUD")
+	if hud_poderes != null:
+		hud_poderes.hide()
+	get_tree().paused = false
+	partida.nombres = nombres
+	partida.con_powerups = con_poderes
+	partida.comenzar_partida(usar_cpu)
+	var sistema = partida.sala.get_node_or_null("Powerups")
+	if sistema != null and sistema.habilitado != con_poderes:
+		sistema.alternar_sistema()
+	hide()
+
+func mostrar_resultado() -> void:
+	material = null
+	color = Color.TRANSPARENT
+	limpiar("Ganó %s" % partida.nombre_jugador(partida.reglas.ganador))
+	boton("Revancha", func():
+		get_tree().set_meta("revancha_pool", {
+			"cpu": partida.jugador_2_cpu,
+			"nombres": partida.nombres.duplicate(),
+			"poderes": partida.con_powerups,
+		})
+		partida.reiniciar_partida()
+	)
+	boton("Nuevo juego", partida.nueva_partida)
+	boton("Volver al menú", partida.reiniciar_partida)
+	get_tree().paused = true
+	show()
 
 func abrir_pausa() -> void:
 	if partida.configurando:
@@ -274,14 +302,19 @@ func abrir_pausa() -> void:
 	boton("Ajustes", ajustes)
 	boton("Cómo jugar", informacion)
 	boton("Volver al menú", confirmar_salida)
-	boton("Salir del juego", func(): get_tree().quit())
+	boton("Salir del juego", confirmar_salida.bind(true))
 
-func confirmar_salida() -> void:
-	limpiar("¿Volver al menú?", "Se perderá la partida actual.")
-	boton("Volver al menú", func():
+func confirmar_salida(cerrar_juego: bool = false, desde_inicio: bool = false) -> void:
+	var accion := "Salir del juego" if cerrar_juego else "Volver al menú"
+	var aviso := "Se cerrará el juego." if desde_inicio else "Se perderá la partida actual."
+	limpiar("¿%s?" % accion, aviso)
+	boton(accion, func():
+		if cerrar_juego:
+			get_tree().quit()
+			return
 		get_tree().paused = false
 		get_tree().reload_current_scene())
-	boton("Cancelar", abrir_pausa)
+	boton("Volver", principal if desde_inicio else abrir_pausa)
 
 func continuar() -> void:
 	if is_instance_valid(camara_anterior):
@@ -357,7 +390,7 @@ func informacion() -> void:
 	contenido.add_child(guia)
 	boton("Volver", volver)
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE and not partida.configurando:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE and not partida.configurando and not partida.terminada:
 		if visible:
 			continuar()
 		else:

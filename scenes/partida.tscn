@@ -68,11 +68,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 16
 autowrap_mode = 2
 
-[node name="Reiniciar" type="Button" parent="HUD/Panel/Margen/Contenido" unique_id=170293692]
-visible = false
-layout_mode = 2
-text = "Nueva partida"
-
 [node name="SonidoWin" type="AudioStreamPlayer" parent="." unique_id=176790986]
 stream = ExtResource("2_xp6uk")
 volume_db = -7.0

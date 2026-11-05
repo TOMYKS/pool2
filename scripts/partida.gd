@@ -12,6 +12,7 @@ var configurando := true
 var jugador_2_cpu := false
 var con_powerups := false
 var nombres := ["Jugador 1", "Jugador 2"]
+var tutorial_completado := [false, false]
 @onready var cpu: Node = $CPU
 var configuracion: Control
 var _retiradas: Dictionary = {}
@@ -21,7 +22,6 @@ var _clic_pendiente = null
 @onready var sala = get_parent()
 @onready var texto: Label = $HUD/Panel/Margen/Contenido/Estado
 @onready var detalle: Label = $HUD/Panel/Margen/Contenido/Detalle
-@onready var reiniciar: Button = $HUD/Panel.reiniciar
 @onready var guia: MeshInstance3D = $Guia
 @onready var sonido_win = $SonidoWin
 @onready var sonido_falta = $SonidoFalta
@@ -40,7 +40,6 @@ func _ready() -> void:
 						if corregida != null:
 							material_bola.albedo_texture = corregida
 	sala.tiro_iniciado.connect(_iniciar_tiro)
-	reiniciar.pressed.connect(nueva_partida)
 	sala.ball.contact_monitor = true
 	sala.ball.max_contacts_reported = 16
 	sala.ball.set_meta("puede_recoger", false)
@@ -60,6 +59,7 @@ func _ready() -> void:
 	_actualizar_hud()
 	configuracion = preload("res://scripts/configurar_partida.gd").new()
 	$HUD.add_child(configuracion)
+	$HUD.add_child(preload("res://scripts/tutorial_tiro.gd").new())
 	_control_camara(false)
 
 
@@ -88,6 +88,8 @@ func puede_apuntar() -> bool:
 func _iniciar_tiro() -> void:
 	if configurando or terminada or bola_en_mano or reiniciando:
 		return
+	if not jugador_2_cpu:
+		tutorial_completado[reglas.turno - 1] = true
 	reglas.iniciar_tiro()
 	# Un contacto que ya existía al empezar no emite otro body_entered.
 	for cuerpo in sala.ball.get_colliding_bodies():
@@ -204,15 +206,18 @@ func finalizar_tiro() -> void:
 	if resultado.has("ganador"):
 		terminada = true
 		if resultado["ganador"] == jugador_que_tiro:
+			sonido_win.process_mode = Node.PROCESS_MODE_ALWAYS
 			sonido_win.play()
 		else:
+			sonido_falta.process_mode = Node.PROCESS_MODE_ALWAYS
 			sonido_falta.volume_db = -20.0
 			sonido_falta.play()
-		sala.cambiar_camara(sala.camera_mesa)
+		sala.camera_mesa.make_current()
 		_control_camara(false)
 		var poderes = sala.get_node_or_null("Powerups")
 		if poderes != null and poderes.habilitado:
 			poderes.alternar_sistema()
+		configuracion.mostrar_resultado.call_deferred()
 	elif resultado.get("bola_en_mano", false):
 		bola_en_mano = true
 		_ocultar_blanca()
@@ -327,7 +332,6 @@ func _actualizar_hud() -> void:
 		detalle.text = "Elegí el jugador 2 para comenzar."
 	elif es_turno_cpu() and not terminada:
 		detalle.text = "CPU jugando…" if reglas.en_tiro else "CPU pensando…"
-	reiniciar.visible = terminada
 	# Refrescar las dos filas al asignar grupos o registrar cualquier caída.
 	get_node("HUD/Panel").actualizar()
 
