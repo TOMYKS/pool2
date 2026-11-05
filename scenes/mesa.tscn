@@ -74,6 +74,7 @@ mesh = ExtResource("6_table_mesh")
 [node name="Patas" type="MeshInstance3D" parent="." unique_id=1174809372]
 transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 5, 0, -5, -2.1855695e-07, 0, 0.67212903, 0)
 gi_mode = 2
+layers = 524289
 mesh = ExtResource("7_legs_mesh")
 
 [node name="Pano" type="StaticBody3D" parent="." unique_id=2093126086]

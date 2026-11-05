@@ -30,6 +30,25 @@
 [ext_resource type="PackedScene" uid="uid://byrw1d6y83sfl" path="res://scenes/powerups.tscn" id="29_ts382"]
 [ext_resource type="PackedScene" uid="uid://ccddnitu3fc1h" path="res://scenes/partida.tscn" id="partida"]
 
+[sub_resource type="Gradient" id="Gradient_sombra_patas"]
+offsets = PackedFloat32Array(0, 0.36, 0.72, 1)
+colors = PackedColorArray(0.035, 0.018, 0.009, 0.64, 0.035, 0.018, 0.009, 0.46, 0.035, 0.018, 0.009, 0.13, 0.035, 0.018, 0.009, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_sombra_patas"]
+gradient = SubResource("Gradient_sombra_patas")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sombra_patas"]
+transparency = 1
+shading_mode = 0
+albedo_texture = SubResource("GradientTexture2D_sombra_patas")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sombra_patas"]
+material = SubResource("StandardMaterial3D_sombra_patas")
+size = Vector2(1.28, 1.28)
+
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
 friction = 0.08
 bounce = 0.48
@@ -52,6 +71,20 @@ size = Vector3(65.29873, 0.4609375, 23.620949)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ds2lj"]
 size = Vector3(0.43347168, 12.442154, 20.180923)
+
+[sub_resource type="Environment" id="Environment_i6w6a"]
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+
+[sub_resource type="FogMaterial" id="FogMaterial_i6w6a"]
+density = 0.19
+albedo = Color(0, 0, 0, 1)
+height_falloff = 1.2311408e-05
+edge_fade = 0.13195081
+
+[sub_resource type="FogMaterial" id="FogMaterial_p1vf7"]
+density = 1.3
+albedo = Color(0, 0, 0, 1)
 
 [node name="Sala" type="Node3D" unique_id=2013218986 node_paths=PackedStringArray("pivote", "camera", "camera_mesa", "marker", "taco", "ball")]
 editor_description = "Coordinacion del golpe y transiciones. Ajustes agrupados en el Inspector."
@@ -124,214 +157,41 @@ spot_angle = 65.0
 spot_angle_attenuation = 0.08537742
 
 [node name="SpotLight3D5" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1261655442]
-transform = Transform3D(0.64156353, 1.5667755e-08, -0.7670699, 0.7670699, -3.3529687e-08, 0.64156353, -1.5667755e-08, -1, -3.3529687e-08, 18.051018, 10.129727, -19.626339)
+transform = Transform3D(0.603141, -0.34086806, -0.721131, 0.76706994, -6.653025e-08, 0.64156353, -0.21868856, -0.9401112, 0.2614696, 17.195385, 12.072704, -15.928652)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
 light_indirect_energy = 1.81
 light_volumetric_fog_energy = 4.111
-spot_range = 14.133
+spot_range = 24.677
+spot_attenuation = -0.25
 spot_angle = 28.74
-spot_angle_attenuation = 0.08537742
+spot_angle_attenuation = 2.5491161
 
-[node name="SpotLight3D18" type="SpotLight3D" parent="Ambiente/Luces" unique_id=2145002231]
-transform = Transform3D(-0.64144963, 7.175005e-08, 0.7671651, 0.7671652, -3.353386e-08, 0.64144963, 7.1750044e-08, 1, -3.353386e-08, -15.285118, 14.342785, -17.416)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.5
-spot_angle = 28.74
-spot_angle_attenuation = 0.08537742
+[node name="SombrasPatas" type="Node3D" parent="Ambiente" unique_id=1502869610]
 
-[node name="SpotLight3D19" type="SpotLight3D" parent="Ambiente/Luces" unique_id=490092059]
-transform = Transform3D(-0.64144963, 7.175005e-08, 0.7671651, 0.7671652, -3.353386e-08, 0.64144963, 7.1750044e-08, 1, -3.353386e-08, -16.430807, 14.172361, 11.97257)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.5
-spot_angle = 28.74
-spot_angle_attenuation = 0.08537742
+[node name="Pie1" type="MeshInstance3D" parent="Ambiente/SombrasPatas" unique_id=444168467]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.85, 0.686, -2.42)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("PlaneMesh_sombra_patas")
 
-[node name="SpotLight3D21" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1175447598]
-transform = Transform3D(-0.64144963, 7.1750044e-08, 0.7671651, 0.7671652, -3.353385e-08, 0.64144963, 7.1750044e-08, 1, -3.3533862e-08, -16.430807, 14.279079, -2.0767791)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.5
-spot_angle = 28.74
-spot_angle_attenuation = 0.08537742
+[node name="Pie2" type="MeshInstance3D" parent="Ambiente/SombrasPatas" unique_id=579803516]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.85, 0.686, -2.42)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("PlaneMesh_sombra_patas")
 
-[node name="SpotLight3D20" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1658053040]
-transform = Transform3D(0.5368346, 0.51769286, -0.66618526, 0.81655437, -0.12017191, 0.5646216, 0.2122439, -0.84708476, -0.4872369, 21.652086, 14.343878, 9.8471)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 40.599
-spot_attenuation = 1.87
-spot_angle = 40.16
-spot_angle_attenuation = 0.08537742
+[node name="Pie3" type="MeshInstance3D" parent="Ambiente/SombrasPatas" unique_id=767469599]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.85, 0.686, 2.42)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("PlaneMesh_sombra_patas")
 
-[node name="SpotLight3D6" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1025722438]
-transform = Transform3D(1, 8.351872e-23, 4.371139e-08, -4.371139e-08, 1.9106855e-15, 1, 0, -1, 1.9106855e-15, 8.159709, 10.600472, -18.305923)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.4
-spot_angle = 55.17
-spot_angle_attenuation = 0.08537742
-
-[node name="SpotLight3D22" type="SpotLight3D" parent="Ambiente/Luces" unique_id=643241670]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.159709, 8.734098, -18.305923)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 4.05
-spot_angle = 55.17
-spot_angle_attenuation = 0.08537742
-
-[node name="SpotLight3D23" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1181421582]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -6.6234922, 8.734098, -18.39556)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 4.05
-spot_angle = 55.17
-spot_angle_attenuation = 0.08537742
-
-[node name="SpotLight3D24" type="SpotLight3D" parent="Ambiente/Luces" unique_id=270929855]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.159709, 8.734098, 15.044737)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 4.05
-spot_angle = 55.17
-spot_angle_attenuation = 0.08537742
-
-[node name="SpotLight3D25" type="SpotLight3D" parent="Ambiente/Luces" unique_id=756211046]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -6.6234922, 8.734098, 15.112595)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 4.05
-spot_angle = 55.17
-spot_angle_attenuation = 0.08537742
-
-[node name="SpotLight3D10" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1712688665]
-transform = Transform3D(1, -8.351872e-23, 3.650719e-30, 0, -4.371139e-08, -1, 8.351872e-23, 1, -4.371139e-08, 31.825537, 9.894775, -9.098105)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.5
-spot_angle = 6.26
-
-[node name="SpotLight3D11" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1614661995]
-transform = Transform3D(1, -8.351872e-23, 3.650719e-30, 0, -4.371139e-08, -1, 8.351872e-23, 1, -4.371139e-08, 31.825537, 9.894775, -4.6463366)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.5
-spot_angle = 6.26
-
-[node name="SpotLight3D12" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1888163287]
-transform = Transform3D(1, -8.351872e-23, 3.650719e-30, 0, -4.371139e-08, -1, 8.351872e-23, 1, -4.371139e-08, 31.825537, 9.894775, -0.14788485)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.5
-spot_angle = 6.26
-
-[node name="SpotLight3D13" type="SpotLight3D" parent="Ambiente/Luces" unique_id=912632679]
-transform = Transform3D(1, -8.351872e-23, 3.650719e-30, 0, -4.371139e-08, -1, 8.351872e-23, 1, -4.371139e-08, 31.825537, 9.894775, 4.379426)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.5
-spot_angle = 6.26
-
-[node name="SpotLight3D14" type="AreaLight3D" parent="Ambiente/Luces" unique_id=684768820]
-transform = Transform3D(1, 8.351872e-23, 3.650719e-30, 0, -4.371139e-08, 1, 8.351872e-23, -1, -4.371139e-08, 31.825537, 12.961831, -9.087487)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-area_range = 16.774
-area_attenuation = 2.343
-
-[node name="SpotLight3D15" type="AreaLight3D" parent="Ambiente/Luces" unique_id=751394940]
-transform = Transform3D(1, 8.351872e-23, 3.650719e-30, 0, -4.371139e-08, 1, 8.351872e-23, -1, -4.371139e-08, 31.825537, 12.961831, -4.6357183)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-area_range = 16.774
-area_attenuation = 2.343
-
-[node name="SpotLight3D16" type="AreaLight3D" parent="Ambiente/Luces" unique_id=1841110800]
-transform = Transform3D(1, 8.351872e-23, 3.650719e-30, 0, -4.371139e-08, 1, 8.351872e-23, -1, -4.371139e-08, 31.825537, 12.961831, -0.13726664)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-area_range = 16.774
-area_attenuation = 2.343
-
-[node name="SpotLight3D17" type="AreaLight3D" parent="Ambiente/Luces" unique_id=1664834228]
-transform = Transform3D(1, 8.351872e-23, 3.650719e-30, 0, -4.371139e-08, 1, 8.351872e-23, -1, -4.371139e-08, 31.825537, 12.961831, 4.390044)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-area_range = 16.774
-area_attenuation = 2.343
-
-[node name="SpotLight3D7" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1382684288]
-transform = Transform3D(1, 8.351872e-23, 4.371139e-08, -4.371139e-08, 1.9106855e-15, 1, 0, -1, 1.9106855e-15, -6.619651, 10.600472, -18.305923)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.4
-spot_angle = 55.17
-spot_angle_attenuation = 0.08537742
-
-[node name="SpotLight3D8" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1355877954]
-transform = Transform3D(1, 8.351872e-23, 4.371139e-08, -4.371139e-08, 1.9106855e-15, 1, 0, -1, 1.9106855e-15, 8.159709, 10.600472, 15.130022)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.4
-spot_angle = 55.17
-spot_angle_attenuation = 0.08537742
-
-[node name="SpotLight3D9" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1025887060]
-transform = Transform3D(1, 8.351872e-23, 4.371139e-08, -4.371139e-08, 1.9106855e-15, 1, 0, -1, 1.9106855e-15, -6.619651, 10.600472, 15.130022)
-light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
-light_energy = 16.0
-light_indirect_energy = 1.81
-light_volumetric_fog_energy = 4.111
-spot_range = 14.133
-spot_attenuation = 1.4
-spot_angle = 55.17
-spot_angle_attenuation = 0.08537742
+[node name="Pie4" type="MeshInstance3D" parent="Ambiente/SombrasPatas" unique_id=1174296212]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.85, 0.686, 2.42)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("PlaneMesh_sombra_patas")
 
 [node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
 editor_description = "Modelos, pano, bandas y geometria de las seis troneras."
@@ -359,7 +219,6 @@ transform = Transform3D(-2.141858e-07, 0, 4.9, 0, 4.9, 0, -4.9, 0, -2.141858e-07
 mesh = ExtResource("6_4xymg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bolas/Ball1" unique_id=161027197]
-visible = false
 shape = SubResource("SphereShape3D_iwtcp")
 
 [node name="SonidoChoque" type="AudioStreamPlayer3D" parent="Bolas/Ball1" unique_id=968500170]
@@ -723,6 +582,7 @@ fov = 62.0
 
 [node name="LimitesMesa" type="Area3D" parent="." unique_id=1908130996]
 editor_description = "Detecta caidas fuera de la superficie y avisa al controlador de partida."
+visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LimitesMesa" unique_id=1712495416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08205795, 3.224358, -0.47808456)
@@ -770,6 +630,34 @@ editor_description = "Reglas, CPU, HUD, colocacion de blanca y resultado."
 [node name="Powerups" parent="." unique_id=676774078 instance=ExtResource("29_ts382")]
 editor_description = "Administrador del activador y de los ocho poderes temporales."
 probabilidad_aparicion = 1.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1533499711]
+environment = SubResource("Environment_i6w6a")
+
+[node name="FogVolume" type="FogVolume" parent="WorldEnvironment" unique_id=1222904083]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.715152, 8.351074, 0.017615318)
+size = Vector3(19.078506, 15.614258, 7.468875)
+material = SubResource("FogMaterial_i6w6a")
+
+[node name="FogVolume2" type="FogVolume" parent="WorldEnvironment" unique_id=685376668]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.949333, 8.351074, 0.017708778)
+size = Vector3(33.800728, 15.614258, 7.314516)
+material = SubResource("FogMaterial_i6w6a")
+
+[node name="FogVolume3" type="FogVolume" parent="WorldEnvironment" unique_id=882836386]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.2161484, 8.351074, -15.599653)
+size = Vector3(65.03377, 15.614258, 23.67493)
+material = SubResource("FogMaterial_i6w6a")
+
+[node name="FogVolume4" type="FogVolume" parent="WorldEnvironment" unique_id=742050576]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0569453, 8.351074, 13.494339)
+size = Vector3(65.35446, 15.614258, 19.637577)
+material = SubResource("FogMaterial_i6w6a")
+
+[node name="FogVolume5" type="FogVolume" parent="WorldEnvironment" unique_id=1835762028]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14888859, -6.0388174, -0.090854645)
+size = Vector3(12.88777, 15.614258, 7.7327347)
+material = SubResource("FogMaterial_p1vf7")
 
 [connection signal="body_entered" from="Bolas/Ball1" to="Bolas/Ball1" method="_on_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball2" to="Bolas/Ball2" method="_on_body_entered"]
