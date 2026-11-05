@@ -111,7 +111,7 @@ func _ready() -> void:
 		principal()
 	get_tree().paused = true
 
-func limpiar(titulo: String, subtitulo := "") -> void:
+func limpiar(titulo: String, subtitulo := "", accion_titulo: Control = null) -> void:
 	_en_principal = false
 	_ajustar_diseno()
 	scroll.scroll_vertical = 0
@@ -127,7 +127,15 @@ func limpiar(titulo: String, subtitulo := "") -> void:
 	etiqueta.add_theme_constant_override("shadow_outline_size", 5)
 	etiqueta.add_theme_font_size_override("font_size", 44)
 	etiqueta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	contenido.add_child(etiqueta)
+	if accion_titulo == null:
+		contenido.add_child(etiqueta)
+	else:
+		var fila := HBoxContainer.new()
+		etiqueta.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_child(etiqueta)
+		accion_titulo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		fila.add_child(accion_titulo)
+		contenido.add_child(fila)
 	if not subtitulo.is_empty():
 		texto(subtitulo)
 
@@ -148,9 +156,12 @@ func boton(nombre: String, accion: Callable) -> void:
 	match nombre:
 		"Ajustes": icono = "ajustes"
 		"Cómo jugar": icono = "guia"
-		"Salir del juego", "Volver al menú", "Volver", "Cancelar": icono = "salir"
+		"Volver al menú": icono = "salir"
+		"Volver": icono = "volver"
+		"Salir del juego", "Cancelar": icono = "cerrar"
 	if not icono.is_empty():
 		b.icon = load("res://assets/menu/%s.svg" % icono)
+		b.add_theme_constant_override("icon_max_width", 24)
 	if nombre in ["Nuevo juego", "Jugar", "Continuar"]:
 		for estado in ["normal", "hover", "pressed", "hover_pressed"]:
 			b.add_theme_stylebox_override(estado, Estilo.principal(estado))
@@ -240,7 +251,25 @@ func abrir_pausa() -> void:
 	get_tree().paused = true
 	partida.get_node("HUD/Panel").hide()
 	show()
-	limpiar("Pausa")
+	var luces_bar: Node3D = partida.sala.get_node("Ambiente/Luces/LucesBar")
+	var niebla_bar: Node3D = partida.sala.get_node("WorldEnvironment/NieblaBar")
+	var interruptor := Button.new()
+	interruptor.icon = load("res://assets/menu/lamparita.svg")
+	interruptor.add_theme_constant_override("icon_max_width", 24)
+	interruptor.toggle_mode = true
+	interruptor.button_pressed = luces_bar.visible
+	interruptor.custom_minimum_size = Vector2(48, 44)
+	interruptor.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	interruptor.tooltip_text = "Luces del bar"
+	interruptor.accessibility_name = "Luces del bar"
+	interruptor.add_theme_color_override("icon_normal_color", Estilo.SUAVE)
+	interruptor.add_theme_color_override("icon_pressed_color", Color("#ffe5a0"))
+	interruptor.add_theme_color_override("icon_hover_pressed_color", Color("#ffe5a0"))
+	interruptor.toggled.connect(func(encendidas: bool):
+		luces_bar.visible = encendidas
+		niebla_bar.visible = not encendidas
+	)
+	limpiar("Pausa", "", interruptor)
 	boton("Continuar", continuar)
 	boton("Ajustes", ajustes)
 	boton("Cómo jugar", informacion)

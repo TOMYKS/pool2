@@ -26,7 +26,7 @@ var _azar := RandomNumberGenerator.new()
 var _tiro := 0
 var _tiro_recogida := -1
 var _ultimo_tiro_preparado := -1
-var _posicion_anterior := Vector3.ZERO
+var _posiciones_anteriores: Dictionary = {}
 var _listo := false
 @onready var _sala = get_parent()
 @onready var _estado: Label = $HUD/Estado
@@ -59,14 +59,12 @@ func _preparar() -> void:
 		_controladores[clave] = controlador
 	_sala.tiro_iniciado.connect(_al_iniciar_tiro)
 	_sala.tiro_finalizado.connect(_al_finalizar_tiro)
-	_posicion_anterior = _sala.ball.global_position
 	_listo = true
 
 
 func alternar_sistema() -> void:
 	habilitado = not habilitado
 	if habilitado:
-		_posicion_anterior = _sala.ball.global_position
 		_intentar_aparicion()
 	else:
 		_quitar_activador()
@@ -75,14 +73,21 @@ func alternar_sistema() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if not _listo:
+	if not _listo or not habilitado or not is_instance_valid(activador):
+		_posiciones_anteriores.clear()
 		return
-	var posicion: Vector3 = _sala.ball.global_position
-	if habilitado and is_instance_valid(activador):
-		# Ignoramos teletransportes (por ejemplo, reposición de la blanca).
-		if posicion.distance_to(_posicion_anterior) <= 1.0:
-			activador.comprobar_recorrido(_sala.ball, _posicion_anterior, posicion)
-	_posicion_anterior = posicion
+	var bolas := get_tree().get_nodes_in_group("bolas_color")
+	bolas.append(_sala.ball)
+	var posiciones: Dictionary = {}
+	for bola: RigidBody3D in bolas:
+		var id := bola.get_instance_id()
+		var posicion := bola.global_position
+		var anterior: Vector3 = _posiciones_anteriores.get(id, posicion)
+		posiciones[id] = posicion
+		# Un salto de posición grande corresponde a una reposición.
+		if posicion != anterior and posicion.distance_to(anterior) <= 1.0:
+			activador.comprobar_recorrido(bola, anterior, posicion)
+	_posiciones_anteriores = posiciones
 
 
 func _al_iniciar_tiro() -> void:
@@ -156,7 +161,8 @@ func _solicitar_recogida() -> void:
 
 
 func _recoger() -> void:
-	if not _sala.ball.get_meta("puede_recoger", true):
+	var partida = _sala.get_node_or_null("Partida")
+	if partida != null and (partida.terminada or partida.reiniciando):
 		return
 	if not habilitado or poder_actual != -1 or not is_instance_valid(activador):
 		return

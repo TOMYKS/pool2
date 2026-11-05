@@ -94,7 +94,7 @@ Negra antes de tiempo, fuera de la mesa o con falta: perdés. Negra + blanca tam
 			mostrar_poder()
 
 func mostrar_poder() -> void:
-	nota("Tocá el ? con la blanca", "Activá los poderes al crear la partida. Cada poder es sorpresa y dura 1–3 tiros posteriores al de recogida. Aparece después de asignar grupos y completar un tiro de cada jugador.")
+	nota("Cualquier bola puede activar un poder", "Si la blanca o una bola de color toca el activador ?, se activa un poder. Activá los poderes al crear la partida. Cada poder es sorpresa y dura 1–3 tiros posteriores al de recogida. Aparece después de asignar grupos y completar un tiro de cada jugador.")
 	var grilla := GridContainer.new()
 	grilla.columns = 4
 	grilla.add_theme_constant_override("h_separation", 8)

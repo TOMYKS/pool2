@@ -25,16 +25,17 @@ func _process(delta: float) -> void:
 
 
 func _al_entrar(body: Node3D) -> void:
-	if not consumido and body.is_in_group("blanca") and body.get_meta("puede_recoger", true):
+	var es_bola := body.is_in_group("blanca") or body.is_in_group("bolas_color")
+	if not consumido and es_bola and not body.is_queued_for_deletion() and body.get_meta("puede_recoger", true):
 		consumido = true
 		hide()
 		set_deferred("monitoring", false)
 		recogido.emit()
 
 
-func comprobar_recorrido(blanca: RigidBody3D, desde: Vector3, hasta: Vector3) -> void:
-	# El Area puede saltarse un contacto si la blanca cruza muy rápido.
+func comprobar_recorrido(bola: RigidBody3D, desde: Vector3, hasta: Vector3) -> void:
+	# El Area puede saltarse un contacto si una bola cruza muy rápido.
 	var cercano := Geometry3D.get_closest_point_to_segment(global_position, desde, hasta)
-	# Radio del activador (0.14) más el de la blanca (0.14).
+	# Radio del activador (0.14) más el de la bola (0.14).
 	if cercano.distance_to(global_position) <= 0.28:
-		_al_entrar(blanca)
+		_al_entrar(bola)
