@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cguivx2otvujd" path="res://scenes/mesa.tscn" id="1_uox7l"]
 [ext_resource type="PackedScene" uid="uid://cn3rsna8e41uo" path="res://scenes/Ball0.tscn" id="2_mteyr"]
 [ext_resource type="PackedScene" uid="uid://cv3d7xjq2qhtd" path="res://scenes/cue.tscn" id="3_3rsqy"]
-[ext_resource type="Script" uid="uid://b3w18lpxydeis" path="res://scripts/movimientowasd.gd" id="3_ltybl"]
+[ext_resource type="Script" uid="uid://b3w18lpxydeis" path="res://scripts/camara_orbital.gd" id="3_ltybl"]
 [ext_resource type="ArrayMesh" uid="uid://cye6jyk8w5dtu" path="res://assets/Ball1.res" id="6_4xymg"]
 [ext_resource type="Script" uid="uid://cda7suvdt8lhx" path="res://scripts/bola_color.gd" id="6_xtqig"]
 [ext_resource type="ArrayMesh" uid="uid://d3m7fnes81vjr" path="res://assets/Ball2.res" id="7_pxogb"]
@@ -30,6 +30,13 @@
 [ext_resource type="PackedScene" uid="uid://byrw1d6y83sfl" path="res://scenes/powerups.tscn" id="29_ts382"]
 [ext_resource type="PackedScene" uid="uid://ccddnitu3fc1h" path="res://scenes/partida.tscn" id="partida"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
+friction = 0.08
+bounce = 0.48
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_iwtcp"]
+radius = 0.14083566
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqvpg"]
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.015686275, 0.2627451, 1, 1)
@@ -40,26 +47,21 @@ emission = Color(0, 0, 0.7050794, 1)
 [sub_resource type="SphereMesh" id="SphereMesh_i6w6a"]
 material = SubResource("StandardMaterial3D_wqvpg")
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mteyr"]
-friction = 0.08
-bounce = 0.48
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_iwtcp"]
-radius = 0.14083566
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_iwtcp"]
 size = Vector3(65.29873, 0.4609375, 23.620949)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ds2lj"]
 size = Vector3(0.43347168, 12.442154, 20.180923)
 
-[node name="Sala" type="Node3D" unique_id=2013218986 node_paths=PackedStringArray("camera", "camera_mesa", "marker", "taco", "ball")]
+[node name="Sala" type="Node3D" unique_id=2013218986 node_paths=PackedStringArray("pivote", "camera", "camera_mesa", "marker", "taco", "ball")]
+editor_description = "Coordinacion del golpe y transiciones. Ajustes agrupados en el Inspector."
 script = ExtResource("1_ml4em")
-camera = NodePath("Pivot/SpringArm3D/Camera3D")
-camera_mesa = NodePath("CameraMesa")
-marker = NodePath("Marca")
-taco = NodePath("Cue")
-ball = NodePath("Ball0")
+pivote = NodePath("Camaras/Pivot")
+camera = NodePath("Camaras/Pivot/SpringArm3D/Camera3D")
+camera_mesa = NodePath("Camaras/CameraMesa")
+marker = NodePath("Apuntado/Marca")
+taco = NodePath("Apuntado/Cue")
+ball = NodePath("Bolas/Ball0")
 cue_max_force = 28.0
 variacion_triangulo = 0.005
 angulo_triangulo = 0.5
@@ -67,21 +69,15 @@ saque_max_force = 28.0
 velocidad_vertical_maxima_color = 0.8
 camera_transition_seconds = 0.4
 
-[node name="Bar" parent="." unique_id=465775975 instance=ExtResource("29_p1vf7")]
-transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, 7.1115875, 9.536743e-07, -2.1328049)
+[node name="Ambiente" type="Node3D" parent="." unique_id=1066321482]
+editor_description = "Decoracion del bar y luces. No controla reglas ni golpes."
 
-[node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
+[node name="Bar" parent="Ambiente" unique_id=465775975 instance=ExtResource("29_p1vf7")]
+transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, 7.1115875, 0.6751281, -2.1328049)
 
-[node name="Partida" parent="." unique_id=2142469568 instance=ExtResource("partida")]
+[node name="Luces" type="Node" parent="Ambiente" unique_id=762203803]
 
-[node name="Ball0" parent="." unique_id=596734405 groups=["blanca"] instance=ExtResource("2_mteyr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.821, 4.3171234, 0)
-contact_monitor = true
-max_contacts_reported = 1
-
-[node name="Luces" type="Node" parent="." unique_id=762203803]
-
-[node name="SpotLight3D" type="SpotLight3D" parent="Luces" unique_id=604606705]
+[node name="SpotLight3D" type="SpotLight3D" parent="Ambiente/Luces" unique_id=604606705]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.5, 8.12463, 0)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -92,7 +88,7 @@ spot_range = 5.4
 spot_angle = 65.0
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D3" type="SpotLight3D" parent="Luces" unique_id=20033930]
+[node name="SpotLight3D3" type="SpotLight3D" parent="Ambiente/Luces" unique_id=20033930]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 11.44, -5)
 light_energy = 16.0
 light_indirect_energy = 1.905
@@ -104,7 +100,7 @@ spot_attenuation = 2.0
 spot_angle = 60.0
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D4" type="SpotLight3D" parent="Luces" unique_id=1726383439]
+[node name="SpotLight3D4" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1726383439]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 11.44, 5)
 light_energy = 16.0
 light_indirect_energy = 1.905
@@ -116,7 +112,7 @@ spot_attenuation = 2.0
 spot_angle = 60.0
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D2" type="SpotLight3D" parent="Luces" unique_id=1555046908]
+[node name="SpotLight3D2" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1555046908]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2.5, 8.12463, 0)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -127,7 +123,7 @@ spot_range = 5.4
 spot_angle = 65.0
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D5" type="SpotLight3D" parent="Luces" unique_id=1261655442]
+[node name="SpotLight3D5" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1261655442]
 transform = Transform3D(0.64156353, 1.5667755e-08, -0.7670699, 0.7670699, -3.3529687e-08, 0.64156353, -1.5667755e-08, -1, -3.3529687e-08, 18.051018, 10.129727, -19.626339)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -137,7 +133,7 @@ spot_range = 14.133
 spot_angle = 28.74
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D18" type="SpotLight3D" parent="Luces" unique_id=2145002231]
+[node name="SpotLight3D18" type="SpotLight3D" parent="Ambiente/Luces" unique_id=2145002231]
 transform = Transform3D(-0.64144963, 7.175005e-08, 0.7671651, 0.7671652, -3.353386e-08, 0.64144963, 7.1750044e-08, 1, -3.353386e-08, -15.285118, 14.342785, -17.416)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -148,7 +144,7 @@ spot_attenuation = 1.5
 spot_angle = 28.74
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D19" type="SpotLight3D" parent="Luces" unique_id=490092059]
+[node name="SpotLight3D19" type="SpotLight3D" parent="Ambiente/Luces" unique_id=490092059]
 transform = Transform3D(-0.64144963, 7.175005e-08, 0.7671651, 0.7671652, -3.353386e-08, 0.64144963, 7.1750044e-08, 1, -3.353386e-08, -16.430807, 14.172361, 11.97257)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -159,7 +155,7 @@ spot_attenuation = 1.5
 spot_angle = 28.74
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D21" type="SpotLight3D" parent="Luces" unique_id=1175447598]
+[node name="SpotLight3D21" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1175447598]
 transform = Transform3D(-0.64144963, 7.1750044e-08, 0.7671651, 0.7671652, -3.353385e-08, 0.64144963, 7.1750044e-08, 1, -3.3533862e-08, -16.430807, 14.279079, -2.0767791)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -170,7 +166,7 @@ spot_attenuation = 1.5
 spot_angle = 28.74
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D20" type="SpotLight3D" parent="Luces" unique_id=1658053040]
+[node name="SpotLight3D20" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1658053040]
 transform = Transform3D(0.5368346, 0.51769286, -0.66618526, 0.81655437, -0.12017191, 0.5646216, 0.2122439, -0.84708476, -0.4872369, 21.652086, 14.343878, 9.8471)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -181,7 +177,7 @@ spot_attenuation = 1.87
 spot_angle = 40.16
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D6" type="SpotLight3D" parent="Luces" unique_id=1025722438]
+[node name="SpotLight3D6" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1025722438]
 transform = Transform3D(1, 8.351872e-23, 4.371139e-08, -4.371139e-08, 1.9106855e-15, 1, 0, -1, 1.9106855e-15, 8.159709, 10.600472, -18.305923)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -192,7 +188,7 @@ spot_attenuation = 1.4
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D22" type="SpotLight3D" parent="Luces" unique_id=643241670]
+[node name="SpotLight3D22" type="SpotLight3D" parent="Ambiente/Luces" unique_id=643241670]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.159709, 8.734098, -18.305923)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -203,7 +199,7 @@ spot_attenuation = 4.05
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D23" type="SpotLight3D" parent="Luces" unique_id=1181421582]
+[node name="SpotLight3D23" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1181421582]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -6.6234922, 8.734098, -18.39556)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -214,7 +210,7 @@ spot_attenuation = 4.05
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D24" type="SpotLight3D" parent="Luces" unique_id=270929855]
+[node name="SpotLight3D24" type="SpotLight3D" parent="Ambiente/Luces" unique_id=270929855]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.159709, 8.734098, 15.044737)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -225,7 +221,7 @@ spot_attenuation = 4.05
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D25" type="SpotLight3D" parent="Luces" unique_id=756211046]
+[node name="SpotLight3D25" type="SpotLight3D" parent="Ambiente/Luces" unique_id=756211046]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -6.6234922, 8.734098, 15.112595)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -236,7 +232,7 @@ spot_attenuation = 4.05
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D10" type="SpotLight3D" parent="Luces" unique_id=1712688665]
+[node name="SpotLight3D10" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1712688665]
 transform = Transform3D(1, -8.351872e-23, 3.650719e-30, 0, -4.371139e-08, -1, 8.351872e-23, 1, -4.371139e-08, 31.825537, 9.894775, -9.098105)
 light_energy = 16.0
 light_indirect_energy = 1.81
@@ -245,7 +241,7 @@ spot_range = 14.133
 spot_attenuation = 1.5
 spot_angle = 6.26
 
-[node name="SpotLight3D11" type="SpotLight3D" parent="Luces" unique_id=1614661995]
+[node name="SpotLight3D11" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1614661995]
 transform = Transform3D(1, -8.351872e-23, 3.650719e-30, 0, -4.371139e-08, -1, 8.351872e-23, 1, -4.371139e-08, 31.825537, 9.894775, -4.6463366)
 light_energy = 16.0
 light_indirect_energy = 1.81
@@ -254,7 +250,7 @@ spot_range = 14.133
 spot_attenuation = 1.5
 spot_angle = 6.26
 
-[node name="SpotLight3D12" type="SpotLight3D" parent="Luces" unique_id=1888163287]
+[node name="SpotLight3D12" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1888163287]
 transform = Transform3D(1, -8.351872e-23, 3.650719e-30, 0, -4.371139e-08, -1, 8.351872e-23, 1, -4.371139e-08, 31.825537, 9.894775, -0.14788485)
 light_energy = 16.0
 light_indirect_energy = 1.81
@@ -263,7 +259,7 @@ spot_range = 14.133
 spot_attenuation = 1.5
 spot_angle = 6.26
 
-[node name="SpotLight3D13" type="SpotLight3D" parent="Luces" unique_id=912632679]
+[node name="SpotLight3D13" type="SpotLight3D" parent="Ambiente/Luces" unique_id=912632679]
 transform = Transform3D(1, -8.351872e-23, 3.650719e-30, 0, -4.371139e-08, -1, 8.351872e-23, 1, -4.371139e-08, 31.825537, 9.894775, 4.379426)
 light_energy = 16.0
 light_indirect_energy = 1.81
@@ -272,7 +268,7 @@ spot_range = 14.133
 spot_attenuation = 1.5
 spot_angle = 6.26
 
-[node name="SpotLight3D14" type="AreaLight3D" parent="Luces" unique_id=684768820]
+[node name="SpotLight3D14" type="AreaLight3D" parent="Ambiente/Luces" unique_id=684768820]
 transform = Transform3D(1, 8.351872e-23, 3.650719e-30, 0, -4.371139e-08, 1, 8.351872e-23, -1, -4.371139e-08, 31.825537, 12.961831, -9.087487)
 light_energy = 16.0
 light_indirect_energy = 1.81
@@ -280,7 +276,7 @@ light_volumetric_fog_energy = 4.111
 area_range = 16.774
 area_attenuation = 2.343
 
-[node name="SpotLight3D15" type="AreaLight3D" parent="Luces" unique_id=751394940]
+[node name="SpotLight3D15" type="AreaLight3D" parent="Ambiente/Luces" unique_id=751394940]
 transform = Transform3D(1, 8.351872e-23, 3.650719e-30, 0, -4.371139e-08, 1, 8.351872e-23, -1, -4.371139e-08, 31.825537, 12.961831, -4.6357183)
 light_energy = 16.0
 light_indirect_energy = 1.81
@@ -288,7 +284,7 @@ light_volumetric_fog_energy = 4.111
 area_range = 16.774
 area_attenuation = 2.343
 
-[node name="SpotLight3D16" type="AreaLight3D" parent="Luces" unique_id=1841110800]
+[node name="SpotLight3D16" type="AreaLight3D" parent="Ambiente/Luces" unique_id=1841110800]
 transform = Transform3D(1, 8.351872e-23, 3.650719e-30, 0, -4.371139e-08, 1, 8.351872e-23, -1, -4.371139e-08, 31.825537, 12.961831, -0.13726664)
 light_energy = 16.0
 light_indirect_energy = 1.81
@@ -296,7 +292,7 @@ light_volumetric_fog_energy = 4.111
 area_range = 16.774
 area_attenuation = 2.343
 
-[node name="SpotLight3D17" type="AreaLight3D" parent="Luces" unique_id=1664834228]
+[node name="SpotLight3D17" type="AreaLight3D" parent="Ambiente/Luces" unique_id=1664834228]
 transform = Transform3D(1, 8.351872e-23, 3.650719e-30, 0, -4.371139e-08, 1, 8.351872e-23, -1, -4.371139e-08, 31.825537, 12.961831, 4.390044)
 light_energy = 16.0
 light_indirect_energy = 1.81
@@ -304,7 +300,7 @@ light_volumetric_fog_energy = 4.111
 area_range = 16.774
 area_attenuation = 2.343
 
-[node name="SpotLight3D7" type="SpotLight3D" parent="Luces" unique_id=1382684288]
+[node name="SpotLight3D7" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1382684288]
 transform = Transform3D(1, 8.351872e-23, 4.371139e-08, -4.371139e-08, 1.9106855e-15, 1, 0, -1, 1.9106855e-15, -6.619651, 10.600472, -18.305923)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -315,7 +311,7 @@ spot_attenuation = 1.4
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D8" type="SpotLight3D" parent="Luces" unique_id=1355877954]
+[node name="SpotLight3D8" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1355877954]
 transform = Transform3D(1, 8.351872e-23, 4.371139e-08, -4.371139e-08, 1.9106855e-15, 1, 0, -1, 1.9106855e-15, 8.159709, 10.600472, 15.130022)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -326,7 +322,7 @@ spot_attenuation = 1.4
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
-[node name="SpotLight3D9" type="SpotLight3D" parent="Luces" unique_id=1025887060]
+[node name="SpotLight3D9" type="SpotLight3D" parent="Ambiente/Luces" unique_id=1025887060]
 transform = Transform3D(1, 8.351872e-23, 4.371139e-08, -4.371139e-08, 1.9106855e-15, 1, 0, -1, 1.9106855e-15, -6.619651, 10.600472, 15.130022)
 light_color = Color(0.9999996, 0.9785333, 0.78538615, 1)
 light_energy = 16.0
@@ -337,32 +333,16 @@ spot_attenuation = 1.4
 spot_angle = 55.17
 spot_angle_attenuation = 0.08537742
 
-[node name="Pivot" type="Node3D" parent="." unique_id=1733307964 node_paths=PackedStringArray("ball")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
-script = ExtResource("3_ltybl")
-ball = NodePath("../Ball0")
-rotation_speed = 0.7
-
-[node name="SpringArm3D" type="SpringArm3D" parent="Pivot" unique_id=26822733]
-collision_mask = 2
-
-[node name="Camera3D" type="Camera3D" parent="Pivot/SpringArm3D" unique_id=1836800179]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.565178)
-
-[node name="Cue" parent="." unique_id=827978359 instance=ExtResource("3_3rsqy")]
-collision_layer = 2
-collision_mask = 2
-
-[node name="Marca" type="MeshInstance3D" parent="." unique_id=210527033]
-transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0)
-cast_shadow = 0
-mesh = SubResource("SphereMesh_i6w6a")
-
-[node name="CameraMesa" type="Camera3D" parent="." unique_id=1053307438]
-transform = Transform3D(1, 0, 0, 0, 0.7403895, 0.67217815, 0, -0.67217815, 0.7403895, 0, 9.192325, 5.410943)
-fov = 62.0
+[node name="Mesa" parent="." unique_id=533647460 instance=ExtResource("1_uox7l")]
+editor_description = "Modelos, pano, bandas y geometria de las seis troneras."
 
 [node name="Bolas" type="Node3D" parent="." unique_id=1903889870]
+editor_description = "Blanca y quince bolas de color; conservan su fisica y armado manual."
+
+[node name="Ball0" parent="Bolas" unique_id=596734405 groups=["blanca"] instance=ExtResource("2_mteyr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.821, 4.3171234, 0)
+contact_monitor = true
+max_contacts_reported = 1
 
 [node name="Ball1" type="RigidBody3D" parent="Bolas" unique_id=946964474 groups=["bolas_color"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58, 4.317959, 0)
@@ -710,46 +690,85 @@ stream = ExtResource("27_s1q4q")
 [node name="SonidoChoqueBlanca" type="AudioStreamPlayer3D" parent="Bolas/Ball15" unique_id=389330230]
 stream = ExtResource("25_obnxk")
 
-[node name="Area3D" type="Area3D" parent="." unique_id=1908130996]
+[node name="Apuntado" type="Node3D" parent="." unique_id=966043470]
+editor_description = "Taco e indicador del punto de impacto."
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1712495416]
+[node name="Cue" parent="Apuntado" unique_id=827978359 instance=ExtResource("3_3rsqy")]
+collision_layer = 2
+collision_mask = 2
+
+[node name="Marca" type="MeshInstance3D" parent="Apuntado" unique_id=210527033]
+transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0)
+cast_shadow = 0
+mesh = SubResource("SphereMesh_i6w6a")
+
+[node name="Camaras" type="Node3D" parent="." unique_id=1871719325]
+editor_description = "Apuntado orbital, vista general y camaras creadas durante la partida."
+
+[node name="Pivot" type="Node3D" parent="Camaras" unique_id=1733307964 node_paths=PackedStringArray("ball")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+script = ExtResource("3_ltybl")
+ball = NodePath("../../Bolas/Ball0")
+rotation_speed = 0.7
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Camaras/Pivot" unique_id=26822733]
+collision_mask = 2
+
+[node name="Camera3D" type="Camera3D" parent="Camaras/Pivot/SpringArm3D" unique_id=1836800179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.565178)
+
+[node name="CameraMesa" type="Camera3D" parent="Camaras" unique_id=1053307438]
+transform = Transform3D(1, 0, 0, 0, 0.7403895, 0.67217815, 0, -0.67217815, 0.7403895, 0, 9.192325, 5.410943)
+fov = 62.0
+
+[node name="LimitesMesa" type="Area3D" parent="." unique_id=1908130996]
+editor_description = "Detecta caidas fuera de la superficie y avisa al controlador de partida."
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LimitesMesa" unique_id=1712495416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08205795, 3.224358, -0.47808456)
 shape = SubResource("BoxShape3D_iwtcp")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Area3D" unique_id=1296944509]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="LimitesMesa" unique_id=1296944509]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.016014, 7.0989122, 0.17614555)
 shape = SubResource("BoxShape3D_ds2lj")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="Area3D" unique_id=1029362343]
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="LimitesMesa" unique_id=1029362343]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.087557, 7.0989122, 0.17614555)
 shape = SubResource("BoxShape3D_ds2lj")
 
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="Area3D" unique_id=25233372]
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="LimitesMesa" unique_id=25233372]
 transform = Transform3D(-0.016656984, 0, 0.99986124, 0, 1, 0, -0.99986124, 0, -0.016656984, -0.3145504, 7.0989122, -5.4830937)
 shape = SubResource("BoxShape3D_ds2lj")
 
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="Area3D" unique_id=1997438845]
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="LimitesMesa" unique_id=1997438845]
 transform = Transform3D(-0.016656984, 0, 0.99986124, 0, 1, 0, -0.99986124, 0, -0.016656984, -0.3145504, 7.0989122, 7.0048513)
 shape = SubResource("BoxShape3D_ds2lj")
 
-[node name="CollisionShape3D6" type="CollisionShape3D" parent="Area3D" unique_id=2085736341]
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="LimitesMesa" unique_id=2085736341]
 transform = Transform3D(-0.016656984, 0, 0.99986124, 0.9997686, -0.013611656, 0.016655441, 0.013609767, 0.9999074, 0.00022672913, -1.0945601, 11.749845, 1.5888705)
 shape = SubResource("BoxShape3D_ds2lj")
 
-[node name="MusicaFondo" type="AudioStreamPlayer3D" parent="." unique_id=1440913928]
+[node name="Audio" type="Node3D" parent="." unique_id=1694139112]
+editor_description = "Musica espacial y efectos globales. Los choques viven en cada bola."
+
+[node name="MusicaFondo" type="AudioStreamPlayer3D" parent="Audio" unique_id=1440913928]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.98952, 3.2644315, -19.558825)
 stream = ExtResource("22_j3qns")
 unit_size = 8.0
 autoplay = true
 panning_strength = 2.0
 
-[node name="SonidoTaco" type="AudioStreamPlayer" parent="." unique_id=1657032163]
+[node name="SonidoTaco" type="AudioStreamPlayer" parent="Audio" unique_id=1657032163]
 stream = ExtResource("23_d1obb")
 
-[node name="SonidoPocket" type="AudioStreamPlayer" parent="." unique_id=2138343129]
+[node name="SonidoPocket" type="AudioStreamPlayer" parent="Audio" unique_id=2138343129]
 stream = ExtResource("24_obnxk")
 
+[node name="Partida" parent="." unique_id=2142469568 instance=ExtResource("partida")]
+editor_description = "Reglas, CPU, HUD, colocacion de blanca y resultado."
+
 [node name="Powerups" parent="." unique_id=676774078 instance=ExtResource("29_ts382")]
+editor_description = "Administrador del activador y de los ocho poderes temporales."
 probabilidad_aparicion = 1.0
 
 [connection signal="body_entered" from="Bolas/Ball1" to="Bolas/Ball1" method="_on_body_entered"]
@@ -767,4 +786,4 @@ probabilidad_aparicion = 1.0
 [connection signal="body_entered" from="Bolas/Ball13" to="Bolas/Ball13" method="_on_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball14" to="Bolas/Ball14" method="_on_body_entered"]
 [connection signal="body_entered" from="Bolas/Ball15" to="Bolas/Ball15" method="_on_body_entered"]
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_entered" from="LimitesMesa" to="." method="_on_limites_mesa_body_entered"]

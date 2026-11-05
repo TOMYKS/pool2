@@ -13,7 +13,6 @@ var logo: TextureRect
 var scroll: ScrollContainer
 var _en_principal := false
 var partida: Node
-var pausa: Button
 var brillo := 1.0
 var volumen_musica := 1.0
 var volumen_efectos := 0.8
@@ -79,22 +78,6 @@ func _ready() -> void:
 	contenido.add_theme_constant_override("separation", 10)
 	interior.add_child(contenido)
 	resized.connect(_ajustar_diseno)
-	pausa = Button.new()
-	pausa.text = "Ⅱ  Pausa"
-	pausa.position = Vector2(16, 16)
-	pausa.add_theme_font_size_override("font_size", 14)
-	pausa.theme = tema
-	for estado in ["normal", "hover", "pressed", "focus"]:
-		var compacto = tema.get_stylebox(estado, "Button").duplicate()
-		compacto.content_margin_top = 6
-		compacto.content_margin_bottom = 6
-		compacto.content_margin_left = 12
-		compacto.content_margin_right = 12
-		pausa.add_theme_stylebox_override(estado, compacto)
-	pausa.process_mode = Node.PROCESS_MODE_ALWAYS
-	get_parent().add_child(pausa)
-	pausa.pressed.connect(abrir_pausa)
-	pausa.hide()
 	var capa := CanvasLayer.new()
 	capa.layer = 90
 	add_child(capa)
@@ -189,7 +172,6 @@ func boton(nombre: String, accion: Callable) -> void:
 
 func principal() -> void:
 	show()
-	pausa.hide()
 	limpiar("")
 	_en_principal = true
 	_ajustar_diseno()
@@ -242,7 +224,7 @@ func nuevo() -> void:
 		if sistema != null and sistema.habilitado != poderes.button_pressed:
 			sistema.alternar_sistema()
 		hide()
-		pausa.hide())
+	)
 	boton("Volver", principal)
 
 func abrir_pausa() -> void:
@@ -251,14 +233,13 @@ func abrir_pausa() -> void:
 	# El tween de la CPU se congela con el árbol; conservar su taco al reanudar.
 	if not partida.cpu.animando_golpe:
 		partida.sala.cancelar_apuntado()
-	partida.sala.get_node("Pivot").is_dragging_camera = false
+	partida.sala.get_node("Camaras/Pivot").is_dragging_camera = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if not get_tree().paused:
 		camara_anterior = get_viewport().get_camera_3d()
 	get_tree().paused = true
 	partida.get_node("HUD/Panel").hide()
 	show()
-	pausa.hide()
 	limpiar("Pausa")
 	boton("Continuar", continuar)
 	boton("Ajustes", ajustes)
@@ -278,7 +259,6 @@ func continuar() -> void:
 		camara_anterior.make_current()
 	partida.get_node("HUD/Panel").show()
 	hide()
-	pausa.hide()
 	get_tree().paused = false
 
 func volver() -> void:
@@ -331,7 +311,7 @@ func _aplicar() -> void:
 	AudioServer.set_bus_volume_linear(0, 1.0)
 	AudioServer.set_bus_volume_linear(AudioServer.get_bus_index("Musica"), volumen_musica)
 	AudioServer.set_bus_volume_linear(AudioServer.get_bus_index("Efectos"), volumen_efectos)
-	partida.sala.get_node("Pivot").mouse_sensitivity = sensibilidad
+	partida.sala.get_node("Camaras/Pivot").mouse_sensitivity = sensibilidad
 	partida.sala.cue_mouse_travel = sensibilidad * 2.0
 	# Corrección visual global: oscurecer o aclarar sin alterar las luces.
 	filtro.color = Color(0, 0, 0, 1.0 - brillo) if brillo <= 1.0 else Color(1, 1, 1, (brillo - 1.0) * 0.5)
@@ -364,7 +344,7 @@ func _preparar_audio() -> void:
 			AudioServer.set_bus_send(indice, "Master")
 	_enrutar_arbol(partida.sala)
 	get_tree().node_added.connect(_enrutar_audio)
-	var musica_3d: AudioStreamPlayer3D = partida.sala.get_node("MusicaFondo")
+	var musica_3d: AudioStreamPlayer3D = partida.sala.get_node("Audio/MusicaFondo")
 	musica_menu = AudioStreamPlayer.new()
 	musica_menu.name = "MusicaMenu"
 	musica_menu.stream = musica_3d.stream
@@ -377,7 +357,7 @@ func _preparar_audio() -> void:
 func _cambiar_musica(en_menu: bool) -> void:
 	if not is_instance_valid(musica_menu):
 		return
-	var musica_3d: AudioStreamPlayer3D = partida.sala.get_node("MusicaFondo")
+	var musica_3d: AudioStreamPlayer3D = partida.sala.get_node("Audio/MusicaFondo")
 	var origen: Node = musica_3d if en_menu else musica_menu
 	var destino: Node = musica_menu if en_menu else musica_3d
 	if destino.playing:
@@ -409,7 +389,7 @@ func _preparar_cine() -> void:
 	camara_menu.name = "CamaraMenu"
 	camara_menu.fov = 52.0
 	camara_menu.near = 0.05
-	partida.sala.add_child(camara_menu)
+	partida.sala.get_node("Camaras").add_child(camara_menu)
 	_actualizar_cine()
 	camara_menu.make_current()
 

@@ -140,16 +140,6 @@ func crear_jugador() -> void:
 		lista.append(bola)
 	bolas.append(lista)
 
-func integrar_pausa(boton: Button) -> void:
-	boton.reparent(fila)
-	fila.move_child(boton, 0)
-	boton.text = "Ⅱ"
-	boton.tooltip_text = "Pausa · Escape"
-	boton.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	boton.custom_minimum_size = Vector2(36, 36)
-	boton.add_theme_font_size_override("font_size", 18)
-	boton.add_theme_color_override("font_color", Estilo.ROSA)
-
 func _process(_delta: float) -> void:
 	actualizar()
 

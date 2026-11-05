@@ -1,5 +1,7 @@
 # Simply Pool
 
+La distribución de la escena principal, las responsabilidades de cada script y los comandos de verificación actuales están en [Organización del proyecto](docs/estructura_proyecto.md).
+
 Simply Pool es un juego de billar 3D para dos jugadores locales que combina precisión, efectos sobre la bola blanca y poderes aleatorios. Desarrollado por Tomás González y Nahuel Curbelo para la Universidad de Montevideo.
 
 ## 🛠️ Acceso y prueba de la versión Alpha

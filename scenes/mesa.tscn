@@ -1,7 +1,37 @@
-[gd_scene format=3 uid="uid://cguivx2otvujd"]
+[gd_scene format=4 uid="uid://cguivx2otvujd"]
 
-[ext_resource type="ArrayMesh" uid="uid://l5457b2tb823" path="res://assets/mesa1.res" id="1_sx2gp"]
-[ext_resource type="ArrayMesh" uid="uid://bpf81swinj310" path="res://assets/mesa2.res" id="2_8ehb7"]
+[ext_resource type="Texture2D" uid="uid://t5ah01djjk4l" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_27.png" id="1_12636"]
+[ext_resource type="Texture2D" uid="uid://u5d5x6g0idlp" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_28.png" id="2_u1ain"]
+[ext_resource type="Texture2D" uid="uid://dvcsqav2r3of6" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_29.png" id="3_aj2bx"]
+[ext_resource type="Texture2D" uid="uid://dg017xcw45a8f" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_282.png" id="4_l2cc3"]
+[ext_resource type="Texture2D" uid="uid://dtdapqo0j1qxh" path="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_292.png" id="5_v13h0"]
+
+[ext_resource type="ArrayMesh" path="res://assets/mesa_tablero.res" id="6_table_mesh"]
+[ext_resource type="ArrayMesh" path="res://assets/mesa_patas.res" id="7_legs_mesh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tj57i"]
+resource_name = "PoolTable_MTL"
+albedo_texture = ExtResource("1_12636")
+metallic_texture = ExtResource("2_u1ain")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("2_u1ain")
+roughness_texture_channel = 1
+normal_enabled = true
+normal_scale = 0.1
+normal_texture = ExtResource("3_aj2bx")
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k6lhg"]
+resource_name = "PoolTable_MTL2"
+albedo_texture = ExtResource("1_12636")
+metallic_texture = ExtResource("4_l2cc3")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("4_l2cc3")
+roughness_texture_channel = 1
+normal_enabled = true
+normal_scale = 0.1
+normal_texture = ExtResource("5_v13h0")
+metadata/_gltf_primary_texture_coord = 0
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_57gcm"]
 friction = 0.1
@@ -36,15 +66,15 @@ size = Vector3(0.8807373, 3.035, 0.43826294)
 
 [node name="Mesa" type="Node3D" unique_id=533647460]
 
-[node name="Pool Table _Mark Peters on Sketchfab_PoolTable_MTL_0" type="MeshInstance3D" parent="." unique_id=347769498]
-transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 2.5, 0, -5, -1.09278474e-07, 0, 2.199049, 0)
-layers = 3
-mesh = ExtResource("1_sx2gp")
+[node name="Mesa_001" type="MeshInstance3D" parent="." unique_id=1837548457]
+transform = Transform3D(5, 0, 0, 0, -1.7881397e-06, 2.5000002, 0, -5.0000005, -8.9406984e-07, 0, 2.199049, 0)
+gi_mode = 2
+mesh = ExtResource("6_table_mesh")
 
-[node name="Pool Table _Mark Peters on Sketchfab_PoolTable_MTL_02" type="MeshInstance3D" parent="." unique_id=1059119242]
-transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 2.5, 0, -5, -1.09278474e-07, 0, 2.199049, 0)
-layers = 3
-mesh = ExtResource("2_8ehb7")
+[node name="Patas" type="MeshInstance3D" parent="." unique_id=1174809372]
+transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 5, 0, -5, -2.1855695e-07, 0, 0.67212903, 0)
+gi_mode = 2
+mesh = ExtResource("7_legs_mesh")
 
 [node name="Pano" type="StaticBody3D" parent="." unique_id=2093126086]
 physics_material_override = SubResource("PhysicsMaterial_57gcm")

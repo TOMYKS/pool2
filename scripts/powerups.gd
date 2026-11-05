@@ -6,14 +6,14 @@ var _ultimo_poder: int = -1
 const ACTIVADOR = preload("res://scenes/activador.tscn")
 enum TipoPoder { PESADAS, REBOTE, GRANDES, PARED, INVISIBLES, FANTASMAS, TRONERAS, OCHOS }
 const PODERES := {
-	TipoPoder.PESADAS: {"activar": "activar_bolas_pesadas", "desactivar": "desactivar_bolas_pesadas", "nombre": "Bolas pesadas", "escena": "pesadas", "duracion": "tiros_pesadas"},
-	TipoPoder.REBOTE: {"activar": "activar_bolas_rebotonas", "desactivar": "desactivar_bolas_rebotonas", "nombre": "Rebote extra", "escena": "rebote", "duracion": "tiros_rebote"},
-	TipoPoder.GRANDES: {"activar": "activar_bolas_grandes", "desactivar": "desactivar_bolas_grandes", "nombre": "Bolas grandes", "escena": "grandes", "duracion": "tiros_grandes"},
-	TipoPoder.PARED: {"activar": "activar_pared", "desactivar": "desactivar_pared", "nombre": "Pared", "escena": "pared", "duracion": "tiros_pared"},
-	TipoPoder.INVISIBLES: {"activar": "activar_bolas_invisibles", "desactivar": "desactivar_bolas_invisibles", "nombre": "Bolas invisibles", "escena": "invisibles", "duracion": ""},
-	TipoPoder.FANTASMAS: {"activar": "activar_bolas_fantasmas", "desactivar": "desactivar_bolas_fantasmas", "nombre": "Bolas falsas", "escena": "fantasmas", "duracion": "tiros_fantasmas"},
-	TipoPoder.TRONERAS: {"activar": "activar_troneras", "desactivar": "desactivar_troneras", "nombre": "Troneras bloqueadas", "escena": "troneras", "duracion": ""},
-	TipoPoder.OCHOS: {"activar": "activar_ochos", "desactivar": "desactivar_ochos", "nombre": "Ochos malditos", "escena": "ochos", "duracion": ""},
+	TipoPoder.PESADAS: {"activar": "activar_bolas_pesadas", "desactivar": "desactivar_bolas_pesadas", "nombre": "Bolas pesadas", "escena": "pesadas"},
+	TipoPoder.REBOTE: {"activar": "activar_bolas_rebotonas", "desactivar": "desactivar_bolas_rebotonas", "nombre": "Rebote extra", "escena": "rebote"},
+	TipoPoder.GRANDES: {"activar": "activar_bolas_grandes", "desactivar": "desactivar_bolas_grandes", "nombre": "Bolas grandes", "escena": "grandes"},
+	TipoPoder.PARED: {"activar": "activar_pared", "desactivar": "desactivar_pared", "nombre": "Pared", "escena": "pared"},
+	TipoPoder.INVISIBLES: {"activar": "activar_bolas_invisibles", "desactivar": "desactivar_bolas_invisibles", "nombre": "Bolas invisibles", "escena": "invisibles"},
+	TipoPoder.FANTASMAS: {"activar": "activar_bolas_fantasmas", "desactivar": "desactivar_bolas_fantasmas", "nombre": "Bolas falsas", "escena": "fantasmas"},
+	TipoPoder.TRONERAS: {"activar": "activar_troneras", "desactivar": "desactivar_troneras", "nombre": "Troneras bloqueadas", "escena": "troneras"},
+	TipoPoder.OCHOS: {"activar": "activar_ochos", "desactivar": "desactivar_ochos", "nombre": "Ochos malditos", "escena": "ochos"},
 }
 
 var habilitado := false
@@ -39,8 +39,11 @@ func _ready() -> void:
 
 
 func _preparar() -> void:
-	# Reutilizamos los poderes ya presentes. Los demás se crean como hijos
-	# de Sala porque sus coordenadas y referencias están definidas allí.
+	# Los controladores comparten un contenedor; Sala se pasa explicitamente
+	# a los poderes que necesitan coordenadas o referencias de la mesa.
+	var contenedor := Node3D.new()
+	contenedor.name = "Controladores"
+	add_child(contenedor)
 	for clave in PODERES:
 		var controlador: Node
 		for hijo in _sala.get_children():
@@ -49,7 +52,9 @@ func _preparar() -> void:
 				break
 		if controlador == null:
 			controlador = load("res://scenes/%s.tscn" % PODERES[clave]["escena"]).instantiate()
-			_sala.add_child(controlador)
+			if "sala" in controlador:
+				controlador.sala = _sala
+			contenedor.add_child(controlador)
 		controlador.set_process_input(false)
 		_controladores[clave] = controlador
 	_sala.tiro_iniciado.connect(_al_iniciar_tiro)

@@ -1,5 +1,7 @@
 extends Node3D
 
+var sala: Node3D
+
 ## Misma tecla de prueba que los demás power-ups.
 @export var tecla_activacion: Key = KEY_SPACE
 
@@ -18,6 +20,8 @@ var _azar := RandomNumberGenerator.new()
 
 
 func _ready() -> void:
+	if sala == null:
+		sala = get_parent()
 	_azar.randomize()
 	# La escena muestra una vista previa en el editor; jugando arranca apagada.
 	pared.visible = false
@@ -25,7 +29,7 @@ func _ready() -> void:
 	# Recursos propios para que varias instancias no compartan dimensiones.
 	colision.shape = colision.shape.duplicate()
 	malla.mesh = malla.mesh.duplicate()
-	var bordes := get_parent().get_node_or_null("Mesa/Bordes") as StaticBody3D
+	var bordes := sala.get_node_or_null("Mesa/Bordes") as StaticBody3D
 	if bordes != null and bordes.physics_material_override != null:
 		pared.physics_material_override = bordes.physics_material_override.duplicate()
 
@@ -68,7 +72,6 @@ func activar_pared() -> bool:
 	var centro := Vector3(elegida.y, ALTURA_PANO + ALTURA / 2.0, 0) if corta_x else Vector3(0, ALTURA_PANO + ALTURA / 2.0, elegida.y)
 	# Las medidas pertenecen a Sala, no al nodo Pared que puede haberse
 	# movido en el editor. Evita sumar su altura a la altura del paño.
-	var sala := get_parent() as Node3D
 	pared.global_transform = sala.global_transform * Transform3D(Basis.IDENTITY, centro)
 	(colision.shape as BoxShape3D).size = dimensiones
 	(malla.mesh as BoxMesh).size = dimensiones
@@ -90,7 +93,6 @@ func _posicion_libre(eje: int, coordenada: float, bolas: Array[Node]) -> bool:
 			if hijo is CollisionShape3D and hijo.shape is SphereShape3D:
 				radio = hijo.shape.radius
 				break
-		var sala := get_parent() as Node3D
 		var pos := sala.to_local(bola.global_position)
 		var distancia := (pos.x if eje == 0 else pos.z) - coordenada
 		if absf(distancia) < radio + GROSOR / 2.0 + MARGEN_BOLAS:

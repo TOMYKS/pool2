@@ -2,20 +2,24 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bm1xevna8x2b4"
-path="res://.godot/imported/comparacion_acabado_bolas.png-28499bd503f3f85d9f03d2c2b6b9df15.ctex"
+uid="uid://u5d5x6g0idlp"
+path.s3tc="res://.godot/imported/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_28.png-64a04401c8ca5f1a13e66de6b32b8a9d.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "37b192e14a2759200a72887355e87080"
 }
 
 [deps]
 
-source_file="res://docs/comparacion_acabado_bolas.png"
-dest_files=["res://.godot/imported/comparacion_acabado_bolas.png-28499bd503f3f85d9f03d2c2b6b9df15.ctex"]
+source_file="res://assets/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_28.png"
+dest_files=["res://.godot/imported/MesaPool_pool_table_-_billiard_table_with_cues_and_balls_28.png-64a04401c8ca5f1a13e66de6b32b8a9d.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -23,7 +27,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -37,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

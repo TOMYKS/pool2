@@ -1,9 +1,6 @@
 extends RigidBody3D
 
 @export var magnus_multiplier: float = 0.3
-@export var magnus_speed_reference: float = 15.0
-@export var magnus_speed_curve: float = 1
-@export var max_magnus_force: float = 10.0
 var _reposo := preload("res://scripts/reposo_bola.gd").new()
 
 # Comparte el ajuste de ascenso de las bolas de color desde Sala.

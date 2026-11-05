@@ -1,5 +1,7 @@
 extends Node3D
 
+@onready var sala = get_parent().get_parent()
+
 @export var ball: RigidBody3D
 @onready var spring_arm: SpringArm3D = $SpringArm3D # Referencia al brazo de la cámara
 
@@ -17,7 +19,7 @@ var is_dragging_camera: bool = false # Rastrea si el clic derecho está apretado
 
 func _ready() -> void:
 	# El taco no debe acortar el brazo de la cámara al apuntar o retroceder.
-	var taco: CollisionObject3D = get_parent().get_node("Cue")
+	var taco: CollisionObject3D = sala.taco
 	spring_arm.add_excluded_object(taco.get_rid())
 	spring_arm.spring_length = clampf(zoom_inicial, min_zoom, max_zoom)
 	rotation.x = deg_to_rad(inclinacion_inicial)
@@ -26,8 +28,8 @@ func _ready() -> void:
 
 
 func _controles_habilitados() -> bool:
-	var partida = get_parent().get_node_or_null("Partida")
-	return partida != null and partida.permite_input_humano() and not partida.bola_en_mano and not get_parent().camara_en_transicion()
+	var partida = sala.get_node_or_null("Partida")
+	return partida != null and partida.permite_input_humano() and not partida.bola_en_mano and not sala.camara_en_transicion()
 
 
 func _process(delta):
@@ -42,7 +44,7 @@ func _process(delta):
 	var input_dir = Input.get_vector("ui_right", "ui_left", "ui_down", "ui_up") 
 	
 	if input_dir != Vector2.ZERO:
-		get_parent().cancelar_apuntado()
+		sala.cancelar_apuntado()
 		rotation.y -= input_dir.x * rotation_speed * delta
 		rotation.x -= input_dir.y * rotation_speed * delta
 		rotation.x = clamp(rotation.x, deg_to_rad(-80), deg_to_rad(-10))
@@ -54,7 +56,7 @@ func _unhandled_input(event):
 	# 1. Detectar si presionamos o soltamos el clic derecho
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.pressed:
-			get_parent().cancelar_apuntado()
+			sala.cancelar_apuntado()
 			is_dragging_camera = true
 			# Atrapa el ratón para que no se salga de la ventana al girar
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

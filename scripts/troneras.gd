@@ -1,5 +1,7 @@
 extends Node3D
 
+var sala: Node3D
+
 enum Patron { ALEATORIO, UN_LADO, MEZCLA, TODAS }
 ## ALEATORIO sortea entre un lado completo, una combinación y las seis.
 @export var patron: Patron = Patron.ALEATORIO
@@ -21,10 +23,12 @@ var _alternar_pendiente := false
 
 
 func _ready() -> void:
+	if sala == null:
+		sala = get_parent()
 	_azar.randomize()
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/powerups/troneras.gdshader")
-	var bordes := get_parent().get_node("Mesa/Bordes") as StaticBody3D
+	var bordes := sala.get_node("Mesa/Bordes") as StaticBody3D
 	for i in range(CENTROS.size()):
 		var tapa := StaticBody3D.new()
 		tapa.name = "Tapa%d" % (i + 1)
@@ -33,7 +37,7 @@ func _ready() -> void:
 		add_child(tapa)
 		var centro: Vector2 = CENTROS[i]
 		var angulo := 0.0 if centro.x == 0.0 else signf(centro.x * centro.y) * PI / 4.0
-		tapa.global_transform = get_parent().global_transform * Transform3D(
+		tapa.global_transform = sala.global_transform * Transform3D(
 			Basis(Vector3.UP, angulo), Vector3(centro.x, ALTURA_PANO + 0.15, centro.y))
 		var forma := BoxShape3D.new()
 		forma.size = TAMANO

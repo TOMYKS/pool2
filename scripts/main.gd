@@ -5,21 +5,23 @@ signal tiro_finalizado
 
 const ReposoBola = preload("res://scripts/reposo_bola.gd")
 
+@export_group("Referencias de escena")
+@export var pivote: Node3D
 @export var camera: Camera3D
 @export var camera_mesa: Camera3D
 @export var marker: MeshInstance3D
 @export var taco: AnimatableBody3D
-@export var ball: RigidBody3D  # <--- Esta era la l­nea que faltaba
-@onready var sonido_taco = $SonidoTaco
-@onready var sonido_pocket = $SonidoPocket
+@export var ball: RigidBody3D
+@onready var sonido_taco = $Audio/SonidoTaco
+@onready var sonido_pocket = $Audio/SonidoPocket
 @onready var partida = $Partida
 
 var time_since_hit: float = 0.0
 var _tiempo_en_reposo: float = 0.0
 var impact_point_global: Vector3
-var is_aiming: bool = false
 var is_hitting_mode: bool = false
 # El collider de la punta sobresale 0.114 m del origen del taco.
+@export_group("Taco y potencia")
 @export var cue_initial_distance: float = 0.15
 @export var cue_max_pullback: float = 1.35
 @export var cue_mouse_travel: float = 0.01
@@ -27,6 +29,7 @@ var is_hitting_mode: bool = false
 @export var cue_power_curve: float = 1.5
 @export var cue_max_force: float = 30.0
 ## Pequeñas diferencias entre armados, conservando la composición manual.
+@export_group("Armado y saque")
 @export_range(0.0, 0.005, 0.0005) var variacion_triangulo: float = 0.0015
 @export_range(0.0, 1.0, 0.1) var angulo_triangulo: float = 0.4
 ## Separación adicional de 1.5 % para evitar contactos especulativos del rack.
@@ -42,6 +45,7 @@ var _material_potencia: StandardMaterial3D
 ## Tope de ascenso de TODAS las bolas, incluida la blanca, en m/s. 0 lo desactiva.
 ## Se conserva el nombre anterior para respetar los valores guardados en Sala.
 ## Solo afecta Y positiva; no modifica potencia, giro, rebote horizontal ni caídas.
+@export_group("Fisica de las bolas")
 @export_range(0.0, 5.0, 0.1) var velocidad_vertical_maxima_color: float = 1.0
 ## Resistencia de rodadura del paño en m/s², común a blanca y bolas de color.
 @export_range(0.0, 0.3, 0.01) var desaceleracion_rodadura: float = 0.2
@@ -49,6 +53,7 @@ var _material_potencia: StandardMaterial3D
 @export_range(0.0, 2.0, 0.1) var roce_velocidad: float = 0.6
 
 ## Duración del viaje entre la cámara de apuntado y la vista general (0 = corte).
+@export_group("Transiciones de camara")
 @export_range(0.0, 3.0, 0.05) var camera_transition_seconds: float = 0.65
 var _camara_viaje: Camera3D
 var _destino_camara: Camera3D
@@ -72,13 +77,13 @@ func cambiar_camara(destino: Camera3D) -> void:
 		destino.make_current()
 		return
 	if destino == camera:
-		$Pivot.global_position = ball.global_position
+		pivote.global_position = ball.global_position
 	var origen := actual.global_transform
 	var fov_origen := actual.fov
 	if _camara_viaje == null:
 		_camara_viaje = Camera3D.new()
 		_camara_viaje.name = "CamaraTransicion"
-		add_child(_camara_viaje)
+		$Camaras.add_child(_camara_viaje)
 	_camara_viaje.global_transform = origen
 	_camara_viaje.fov = fov_origen
 	_camara_viaje.near = destino.near
@@ -96,16 +101,15 @@ func cambiar_camara(destino: Camera3D) -> void:
 
 # --- CONFIGURACIN DE SPIN (Arcade) ---
 ## Radio de la bola (debe coincidir con el CollisionShape3D SphereShape3D)
+@export_group("Efecto de la blanca")
 @export var ball_radius: float = 0.14
-## Multiplicador base para convertir el offset normalizado en torque
-@export var spin_multiplier: float = 8.0
 ## Torque mÃ¡ximo permitido (clamp) para evitar spins absurdos
 @export var max_torque: float = 3.0
 
 func _ready() -> void:
 	var azar_triangulo := RandomNumberGenerator.new()
 	azar_triangulo.randomize()
-	preload("res://scripts/armado_triangulo.gd").preparar($Bolas.get_children(), variacion_triangulo, angulo_triangulo, azar_triangulo, separacion_triangulo)
+	preload("res://scripts/armado_triangulo.gd").preparar(get_tree().get_nodes_in_group("bolas_color"), variacion_triangulo, angulo_triangulo, azar_triangulo, separacion_triangulo)
 	for bola in [ball] + get_tree().get_nodes_in_group("bolas_color"):
 		bola.velocidad_vertical_maxima = velocidad_vertical_maxima_color
 		bola.desaceleracion_rodadura = desaceleracion_rodadura
@@ -146,7 +150,7 @@ func _unhandled_input(event):
 func shoot_raycast(mouse_pos: Vector2):
 	if camara_en_transicion() or is_waiting_for_ball or not partida.puede_apuntar() or not partida.permite_input_humano():
 		return
-	if $Pivot.is_dragging_camera:
+	if pivote.is_dragging_camera:
 		return
 	var space_state = get_world_3d().direct_space_state
 	var origin = camera.project_ray_origin(mouse_pos)
@@ -253,7 +257,7 @@ func _input(event):
 			var raw_force := ajustar_fuerza_tiro(_potencia_del_recorrido())
 			
 			# Ahora sí: Centro exacto = distancia 0.0 (Eficiencia 100%)
-			# Borde extremo = distancia 1.0 (Eficiencia 65%)
+			# Borde extremo = distancia 1.0 (Eficiencia 20%)
 			var power_efficiency = 1.0 - (distancia_del_centro * 0.80) 
 			
 			var hit_force = raw_force * power_efficiency
@@ -377,7 +381,7 @@ func _process(delta):
 		tiro_finalizado.emit()
 	else:
 		_tiempo_en_reposo = 0.0
-func _on_area_3d_body_entered(body):
+func _on_limites_mesa_body_entered(body):
 	partida.registrar_caida(body)
 func todas_las_bolas_detenidas() -> bool:
 	# 1. Comprobamos la blanca primero (si se mueve, ya sabemos que no debemos cambiar la cámara)

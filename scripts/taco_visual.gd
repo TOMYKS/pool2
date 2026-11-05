@@ -59,7 +59,7 @@ func _recorrido_libre(retiro_maximo: float) -> bool:
 	for blanca in get_tree().get_nodes_in_group("blanca"):
 		excluidos.append(blanca.get_rid())
 	consulta.exclude = excluidos
-	var sala := cuerpo.get_parent()
+	var sala := cuerpo.get_parent().get_parent()
 	var mesa := sala.get_node("Mesa")
 	var poderes := sala.get_node_or_null("Powerups")
 	# Segmentos de grosor creciente: no tratar la punta fina como el mango.

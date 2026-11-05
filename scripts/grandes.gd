@@ -1,5 +1,7 @@
 extends Node3D
 
+var sala: Node3D
+
 ## Multiplica el radio y el tamaño visual de las bolas de color.
 @export_range(2.0, 3.0, 1.0) var multiplicador_tamano: float = 2.0
 

@@ -235,7 +235,7 @@ func _camara_del_turno() -> void:
 
 func _control_camara(permitir: bool) -> void:
 	permitir = permitir and permite_input_humano()
-	var pivote = sala.get_node("Pivot")
+	var pivote = sala.get_node("Camaras/Pivot")
 	pivote.set_process(permitir)
 	pivote.set_process_unhandled_input(permitir)
 	pivote.is_dragging_camera = false

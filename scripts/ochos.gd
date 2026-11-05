@@ -1,5 +1,7 @@
 extends Node3D
 
+var sala: Node3D
+
 @export var tecla_activacion: Key = KEY_SPACE
 
 const MALLA_OCHO = preload("res://assets/Ball8.res")
@@ -8,10 +10,12 @@ var powerup_ochos_activo := false
 var _originales: Array[Dictionary] = []
 var _azar := RandomNumberGenerator.new()
 var _generacion := 0
-@onready var _partida = get_parent().get_node("Partida")
+@onready var _partida = (sala if sala != null else get_parent()).get_node("Partida")
 
 
 func _ready() -> void:
+	if sala == null:
+		sala = get_parent()
 	_azar.randomize()
 	_partida.bola_retirada.connect(_al_retirar_bola)
 
@@ -81,7 +85,7 @@ func _revelar(grupo: int, generacion: int) -> void:
 			continue
 		if not bola.get_meta("ocho_mortal", false):
 			return # Nunca dejar dos bolas visibles del mismo grupo.
-		if get_parent().to_local(bola.global_position).y < _partida.ALTURA_PANO:
+		if sala.to_local(bola.global_position).y < _partida.ALTURA_PANO:
 			continue
 		candidatas.append(datos)
 	if candidatas.is_empty():
