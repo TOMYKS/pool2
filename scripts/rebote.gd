@@ -39,10 +39,6 @@ func activar_bolas_rebotonas():
 			
 			# 2. Saturamos los colores (Valores mayores a 1.0 sobreexponen el color)
 			material.albedo_color = Color(1.5, 1.5, 1.5) 
-			# 3. Activamos una ligera emisión de luz para que resalten
-			material.emission_enabled = true
-			# Si usas Godot 4.3+, puedes ajustar la energía. Si te da error, borra la línea de abajo:
-			material.emission_energy_multiplier = 0.2 
 			
 
 func desactivar_bolas_rebotonas():
@@ -57,6 +53,5 @@ func desactivar_bolas_rebotonas():
 		if mesh and mesh.get_active_material(0):
 			var material = mesh.get_active_material(0)
 			
-			# 2. Restauramos los colores y apagamos la emisión
+			# 2. Restauramos los colores.
 			material.albedo_color = Color(1.0, 1.0, 1.0)
-			material.emission_enabled = false
