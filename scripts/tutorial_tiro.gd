@@ -39,7 +39,7 @@ func _process(_delta: float) -> void:
 
 
 func _actualizar_cartel() -> bool:
-	if get_tree().paused or partida.jugador_2_cpu or not partida.puede_apuntar():
+	if get_tree().paused or partida.es_turno_cpu() or not partida.puede_apuntar():
 		return false
 	if partida.tutorial_completado[partida.reglas.turno - 1] or sala.camara_en_transicion():
 		return false

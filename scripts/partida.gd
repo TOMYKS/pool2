@@ -88,7 +88,7 @@ func puede_apuntar() -> bool:
 func _iniciar_tiro() -> void:
 	if configurando or terminada or bola_en_mano or reiniciando:
 		return
-	if not jugador_2_cpu:
+	if not es_turno_cpu():
 		tutorial_completado[reglas.turno - 1] = true
 	reglas.iniciar_tiro()
 	# Un contacto que ya existía al empezar no emite otro body_entered.
