@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://q7tox2tsddo6"]
+
+[resource]
+disable_fog = true
+emission_enabled = true
+emission = Color(1.0324018, 0.31695944, 0.8535412, 1)
+emission_energy_multiplier = 5.0
