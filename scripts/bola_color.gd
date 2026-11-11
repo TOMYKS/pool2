@@ -1,19 +1,29 @@
 extends RigidBody3D
 
+const Fisica = preload("res://scripts/fisica_bola.gd")
+
+var _velocidad_anterior := Vector3.ZERO
 var _reposo := preload("res://scripts/reposo_bola.gd").new()
 
 # Configurado para todas las bolas de color desde el Inspector de Sala.
-var velocidad_vertical_maxima: float = 1.0
-var desaceleracion_rodadura: float = 0.2
-var roce_velocidad: float = 0.6
+var velocidad_vertical_maxima: float = 0.0
+var desaceleracion_rodadura: float = 0.418514221
+var roce_velocidad: float = 0.0
 
+
+func _ready() -> void:
+	preload("res://scripts/fisica_bola.gd").preparar(self)
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	# Frenar únicamente el ascenso producido por choques. No bloquear Y:
-	# las troneras, las caídas y los cambios de tamaño necesitan gravedad.
-	preload("res://scripts/fisica_bola.gd").integrar(state, velocidad_vertical_maxima, desaceleracion_rodadura, roce_velocidad)
+	var radio := Fisica.radio_de(self)
+	if has_meta("rebote_extra_banda"):
+		Fisica.aplicar_rebote_extra_banda(state, _velocidad_anterior, radio)
+	Fisica.actualizar_contactos(self, state)
+	Fisica.integrar(state, velocidad_vertical_maxima, desaceleracion_rodadura, roce_velocidad, radio)
+	_velocidad_anterior = state.linear_velocity
 
 func _physics_process(delta: float) -> void:
+	preload("res://scripts/fisica_bola.gd").anticipar_contactos(self, delta)
 	_reposo.actualizar(self, delta)
 
 # Referencia rápida al nodo de sonido que acabamos de crear

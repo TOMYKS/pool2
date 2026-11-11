@@ -79,3 +79,13 @@ func _recorrido_libre(retiro_maximo: float) -> bool:
 			if obstaculo.is_in_group("bolas_color") or mesa.is_ancestor_of(obstaculo) or (poderes != null and poderes.is_ancestor_of(obstaculo)):
 				return false
 	return true
+
+# Misma inclinacion que se observa: el efecto nace del contacto con el paño,
+# no de una fuerza Magnus permanente. Mantener la direccion de apuntado en XZ.
+func direccion_golpe(horizontal: Vector3) -> Vector3:
+	if not _preparado:
+		return horizontal.normalized()
+	var eje := -_base.z.normalized()
+	var plano := Vector3(horizontal.x, 0.0, horizontal.z).normalized()
+	var inclinacion := asin(clampf(-eje.y, 0.0, sin(deg_to_rad(inclinacion_maxima))))
+	return plano * cos(inclinacion) + Vector3.DOWN * sin(inclinacion)

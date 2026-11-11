@@ -19,6 +19,8 @@ const ReposoBola = preload("res://scripts/reposo_bola.gd")
 var time_since_hit: float = 0.0
 var _tiempo_en_reposo: float = 0.0
 var impact_point_global: Vector3
+var _direccion_apuntada := Vector3.ZERO
+var _punta_saque: RigidBody3D
 var is_hitting_mode: bool = false
 # El collider de la punta sobresale 0.114 m del origen del taco.
 @export_group("Taco y potencia")
@@ -30,12 +32,12 @@ var is_hitting_mode: bool = false
 @export var cue_max_force: float = 30.0
 ## Pequeñas diferencias entre armados, conservando la composición manual.
 @export_group("Armado y saque")
-@export_range(0.0, 0.005, 0.0005) var variacion_triangulo: float = 0.0015
-@export_range(0.0, 1.0, 0.1) var angulo_triangulo: float = 0.4
-## Separación adicional de 1.5 % para evitar contactos especulativos del rack.
-@export_range(1.0, 1.03, 0.001) var separacion_triangulo: float = 1.015
-## Solo en el saque: comprime el tramo alto de potencia. 0 lo desactiva.
-@export_range(0.0, 30.0, 0.5) var saque_max_force: float = 24.0
+@export_range(0.0, 0.005, 0.0005) var variacion_triangulo: float = 0.0
+@export_range(0.0, 1.0, 0.1) var angulo_triangulo: float = 0.3
+## Separación adicional de 3.5 % para evitar contactos especulativos del rack.
+@export_range(1.0, 1.05, 0.001) var separacion_triangulo: float = 1.035
+## Solo en el saque: ajusta el tramo alto de potencia. 0 lo desactiva.
+@export_range(0.0, 65.0, 0.5) var saque_max_force: float = 48.0
 var is_waiting_for_ball: bool = false
 var _recorrido_golpe: float = 0.0
 var _pausa_golpe: float = 0.0
@@ -46,11 +48,12 @@ var _material_potencia: StandardMaterial3D
 ## Se conserva el nombre anterior para respetar los valores guardados en Sala.
 ## Solo afecta Y positiva; no modifica potencia, giro, rebote horizontal ni caídas.
 @export_group("Fisica de las bolas")
-@export_range(0.0, 5.0, 0.1) var velocidad_vertical_maxima_color: float = 1.0
-## Resistencia de rodadura del paño en m/s², común a blanca y bolas de color.
-@export_range(0.0, 0.3, 0.01) var desaceleracion_rodadura: float = 0.2
-## Roce extra a velocidades mayores a 2 m/s. No altera los tiros muy suaves.
-@export_range(0.0, 2.0, 0.1) var roce_velocidad: float = 0.6
+@export_range(0.0, 5.0, 0.1) var velocidad_vertical_maxima_color: float = 0.0
+## Resistencia de rodadura en unidades de escena/s², común a todas las bolas.
+@export var usar_rodadura_del_perfil: bool = true
+@export_range(0.0, 1.5, 0.001) var desaceleracion_rodadura: float = 0.418514221
+## Roce extra por encima de 2 m/s físicos (convertidos a la escala de la mesa).
+@export_range(0.0, 2.0, 0.1) var roce_velocidad: float = 0.0
 
 ## Duración del viaje entre la cámara de apuntado y la vista general (0 = corte).
 @export_group("Transiciones de camara")
@@ -107,6 +110,11 @@ func cambiar_camara(destino: Camera3D) -> void:
 @export var max_torque: float = 3.0
 
 func _ready() -> void:
+	ball.body_entered.connect(_contacto_saque)
+	if usar_rodadura_del_perfil:
+		var f := preload("res://scripts/fisica_bola.gd")
+		desaceleracion_rodadura = f.PERFIL.friccion_rodadura * f.gravedad()
+	preload("res://scripts/fisica_bola.gd").preparar_mesa($Mesa)
 	var azar_triangulo := RandomNumberGenerator.new()
 	azar_triangulo.randomize()
 	preload("res://scripts/armado_triangulo.gd").preparar(get_tree().get_nodes_in_group("bolas_color"), variacion_triangulo, angulo_triangulo, azar_triangulo, separacion_triangulo)
@@ -126,6 +134,7 @@ func _ready() -> void:
 
 
 func cancelar_apuntado() -> void:
+	_direccion_apuntada = Vector3.ZERO
 	is_hitting_mode = false
 	_golpe_armado = false
 	_recorrido_golpe = 0.0
@@ -161,8 +170,13 @@ func shoot_raycast(mouse_pos: Vector2):
 	
 	# Si el rayo cho con algo, y ese algo es nuestra bola
 	if result and result.collider == ball:
-		impact_point_global = result.position
-		marker.global_position = impact_point_global
+		var fisica = preload("res://scripts/fisica_bola.gd")
+		var seleccion: Dictionary = fisica.seleccionar_impacto(origin, camera.project_ray_normal(mouse_pos), ball.global_position, fisica.radio_de(ball))
+		if seleccion.is_empty():
+			return
+		impact_point_global = seleccion.punto
+		_direccion_apuntada = seleccion.direccion
+		marker.global_position = result.position
 		marker.visible = true
 		
 		# Preparamos el palo
@@ -171,7 +185,9 @@ func shoot_raycast(mouse_pos: Vector2):
 func setup_cue_stick():
 	# 2. Calculamos la posicn deseada
 	var pos_camara = camera.global_position
-	var direccion = Vector3(impact_point_global.x - pos_camara.x, 0, impact_point_global.z - pos_camara.z).normalized()
+	var direccion := _direccion_apuntada
+	if direccion.is_zero_approx():
+		direccion = Vector3(ball.global_position.x - pos_camara.x, 0, ball.global_position.z - pos_camara.z).normalized()
 	
 	var distancia_retiro = cue_initial_distance
 	var posicion_final = impact_point_global - (direccion * distancia_retiro)
@@ -234,68 +250,19 @@ func _input(event):
 			taco.visible = false # Ocultamos el palo
 			
 			# ============================================			# ============================================
-			# SISTEMA DE GOLPE ARCADE
+			# GOLPE CON CONTACTO E INCLINACION
 			# ============================================
 			
 			# 1. DIRECCIÓN DEL GOLPE
-			var hit_direction = -taco.global_transform.basis.z.normalized()
+			var hit_direction: Vector3 = -taco.global_transform.basis.z.normalized()
 			
-			# 2. CALCULAR OFFSET DEL PUNTO DE IMPACTO (Ejes 3D)
-			var offset_impacto = impact_point_global - ball.global_position
-			var offset_normalizado = offset_impacto / ball_radius
-			
-			# 3. PROYECTAR EL OFFSET EN EJES 2D (Arriba/Abajo y Lados)
-			var right_axis = hit_direction.cross(Vector3.UP).normalized()
-			var topspin_amount = -offset_normalizado.y
-			var sidespin_amount = offset_normalizado.dot(right_axis)
-			
-			# LA CORRECCIÓN: Medimos la distancia desde el "centro de la mira" en 2D
-			var distancia_del_centro = Vector2(sidespin_amount, topspin_amount).length()
-			distancia_del_centro = clamp(distancia_del_centro, 0.0, 1.0) # Seguridad de 0 a 1
-			
-			# 4. POTENCIA Y EFICIENCIA
 			var raw_force := ajustar_fuerza_tiro(_potencia_del_recorrido())
-			
-			# Ahora sí: Centro exacto = distancia 0.0 (Eficiencia 100%)
-			# Borde extremo = distancia 1.0 (Eficiencia 20%)
-			var power_efficiency = 1.0 - (distancia_del_centro * 0.80) 
-			
-			var hit_force = raw_force * power_efficiency
-			hit_force = clamp(hit_force, 0.5, cue_max_force)
-			# 3. IMPULSO LINEAL PURO
-			# Una blanca recién colocada queda fija hasta este contacto real.
-			ball.freeze = false
-			ball.sleeping = false
-			ball.apply_central_impulse(hit_direction * hit_force)
-			var peso_golpe = inverse_lerp(0.5, cue_max_force, hit_force)
+			var hit_force := aplicar_golpe(hit_direction, raw_force, impact_point_global)
+			var peso_golpe = clampf(hit_force / _limite_potencia_actual(), 0.0, 1.0)
 			
 			# Rango muy cerrado: de -8.0 dB (suave) a 0.0 dB (fuerte). Siempre se escuchará.
 			sonido_taco.volume_db = lerp(-14.0, 0.0, peso_golpe)
 			sonido_taco.play()
-			# ============================================
-			# MULTIPLICADORES INDEPENDIENTES
-			# ============================================
-			
-			var spin_torque = Vector3.ZERO
-			
-			# Topspin / Backspin: 
-			var topspin_multiplier = 0.7
-			spin_torque += right_axis * (topspin_amount * topspin_multiplier)
-			
-			# Sidespin:
-			var sidespin_multiplier = -0.2
-			spin_torque += Vector3.UP * (sidespin_amount * sidespin_multiplier)
-			
-			# Aplicamos la fuerza del golpe al giro resultante
-			# El giro usa la misma potencia del recorrido, antes de la eficiencia.
-			spin_torque *= raw_force
-			
-			# Para que el sidespin sea l, subimos el max_torque temporalmente si es necesario
-			var dynamic_max_torque = max_torque * 2.0
-			if spin_torque.length() > dynamic_max_torque:
-				spin_torque = spin_torque.normalized() * dynamic_max_torque
-			
-			ball.apply_torque_impulse(spin_torque)
 			tiro_iniciado.emit()
 
 
@@ -314,9 +281,9 @@ func _potencia_del_recorrido() -> float:
 func ajustar_fuerza_tiro(fuerza: float) -> float:
 	if not partida.reglas.saque or saque_max_force <= 0.0:
 		return fuerza
-	var maximo := minf(saque_max_force, cue_max_force)
+	var maximo := saque_max_force
 	# Conservar intacto el 70 % inferior del control de potencia. Por encima,
-	# comprimir suavemente hasta el máximo del saque, sin un escalón ni meseta.
+	# ajustar suavemente hasta el máximo del saque.
 	var umbral := minf(cue_max_force * 0.7, maximo)
 	if fuerza <= umbral:
 		return fuerza
@@ -324,10 +291,14 @@ func ajustar_fuerza_tiro(fuerza: float) -> float:
 	return lerpf(umbral, maximo, peso)
 
 
+func _limite_potencia_actual() -> float:
+	return saque_max_force if partida.reglas.saque and saque_max_force > 0.0 else cue_max_force
+
+
 func _potencia_para_recorrido(recorrido: float) -> float:
 	# Curva suave: deja más recorrido disponible para tiros bajos y medios.
 	var proporcion := clampf(recorrido / maxf(cue_max_pullback, 0.01), 0.0, 1.0)
-	return lerpf(0.5, cue_max_force, pow(proporcion, cue_power_curve))
+	return cue_max_force * pow(proporcion, cue_power_curve)
 
 
 func _actualizar_indicador_potencia() -> void:
@@ -335,10 +306,9 @@ func _actualizar_indicador_potencia() -> void:
 	var direccion := -taco.global_basis.z.normalized()
 	var restante := maxf(0.0, (impact_point_global - taco.global_position).dot(direccion) - 0.114)
 	var potencia := ajustar_fuerza_tiro(_potencia_para_recorrido(_recorrido_golpe + restante))
-	var offset := (impact_point_global - ball.global_position) / ball_radius
-	var distancia := clampf(Vector2(offset.dot(direccion.cross(Vector3.UP)), offset.y).length(), 0.0, 1.0)
-	potencia = clampf(potencia * (1.0 - distancia * 0.80), 0.5, cue_max_force)
-	var peso := inverse_lerp(0.5, cue_max_force, potencia)
+	var datos := datos_golpe(direccion, potencia, impact_point_global)
+	potencia = (datos.impulso as Vector3).length()
+	var peso := clampf(potencia / _limite_potencia_actual(), 0.0, 1.0)
 	var verde := Color(0.1, 1.0, 0.15)
 	var amarillo := Color(1.0, 0.9, 0.0)
 	var rojo := Color(1.0, 0.08, 0.02)
@@ -400,3 +370,33 @@ func todas_las_bolas_detenidas() -> bool:
 			
 	# Si el código llega hasta aquí, significa que absolutamente nada se está moviendo
 	return true
+
+# Usado tanto por el jugador como por la CPU.
+func datos_golpe(direccion: Vector3, potencia: float, punto: Vector3) -> Dictionary:
+	var fisica = preload("res://scripts/fisica_bola.gd")
+	var eje: Vector3 = taco.get_node("Visual").direccion_golpe(direccion)
+	return fisica.calcular_golpe(eje, punto - ball.global_position, fisica.radio_de(ball), clampf(potencia, 0.0, _limite_potencia_actual()))
+
+func aplicar_golpe(direccion: Vector3, potencia: float, punto: Vector3) -> float:
+	var datos := datos_golpe(direccion, potencia, punto)
+	_punta_saque = null
+	if partida.reglas.saque and (datos.impulso as Vector3).length() >= 28.0:
+		for bola: RigidBody3D in get_tree().get_nodes_in_group("bolas_color"):
+			if _punta_saque == null or bola.global_position.x > _punta_saque.global_position.x:
+				_punta_saque = bola
+	ball.freeze = false
+	ball.sleeping = false
+	ball.apply_impulse(datos.impulso, datos.brazo)
+	ball.iniciar_comba()
+	return (datos.impulso as Vector3).length()
+
+func _contacto_saque(cuerpo: Node) -> void:
+	if not is_instance_valid(_punta_saque) or not partida.reglas.en_tiro or not cuerpo.is_in_group("bolas_color"):
+		return
+	var es_punta := cuerpo == _punta_saque
+	_punta_saque = null
+	if not es_punta:
+		return
+	var bolas := get_tree().get_nodes_in_group("bolas_color")
+	if bolas.size() == 15:
+		preload("res://scripts/armado_triangulo.gd").repartir_impacto.call_deferred(bolas)

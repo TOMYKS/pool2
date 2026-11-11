@@ -1,8 +1,8 @@
 extends RefCounted
 
 # Evitar que los contactos entre bolas prolonguen un movimiento imperceptible.
-const VELOCIDAD_MINIMA := 0.06
-const VELOCIDAD_GIRO_MINIMA := 0.10
+const VELOCIDAD_MINIMA := 0.006
+const VELOCIDAD_GIRO_MINIMA := 0.006
 const TIEMPO_PARA_REPOSO := 0.35
 # Un rebote mínimo o una esfera encajada pueden conservar velocidad de solver
 # sin movimiento apreciable. Exigir posición estable y apoyo antes de dormirla.
