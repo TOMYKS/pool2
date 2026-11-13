@@ -10,7 +10,7 @@ var powerup_ochos_activo := false
 var _originales: Array[Dictionary] = []
 var _azar := RandomNumberGenerator.new()
 var _generacion := 0
-@onready var _partida = (sala if sala != null else get_parent()).get_node("Partida")
+@onready var _partida = (sala if sala != null else get_parent() as Node3D).get_node("Partida")
 
 
 func _ready() -> void:
@@ -30,9 +30,12 @@ func _input(event: InputEvent) -> void:
 			activar_ochos()
 
 
-func activar_ochos() -> void:
+func activar_ochos() -> bool:
 	if powerup_ochos_activo:
-		return
+		return true
+	var reglas = _partida.reglas
+	if maxi(reglas.pendientes(1).size(), reglas.pendientes(2).size()) < 2:
+		return false
 	powerup_ochos_activo = true
 	_generacion += 1
 	for bola in get_tree().get_nodes_in_group("bolas_color"):
@@ -59,16 +62,14 @@ func activar_ochos() -> void:
 			visual.set_surface_override_material(i, null)
 	_revelar(Reglas.Grupo.LISAS, _generacion)
 	_revelar(Reglas.Grupo.RAYADAS, _generacion)
+	return true
 
 
-func _al_retirar_bola(bola: RigidBody3D, tronera: bool, jugador: int) -> void:
-	if not powerup_ochos_activo or not tronera or bola.get_meta("ocho_mortal", false):
+func _al_retirar_bola(bola: RigidBody3D, _tronera: bool, _jugador: int) -> void:
+	if not powerup_ochos_activo or bola.get_meta("ocho_mortal", false):
 		return
 	var grupo: int = _partida.reglas.grupo_de(int(bola.get_meta("numero", 0)))
-	var grupo_jugador: int = _partida.reglas.grupos[jugador - 1]
 	if grupo == Reglas.Grupo.SIN_ASIGNAR:
-		return
-	if grupo_jugador != Reglas.Grupo.SIN_ASIGNAR and grupo_jugador != grupo:
 		return
 	# Esperar las demás caídas del mismo paso evita salvar por orden de señales
 	# a otra negra que ya estaba entrando. Tampoco se eligen nodos retirados.

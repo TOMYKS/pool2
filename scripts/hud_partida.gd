@@ -143,8 +143,8 @@ func actualizar() -> void:
 		turno.text = "Ganó %s" % partida.nombre_jugador(r.ganador)
 	for i in range(2):
 		var grupo: int = r.grupos[i]
-		var activo: bool = r.turno == i + 1 and not partida.terminada
-		jugadores[i].text = ("▸ " if activo else "") + partida.nombre_jugador(i + 1)
+		var jugador_activo: bool = r.turno == i + 1 and not partida.terminada
+		jugadores[i].text = ("▸ " if jugador_activo else "") + partida.nombre_jugador(i + 1)
 		jugadores[i].tooltip_text = partida.nombre_jugador(i + 1)
 		_ajustar_tamano(jugadores[i], 26)
 		grupos[i].text = "Mesa abierta" if grupo == 0 else ("%s · %s" % ["Lisas" if grupo == 1 else "Rayadas", "Va por la 8" if r.pendientes(i + 1).is_empty() else "%d restantes" % r.pendientes(i + 1).size()])
@@ -169,8 +169,7 @@ func actualizar() -> void:
 			ultimo_icono = sistema.poder_actual
 			var archivo: String = sistema.PODERES[ultimo_icono]["escena"]
 			icono_poder.texture = load("res://assets/powerups/iconos/%s.svg" % archivo)
-		ficha_poder.tooltip_text = sistema.PODERES[sistema.poder_actual]["nombre"]
-		nombre_poder.text = ficha_poder.tooltip_text
+		nombre_poder.text = sistema.PODERES[sistema.poder_actual]["nombre"]
 		duracion_poder.text = "%d tiro%s" % [sistema.tiros_restantes, "" if sistema.tiros_restantes == 1 else "s"]
 	modo.tooltip_text = modo.text
 	turno.tooltip_text = turno.text

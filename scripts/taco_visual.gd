@@ -5,6 +5,8 @@ extends Node3D
 @export_range(20.0, 50.0, 1.0) var inclinacion_maxima := 35.0
 @export var margen_visual := 0.006
 
+const INCLINACION_MAXIMA_VISUAL := 85.0
+
 var _largo := 0.0
 var _radio := 0.0
 var _punto := Vector3.ZERO
@@ -26,13 +28,19 @@ func preparar(punto: Vector3, retiro_maximo: float) -> void:
 	_direccion_fisica = -cuerpo.global_basis.z.normalized()
 	var base_horizontal := cuerpo.global_basis.orthonormalized()
 	var angulo := inclinacion_minima
+	var limite := inclinacion_maxima
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	var forma := CapsuleShape3D.new()
+	consulta.shape = forma
 	# Elegir UNA inclinación considerando el recorrido completo antes de tirar.
-	# Si no hay espacio, conservar el ángulo máximo sin desplazar el apuntado.
+	# Si hace falta, elevar más el modelo. La inclinación física sigue limitada.
 	while true:
 		_base = base_horizontal * Basis(Vector3.RIGHT, -deg_to_rad(angulo))
-		if _recorrido_libre(retiro_maximo) or angulo >= inclinacion_maxima:
+		if _recorrido_libre(retiro_maximo, consulta, forma) or angulo >= INCLINACION_MAXIMA_VISUAL:
 			break
-		angulo = minf(angulo + 2.0, inclinacion_maxima)
+		if angulo >= limite:
+			limite = INCLINACION_MAXIMA_VISUAL
+		angulo = minf(angulo + 2.0, limite)
 	_preparado = true
 	actualizar()
 
@@ -51,8 +59,7 @@ func actualizar() -> void:
 	global_transform = Transform3D(_base, _punto + _base.z * distancia)
 
 
-func _recorrido_libre(retiro_maximo: float) -> bool:
-	var consulta := PhysicsShapeQueryParameters3D.new()
+func _recorrido_libre(retiro_maximo: float, consulta: PhysicsShapeQueryParameters3D, forma: CapsuleShape3D) -> bool:
 	consulta.collision_mask = 3
 	consulta.margin = 0.0
 	var excluidos: Array[RID] = [cuerpo.get_rid()]
@@ -68,15 +75,13 @@ func _recorrido_libre(retiro_maximo: float) -> bool:
 	for tramo in range(20):
 		var inicio := lerpf(0.03, fin, tramo / 20.0)
 		var final := lerpf(0.03, fin, (tramo + 1) / 20.0)
-		var forma := CapsuleShape3D.new()
 		forma.radius = lerpf(0.011, _radio, minf(final / _largo, 1.0)) + margen_visual
 		forma.height = final - inicio + forma.radius * 2.0
-		consulta.shape = forma
 		consulta.transform = Transform3D(Basis(_base.x, _base.z, _base.x.cross(_base.z)), _punto + _base.z * ((inicio + final) * 0.5))
 		for choque in get_world_3d().direct_space_state.intersect_shape(consulta, 32):
 			var obstaculo: Node = choque.collider
 			# Muebles del bar y decoración no deben levantar el taco.
-			if obstaculo.is_in_group("bolas_color") or mesa.is_ancestor_of(obstaculo) or (poderes != null and poderes.is_ancestor_of(obstaculo)):
+			if obstaculo != null and (obstaculo.is_in_group("bolas_color") or mesa.is_ancestor_of(obstaculo) or (poderes != null and poderes.is_ancestor_of(obstaculo))):
 				return false
 	return true
 

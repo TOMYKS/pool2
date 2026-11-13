@@ -117,9 +117,10 @@ static func anticipar_contactos(bola: RigidBody3D, dt: float) -> void:
 	var mu: float = PERFIL.friccion_bolas_lenta
 	var primero := INF
 	var radio := radio_de(bola)
-	for nodo in bola.get_tree().get_nodes_in_group("bolas_fisica"):
+	var candidatas := [] if bola.has_meta("bola_fantasma") else bola.get_tree().get_nodes_in_group("bolas_fisica")
+	for nodo in candidatas:
 		var otra := nodo as RigidBody3D
-		if otra == bola or otra.freeze or bola.get_collision_exceptions().has(otra):
+		if otra == null or otra == bola or otra.freeze or otra.is_queued_for_deletion() or otra.has_meta("bola_fantasma"):
 			continue
 		var dp := otra.global_position - bola.global_position
 		var dv := otra.linear_velocity - bola.linear_velocity

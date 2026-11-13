@@ -178,7 +178,7 @@ func _recoger() -> void:
 		var indice := _azar.randi_range(0, opciones.size() - 1)
 		var clave: TipoPoder = opciones.pop_at(indice)
 		var resultado = _controladores[clave].call(PODERES[clave]["activar"])
-		if clave == TipoPoder.PARED and resultado != true:
+		if (clave == TipoPoder.PARED or clave == TipoPoder.OCHOS) and resultado != true:
 			continue
 		poder_actual = clave
 		_ultimo_poder = clave

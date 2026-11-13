@@ -18,12 +18,13 @@ func activar_bolas_fantasmas():
 	var bolas_mezcladas = todas_las_bolas.duplicate()
 	bolas_mezcladas.shuffle()
 	
-	var cantidad_a_afectar = bolas_mezcladas.size() / 2
+	var cantidad_a_afectar = floori(bolas_mezcladas.size() * 0.5)
 	var bolas_blancas = get_tree().get_nodes_in_group("blanca")
 	
 	for i in range(cantidad_a_afectar):
 		var bola_fantasma = bolas_mezcladas[i] as RigidBody3D
 		bolas_fantasmas.append(bola_fantasma)
+		bola_fantasma.set_meta("bola_fantasma", true)
 		
 		for otra_bola in todas_las_bolas:
 			if otra_bola != bola_fantasma:
@@ -42,6 +43,7 @@ func desactivar_bolas_fantasmas():
 
 	for bola_fantasma in bolas_fantasmas:
 		if is_instance_valid(bola_fantasma):
+			bola_fantasma.remove_meta("bola_fantasma")
 			
 			for otra_bola in todas_las_bolas:
 				if is_instance_valid(otra_bola) and otra_bola != bola_fantasma:

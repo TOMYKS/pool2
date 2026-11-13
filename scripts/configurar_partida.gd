@@ -420,8 +420,8 @@ func _cambiar_musica(en_menu: bool) -> void:
 	if not is_instance_valid(musica_menu):
 		return
 	var musica_3d: AudioStreamPlayer3D = partida.sala.get_node("Audio/MusicaFondo")
-	var origen: Node = musica_3d if en_menu else musica_menu
-	var destino: Node = musica_menu if en_menu else musica_3d
+	var origen: Node = musica_3d as Node if en_menu else musica_menu as Node
+	var destino: Node = musica_menu as Node if en_menu else musica_3d as Node
 	if destino.playing:
 		return
 	var posicion: float = origen.get_playback_position() if origen.playing else 0.0
