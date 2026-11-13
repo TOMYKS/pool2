@@ -112,10 +112,6 @@ marker = NodePath("Apuntado/Marca")
 taco = NodePath("Apuntado/Cue")
 ball = NodePath("Bolas/Ball0")
 cue_max_force = 28.0
-variacion_triangulo = 0.005
-angulo_triangulo = 0.5
-saque_max_force = 28.0
-velocidad_vertical_maxima_color = 0.8
 camera_transition_seconds = 0.4
 
 [node name="Ambiente" type="Node3D" parent="." unique_id=1066321482]

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" format=3 uid="uid://olt8kc7bann1"]
+
+[ext_resource type="Script" uid="uid://bba2xr0r5g3c4" path="res://scripts/perfil_billar.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+intensidad_comba = 0.008

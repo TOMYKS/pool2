@@ -189,9 +189,9 @@ func _impactar(direccion: Vector3, fuerza: float) -> void:
 	sala.taco.global_position = Vector3(0, -1, 0)
 	sala.ball.freeze = false
 	sala.ball.sleeping = false
-	var fuerza_real: float = sala.ajustar_fuerza_tiro(clampf(fuerza, 5.5, 20.0))
-	sala.ball.apply_central_impulse(direccion * fuerza_real)
-	sala.sonido_taco.volume_db = lerpf(-14.0, 0.0, inverse_lerp(5.5, 20.0, fuerza))
+	var fuerza_real: float = sala.ajustar_fuerza_tiro(clampf(fuerza, 0.0, minf(20.0, sala.cue_max_force)))
+	sala.aplicar_golpe(direccion, fuerza_real, sala.ball.global_position - direccion * sala.ball_radius)
+	sala.sonido_taco.volume_db = lerpf(-14.0, 0.0, clampf(fuerza_real / sala.cue_max_force, 0.0, 1.0))
 	sala.sonido_taco.play()
 	sala.tiro_iniciado.emit()
 	sala.is_waiting_for_ball = true

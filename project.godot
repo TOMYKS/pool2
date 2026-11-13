@@ -38,6 +38,7 @@ jolt_physics_3d/simulation/speculative_contact_distance=0.001
 jolt_physics_3d/simulation/bounce_velocity_threshold=0.1
 jolt_physics_3d/simulation/continuous_cd_movement_threshold=0.1
 jolt_physics_3d/simulation/continuous_cd_max_penetration=0.01
+jolt_physics_3d/limits/max_angular_velocity=2000.0
 
 [rendering]
 
